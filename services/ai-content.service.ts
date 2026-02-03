@@ -164,20 +164,14 @@ Return JSON with this EXACT structure:
     }
     // ... for each service
   ],
-  "testimonials": [
-    {
-      "quote": "Authentic-sounding customer quote, specific result mentioned",
-      "author": "Realistic name",
-      "role": "Realistic job title or description"
-    }
-    // 3 testimonials total
-  ],
   "cta": {
     "headline": "Compelling call-to-action headline with urgency",
     "subheadline": "Supporting text that overcomes last objection",
     "buttonText": "Action verb"
   }
 }
+
+IMPORTANT: Do NOT include testimonials - they will be provided separately.
 
 Make it SPECIFIC to this business. Use their name. Reference their actual services.
 NO placeholders. NO generic content.`;
@@ -206,7 +200,8 @@ NO placeholders. NO generic content.`;
         title: s,
         description: `Professional ${s.toLowerCase()} services tailored to your needs.`,
       })),
-      testimonials: content.testimonials || this.generateDefaultTestimonials(input),
+      // Empty testimonials - will only be shown if provided in form
+      testimonials: [],
       cta: {
         headline: content.cta?.headline || `Ready to work with ${input.businessName}?`,
         subheadline: content.cta?.subheadline || 'Get in touch today to get started.',
@@ -239,33 +234,14 @@ NO placeholders. NO generic content.`;
         title: service,
         description: `Professional ${service.toLowerCase()} services designed to meet your specific needs.`,
       })),
-      testimonials: this.generateDefaultTestimonials(input),
+      // Empty testimonials - only shown if provided in form
+      testimonials: [],
       cta: {
         headline: `Ready to Experience ${input.businessName}?`,
         subheadline: 'Contact us today to learn how we can help you achieve your goals.',
         buttonText: 'Get In Touch',
       },
     };
-  }
-
-  private generateDefaultTestimonials(input: ContentGenerationInput) {
-    return [
-      {
-        quote: `Working with ${input.businessName} was one of the best decisions we made. Professional, reliable, and truly excellent results.`,
-        author: 'Sarah Johnson',
-        role: 'Business Owner',
-      },
-      {
-        quote: 'Exceptional service from start to finish. They went above and beyond our expectations.',
-        author: 'Michael Chen',
-        role: 'Project Manager',
-      },
-      {
-        quote: 'Highly recommend! Their expertise and attention to detail made all the difference.',
-        author: 'Emily Rodriguez',
-        role: 'Marketing Director',
-      },
-    ];
   }
 }
 

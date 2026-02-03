@@ -11,6 +11,8 @@ interface WebsiteData {
   secondaryColor: string
   accentColor: string
   deploymentUrl: string | null
+  previewUrl: string | null
+  formSubmissionId: string
 }
 
 interface EditableContent {
@@ -497,21 +499,13 @@ export default function EditWebsitePage() {
         </div>
 
         {/* Preview iframe */}
-        <div className="flex-1 bg-white">
-          {website.deploymentUrl ? (
-            <iframe
-              src={website.deploymentUrl}
-              className="w-full h-full border-0"
-              title="Website Preview"
-            />
-          ) : (
-            <div className="flex items-center justify-center h-full bg-gray-100">
-              <div className="text-center text-gray-500">
-                <div className="text-6xl mb-4">🌐</div>
-                <p>Website preview will appear here</p>
-              </div>
-            </div>
-          )}
+        <div className="flex-1 bg-gray-900">
+          <iframe
+            src={website.deploymentUrl || `/api/preview/${website.formSubmissionId}`}
+            className="w-full h-full border-0"
+            title="Website Preview"
+            key={`preview-${saved}`}
+          />
         </div>
       </div>
     </div>

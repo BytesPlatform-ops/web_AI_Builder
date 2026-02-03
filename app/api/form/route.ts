@@ -208,6 +208,7 @@ export async function POST(request: NextRequest) {
         colors: extractedColors,
         logoUrl: logoUrl || undefined,
         heroImageUrl: heroImageUrl || undefined,
+        additionalImages: additionalImages || [],
         contactInfo: {
           email,
           phone: phone || undefined,

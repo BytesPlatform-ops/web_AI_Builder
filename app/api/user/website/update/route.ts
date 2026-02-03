@@ -83,12 +83,28 @@ export async function POST(request: NextRequest) {
 
     // Step 2: Regenerate template with new colors
     console.log('🎨 Step 2: Regenerating website template with new colors...');
+    
+    // Parse additional images
+    let additionalImages: string[] = [];
+    if (submission.additionalImages) {
+      if (typeof submission.additionalImages === 'string') {
+        try {
+          additionalImages = JSON.parse(submission.additionalImages);
+        } catch {
+          additionalImages = [];
+        }
+      } else if (Array.isArray(submission.additionalImages)) {
+        additionalImages = submission.additionalImages as string[];
+      }
+    }
+    
     const generatedWebsite = await premiumTemplateGenerator.generate({
       businessName: submission.businessName,
       content: enhancedContent,
       colors: newColors,
       logoUrl: submission.logoUrl || undefined,
       heroImageUrl: submission.heroImageUrl || undefined,
+      additionalImages: additionalImages,
       contactInfo: {
         email: submission.email,
         phone: submission.phone || undefined,

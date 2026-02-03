@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Discover the rich, unique flavors of locally sourced beans at Aurora Brew House">
+  <meta name="description" content="Experience the unique blend of freshly roasted coffee and home-baked pastries in our inviting café.">
   <meta name="theme-color" content="#0a0a0a">
-  <title>Aurora Brew House | Transform Your Mornings with Aurora's Artisan Coffee</title>
+  <title>Aurora Brew House | Transform Your Day with Aurora Brew House’s Artisan Coffee</title>
   
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
   
   <link rel="stylesheet" href="styles.css">
-  
+  <link rel="icon" type="image/png" href="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770158035443-logo_gloria.png">
 </head>
 <body>
   <!-- Animated Background -->
@@ -38,13 +38,13 @@
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="#" class="nav-logo">
-        <span class="logo-text">Aurora Brew House</span>
+        <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770158035443-logo_gloria.png" alt="Aurora Brew House" class="logo-img">
       </a>
       
       <div class="nav-links" id="navLinks">
         <a href="#services" class="nav-link">Services</a>
         <a href="#about" class="nav-link">About</a>
-        
+        <a href="#gallery" class="nav-link">Gallery</a>
         <a href="#contact" class="nav-link">Contact</a>
       </div>
       
@@ -60,7 +60,9 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" style="--hero-bg: url('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/hero/1770158037055-HERO_AURORA.webp')">
+    <div class="hero-bg-image"></div>
+    <div class="hero-overlay"></div>
     <div class="hero-content">
       <div class="hero-badge" data-animate="fade-up">
         <span class="badge-pulse"></span>
@@ -68,11 +70,11 @@
       </div>
       
       <h1 class="hero-title" data-animate="fade-up" data-delay="0.1">
-        <span class="title-line">Transform Your Mornings with Aurora's Artisan Coffee</span>
+        <span class="title-line">Transform Your Day with Aurora Brew House’s Artisan Coffee</span>
       </h1>
       
       <p class="hero-desc" data-animate="fade-up" data-delay="0.2">
-        Discover the rich, unique flavors of locally sourced beans at Aurora Brew House
+        Experience the unique blend of freshly roasted coffee and home-baked pastries in our inviting café.
       </p>
       
       <div class="hero-buttons" data-animate="fade-up" data-delay="0.3">
@@ -87,8 +89,6 @@
       </div>
     </div>
     
-    
-    
     <div class="hero-scroll">
       <div class="scroll-indicator">
         <div class="scroll-dot"></div>
@@ -102,7 +102,7 @@
     <div class="container">
       <div class="section-header" data-animate="fade-up">
         <span class="section-badge">
-          <span class="badge-icon">⚡</span>
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
           Our Services
         </span>
         <h2 class="section-title">What We Offer</h2>
@@ -117,8 +117,8 @@
             <div class="bento-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             </div>
-            <h3 class="bento-title">Coffee</h3>
-            <p class="bento-desc">Savor the distinction of hand-roasted beans in every meticulously crafted cup.</p>
+            <h3 class="bento-title">Specialty coffee brewing</h3>
+            <p class="bento-desc">Savor the rich, complex flavors of coffee expertly brewed from freshly roasted beans.</p>
             <a href="#contact" class="bento-link">
               Learn more
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -132,8 +132,8 @@
             <div class="bento-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </div>
-            <h3 class="bento-title">Pastries</h3>
-            <p class="bento-desc">Pair your brew with delectable, freshly-baked pastries from local artisans.</p>
+            <h3 class="bento-title">Freshly baked pastries</h3>
+            <p class="bento-desc">Indulge in the comforting aroma and taste of pastries baked daily from scratch.</p>
             <a href="#contact" class="bento-link">
               Learn more
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -147,8 +147,38 @@
             <div class="bento-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             </div>
-            <h3 class="bento-title">Events</h3>
-            <p class="bento-desc">Host your next event in a vibrant, inviting space centered around exceptional coffee.</p>
+            <h3 class="bento-title">Custom cakes</h3>
+            <p class="bento-desc">Celebrate your special moments with beautifully crafted cakes, tailored to your preferences.</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="bento-card " data-animate="fade-up" data-delay="0.30000000000000004" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <h3 class="bento-title">Private events & gatherings</h3>
+            <p class="bento-desc">Host memorable gatherings in our stylish, versatile space designed for comfort and convenience.</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="bento-card " data-animate="fade-up" data-delay="0.4" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3 class="bento-title">Online ordering & takeaway</h3>
+            <p class="bento-desc">Enjoy Aurora’s finest at home with our easy online ordering system and convenient takeaway service.</p>
             <a href="#contact" class="bento-link">
               Learn more
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -166,13 +196,13 @@
       <div class="about-grid">
         <div class="about-content">
           <span class="section-badge" data-animate="fade-up">
-            <span class="badge-icon">🏆</span>
+            <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
             About Us
           </span>
           <h2 class="section-title text-left" data-animate="fade-up" data-delay="0.1">Why Choose Aurora Brew House?</h2>
           
           <div class="about-text" data-animate="fade-up" data-delay="0.2">
-            <p>At Aurora Brew House, we're more than just a coffee shop; we’re a sanctuary for coffee lovers. Dedicated to premium, locally sourced beans, every cup we serve is a testament to quality and freshness.</p><p>Set apart by our commitment to artisan processes, we roast our beans in-house, ensuring you enjoy the most flavorful and aromatic coffee experience in every sip.</p>
+            <p>At Aurora Brew House, we’re more than just a café; we're a vibrant community hub where premium coffee meets exceptional comfort.</p><p>Distinct in our approach, we prioritize fresh, high-quality ingredients for all our offerings, crafting each beverage and pastry to perfection.</p>
           </div>
           
           <div class="about-stats" data-animate="fade-up" data-delay="0.3">
@@ -219,9 +249,7 @@
           <div class="about-card" data-tilt>
             <div class="about-card-glow"></div>
             
-            <div class="about-placeholder">
-              <span>A</span>
-            </div>
+            <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770158035443-logo_gloria.png" alt="Aurora Brew House" class="about-logo" />
             
             <div class="about-card-content">
               <h3>Aurora Brew House</h3>
@@ -234,83 +262,45 @@
   </section>
 
   
-  <!-- Testimonials Section -->
-  <section class="testimonials" id="testimonials">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-badge">
-          <span class="badge-icon">⭐</span>
-          Testimonials
-        </span>
-        <h2 class="section-title">What Our Clients Say</h2>
-        <p class="section-desc">Don't just take our word for it - hear from our satisfied clients.</p>
-      </div>
-      
-      <div class="testimonials-grid">
-        
-        <div class="testimonial-card" data-animate="fade-up" data-delay="0" data-tilt>
-          <div class="testimonial-glow"></div>
-          <div class="testimonial-content">
-            <div class="testimonial-stars">
-              ★★★★★
-            </div>
-            <blockquote class="testimonial-quote">"Aurora Brew House isn't just a coffee shop, it's where my day truly begins—exceptional taste, every single morning."</blockquote>
-            <div class="testimonial-author">
-              <div class="author-avatar">
-                EC
-              </div>
-              <div class="author-info">
-                <span class="author-name">Emily Carter</span>
-                <span class="author-role">Blogger & Coffee Enthusiast</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="testimonial-card" data-animate="fade-up" data-delay="0.1" data-tilt>
-          <div class="testimonial-glow"></div>
-          <div class="testimonial-content">
-            <div class="testimonial-stars">
-              ★★★★★
-            </div>
-            <blockquote class="testimonial-quote">"The aura and aroma of freshly roasted beans at Aurora take my coffee experience to a whole new level."</blockquote>
-            <div class="testimonial-author">
-              <div class="author-avatar">
-                JL
-              </div>
-              <div class="author-info">
-                <span class="author-name">James Lowell</span>
-                <span class="author-role">Local Artist</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="testimonial-card" data-animate="fade-up" data-delay="0.2" data-tilt>
-          <div class="testimonial-glow"></div>
-          <div class="testimonial-content">
-            <div class="testimonial-stars">
-              ★★★★★
-            </div>
-            <blockquote class="testimonial-quote">"Hosting our book club at Aurora Brew House was delightful—the perfect setting for warm conversations over great coffee."</blockquote>
-            <div class="testimonial-author">
-              <div class="author-avatar">
-                SM
-              </div>
-              <div class="author-info">
-                <span class="author-name">Sarah Mendez</span>
-                <span class="author-role">Book Club Coordinator</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-  </section>
-  
 
   
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-badge">
+            <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+            Our Work
+          </span>
+          <h2 class="section-title">Gallery</h2>
+          <p class="section-desc">Take a look at what we do</p>
+        </div>
+        
+        <div class="gallery-grid">
+          
+          <div class="gallery-item" data-animate="zoom-in" data-delay="0">
+            <div class="gallery-image-wrapper">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770158038503-aurora_more.webp" alt="Gallery image 1" class="gallery-image" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-zoom" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770158038503-aurora_more.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+      <button class="lightbox-close" onclick="closeLightbox()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <img src="" alt="Fullscreen" class="lightbox-image" id="lightboxImage" />
+    </div>
+    
 
   <!-- CTA Section -->
   <section class="cta" id="contact">
@@ -322,20 +312,20 @@
     <div class="container">
       <div class="cta-content" data-animate="fade-up">
         <span class="section-badge section-badge-light">
-          <span class="badge-icon">💬</span>
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
           Get In Touch
         </span>
-        <h2 class="cta-title">Ready for Coffee That Changes Your Day?</h2>
-        <p class="cta-desc">Stop by today and taste the difference passion makes.</p>
+        <h2 class="cta-title">Ready for a Taste of Luxury?</h2>
+        <p class="cta-desc">Book your table or order online today and elevate your dining experience.</p>
         
         <div class="cta-buttons">
           
-          <a href="tel:+1234567890" class="btn btn-white">
+          <a href="tel:+923353279709" class="btn btn-white">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             <span>Call Us</span>
           </a>
           
-          <a href="mailto:aurora@example.com" class="btn btn-glass">
+          <a href="mailto:nomansiddiqui872@gmail.com" class="btn btn-glass">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <span>Email Us</span>
           </a>
@@ -345,12 +335,17 @@
           
           <div class="info-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span>+1234567890</span>
+            <span>+923353279709</span>
           </div>
           
           <div class="info-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span>aurora@example.com</span>
+            <span>nomansiddiqui872@gmail.com</span>
+          </div>
+          
+          <div class="info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Hno 4q block 2 P.E.C.H.S karachi</span>
           </div>
           
         </div>
@@ -363,8 +358,8 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo-text">Aurora Brew House</span>
-          <p class="footer-desc">Discover the rich, unique flavors of locally sourced beans at Aurora Brew House</p>
+          <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770158035443-logo_gloria.png" alt="Aurora Brew House" class="footer-logo">
+          <p class="footer-desc">Experience the unique blend of freshly roasted coffee and home-baked pastries in our inviting café.</p>
           
           
           <div class="footer-social">
@@ -381,15 +376,15 @@
           <a href="#hero">Home</a>
           <a href="#services">Services</a>
           <a href="#about">About</a>
-          
+          <a href="#gallery">Gallery</a>
           <a href="#contact">Contact</a>
         </div>
         
         <div class="footer-links">
           <h4>Contact Info</h4>
-          <a href="mailto:aurora@example.com">aurora@example.com</a>
-          <a href="tel:+1234567890">+1234567890</a>
-          
+          <a href="mailto:nomansiddiqui872@gmail.com">nomansiddiqui872@gmail.com</a>
+          <a href="tel:+923353279709">+923353279709</a>
+          <span>Hno 4q block 2 P.E.C.H.S karachi</span>
         </div>
       </div>
       

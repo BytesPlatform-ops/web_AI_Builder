@@ -1,19 +1,21 @@
 /**
- * STUNNING Premium Website Template Generator v2.0
+ * ULTIMATE Premium Website Template Generator v3.0
  * 
- * Design Inspiration: Stripe, Linear, Vercel, Apple
+ * Design Inspiration: Aceternity UI, Linear, Vercel, Stripe, Apple
  * 
  * Features:
- * - GSAP Scroll Animations (reveal on scroll)
- * - Glassmorphism navigation
- * - Gradient overlays & backgrounds
- * - Smooth micro-interactions
- * - Parallax hero effects
- * - Modern typography (Inter font)
- * - Premium card designs
- * - Floating elements & decorations
- * - Dark/Light mode ready
- * - Mobile-first responsive
+ * ✅ GSAP ScrollTrigger animations
+ * ✅ Aceternity-style spotlight effects
+ * ✅ 3D tilt cards on hover
+ * ✅ Animated gradient backgrounds
+ * ✅ Particles/floating orbs
+ * ✅ Text reveal animations (split text)
+ * ✅ Bento grid layouts
+ * ✅ Glassmorphism everywhere
+ * ✅ Image gallery with lightbox
+ * ✅ Smooth page transitions
+ * ✅ Mobile-first responsive
+ * ✅ Dark theme with accent colors
  */
 
 import { GeneratedContent } from './ai-content.service';
@@ -45,9 +47,9 @@ export interface GeneratedFiles {
   'script.js': string;
 }
 
-class PremiumTemplateGenerator {
+class UltimatePremiumTemplateGenerator {
   async generate(input: TemplateInput): Promise<GeneratedFiles> {
-    console.log(`🎨 Generating STUNNING premium template for ${input.businessName}...`);
+    console.log(`🎨 Generating ULTIMATE premium template for ${input.businessName}...`);
 
     const html = this.generateHTML(input);
     const css = this.generateCSS(input);
@@ -61,17 +63,57 @@ class PremiumTemplateGenerator {
   }
 
   private generateHTML(input: TemplateInput): string {
-    const { businessName, content, logoUrl, heroImageUrl, contactInfo } = input;
+    const { businessName, content, logoUrl, heroImageUrl, additionalImages, contactInfo } = input;
 
-    // Generate service icons based on index
+    // Service icons - modern minimal
     const serviceIcons = [
-      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
-      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`,
-      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>`,
-      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
-      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>`,
-      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`,
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`,
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
     ];
+
+    // Generate gallery images HTML if additional images exist
+    const galleryHTML = additionalImages && additionalImages.length > 0 ? `
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-badge">
+            <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+            Our Work
+          </span>
+          <h2 class="section-title">Gallery</h2>
+          <p class="section-desc">Take a look at what we do</p>
+        </div>
+        
+        <div class="gallery-grid">
+          ${additionalImages.map((img, i) => `
+          <div class="gallery-item" data-animate="zoom-in" data-delay="${i * 0.1}">
+            <div class="gallery-image-wrapper">
+              <img src="${img}" alt="Gallery image ${i + 1}" class="gallery-image" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-zoom" onclick="openLightbox('${img}')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+    
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+      <button class="lightbox-close" onclick="closeLightbox()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <img src="" alt="Fullscreen" class="lightbox-image" id="lightboxImage" />
+    </div>
+    ` : '';
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -79,36 +121,39 @@ class PremiumTemplateGenerator {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="${content.hero.subheadline}">
+  <meta name="theme-color" content="#0a0a0a">
   <title>${businessName} | ${content.hero.headline}</title>
   
-  <!-- Preconnect for performance -->
+  <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- Inter Font - Modern & Clean -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Fonts: Inter + Space Grotesk for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   
-  <!-- GSAP for animations -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
   
   <link rel="stylesheet" href="styles.css">
   ${logoUrl ? `<link rel="icon" type="image/png" href="${logoUrl}">` : ''}
 </head>
 <body>
-  <!-- Cursor follower (desktop only) -->
-  <div class="cursor-glow"></div>
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-gradient"></div>
+  <div class="spotlight" id="spotlight"></div>
   
-  <!-- Floating decorations -->
-  <div class="floating-shapes">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
+  <!-- Floating Orbs -->
+  <div class="orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
   </div>
 
-  <!-- Navigation - Glassmorphism -->
+  <!-- Navigation -->
   <nav class="nav" id="nav">
-    <div class="nav-container">
+    <div class="nav-inner">
       <a href="#" class="nav-logo">
         ${logoUrl 
           ? `<img src="${logoUrl}" alt="${businessName}" class="logo-img">`
@@ -119,141 +164,209 @@ class PremiumTemplateGenerator {
       <div class="nav-links" id="navLinks">
         <a href="#services" class="nav-link">Services</a>
         <a href="#about" class="nav-link">About</a>
-        <a href="#contact" class="nav-link nav-cta">${content.hero.ctaPrimary}</a>
+        ${additionalImages && additionalImages.length > 0 ? '<a href="#gallery" class="nav-link">Gallery</a>' : ''}
+        <a href="#contact" class="nav-link">Contact</a>
       </div>
       
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
+      <a href="#contact" class="nav-cta">
+        <span>Get Started</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
-  <!-- Hero Section - Full Screen with Parallax -->
-  <section class="hero" id="hero">
-    <div class="hero-bg">
-      ${heroImageUrl ? `<img src="${heroImageUrl}" alt="" class="hero-bg-img">` : ''}
-      <div class="hero-gradient"></div>
-    </div>
-    
+  <!-- Hero Section -->
+  <section class="hero" id="hero" ${heroImageUrl ? `style="--hero-bg: url('${heroImageUrl}')"` : ''}>
+    ${heroImageUrl ? '<div class="hero-bg-image"></div>' : ''}
+    <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-badge animate-fade-up">
-        <span class="badge-dot"></span>
-        <span>Trusted by hundreds of happy customers</span>
+      <div class="hero-badge" data-animate="fade-up">
+        <span class="badge-pulse"></span>
+        <span>Welcome to ${businessName}</span>
       </div>
       
-      <h1 class="hero-title animate-fade-up delay-1">
-        ${content.hero.headline}
+      <h1 class="hero-title" data-animate="fade-up" data-delay="0.1">
+        <span class="title-line">${content.hero.headline}</span>
       </h1>
       
-      <p class="hero-subtitle animate-fade-up delay-2">
+      <p class="hero-desc" data-animate="fade-up" data-delay="0.2">
         ${content.hero.subheadline}
       </p>
       
-      <div class="hero-buttons animate-fade-up delay-3">
-        <a href="#contact" class="btn btn-primary btn-lg">
+      <div class="hero-buttons" data-animate="fade-up" data-delay="0.3">
+        <a href="#contact" class="btn btn-primary">
           <span>${content.hero.ctaPrimary}</span>
-          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
+          <div class="btn-glow"></div>
         </a>
-        <a href="#services" class="btn btn-secondary btn-lg">
-          ${content.hero.ctaSecondary}
+        <a href="#services" class="btn btn-ghost">
+          <span>${content.hero.ctaSecondary}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
-      
-      <!-- Stats removed - user can provide their own stats via form if needed -->
     </div>
     
     <div class="hero-scroll">
-      <span>Scroll to explore</span>
-      <div class="scroll-line">
+      <div class="scroll-indicator">
         <div class="scroll-dot"></div>
       </div>
+      <span>Scroll down</span>
     </div>
   </section>
 
-  <!-- Services Section -->
+  <!-- Services Section - Bento Grid -->
   <section class="services" id="services">
     <div class="container">
-      <div class="section-header">
-        <span class="section-tag">What We Do</span>
-        <h2 class="section-title">Our Services</h2>
-        <p class="section-subtitle">Discover how we can help transform your business with our comprehensive range of professional services.</p>
+      <div class="section-header" data-animate="fade-up">
+        <span class="section-badge">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+          Our Services
+        </span>
+        <h2 class="section-title">What We Offer</h2>
+        <p class="section-desc">Discover our comprehensive range of professional services designed to help your business thrive.</p>
       </div>
       
-      <div class="services-grid">
-        ${content.services.map((service, index) => `
-        <div class="service-card" data-animate="fade-up" data-delay="${index * 0.1}">
-          <div class="service-icon">
-            ${serviceIcons[index % serviceIcons.length]}
+      <div class="bento-grid">
+        ${content.services.map((service, i) => `
+        <div class="bento-card ${i === 0 ? 'bento-featured' : ''}" data-animate="fade-up" data-delay="${i * 0.1}" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              ${serviceIcons[i % serviceIcons.length]}
+            </div>
+            <h3 class="bento-title">${service.title}</h3>
+            <p class="bento-desc">${service.description}</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
           </div>
-          <h3 class="service-title">${service.title}</h3>
-          <p class="service-desc">${service.description}</p>
-          <a href="#contact" class="service-link">
-            Learn more
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </a>
         </div>
         `).join('')}
       </div>
     </div>
   </section>
 
-  <!-- About Section - Split Layout -->
+  <!-- About Section -->
   <section class="about" id="about">
     <div class="container">
       <div class="about-grid">
         <div class="about-content">
-          <span class="section-tag">About Us</span>
-          <h2 class="section-title text-left">${content.about.headline}</h2>
-          ${content.about.paragraphs.map((p, i) => `
-          <p class="about-text" data-animate="fade-up" data-delay="${i * 0.1}">${p}</p>
-          `).join('')}
+          <span class="section-badge" data-animate="fade-up">
+            <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
+            About Us
+          </span>
+          <h2 class="section-title text-left" data-animate="fade-up" data-delay="0.1">${content.about.headline}</h2>
           
-          <div class="about-features" data-animate="fade-up">
-            <div class="feature">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
+          <div class="about-text" data-animate="fade-up" data-delay="0.2">
+            ${content.about.paragraphs.map(p => `<p>${p}</p>`).join('')}
+          </div>
+          
+          <div class="about-stats" data-animate="fade-up" data-delay="0.3">
+            <div class="stat">
+              <span class="stat-number" data-count="100">0</span>
+              <span class="stat-suffix">%</span>
+              <span class="stat-label">Satisfaction</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="24">0</span>
+              <span class="stat-suffix">/7</span>
+              <span class="stat-label">Support</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="500">0</span>
+              <span class="stat-suffix">+</span>
+              <span class="stat-label">Clients</span>
+            </div>
+          </div>
+          
+          <div class="about-features" data-animate="fade-up" data-delay="0.4">
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
               <span>Professional Excellence</span>
             </div>
-            <div class="feature">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
               <span>Customer Focused</span>
             </div>
-            <div class="feature">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
               <span>Quality Guaranteed</span>
             </div>
           </div>
         </div>
         
-        <div class="about-visual" data-animate="scale-in">
-          <div class="about-image-wrapper">
+        <div class="about-visual" data-animate="zoom-in" data-delay="0.2">
+          <div class="about-card" data-tilt>
+            <div class="about-card-glow"></div>
+            ${logoUrl ? `
+            <img src="${logoUrl}" alt="${businessName}" class="about-logo" />
+            ` : `
             <div class="about-placeholder">
-              <span class="placeholder-text">${businessName.charAt(0)}</span>
+              <span>${businessName.charAt(0)}</span>
             </div>
-            <div class="about-image-decoration"></div>
+            `}
+            <div class="about-card-content">
+              <h3>${businessName}</h3>
+              <p>Excellence in every detail</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Testimonials Section Removed - We don't generate fake reviews -->
+  ${content.testimonials && content.testimonials.length > 0 ? `
+  <!-- Testimonials Section -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header" data-animate="fade-up">
+        <span class="section-badge">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+          Testimonials
+        </span>
+        <h2 class="section-title">What Our Clients Say</h2>
+        <p class="section-desc">Don't just take our word for it - hear from our satisfied clients.</p>
+      </div>
+      
+      <div class="testimonials-grid">
+        ${content.testimonials.map((testimonial, i) => `
+        <div class="testimonial-card" data-animate="fade-up" data-delay="${i * 0.1}" data-tilt>
+          <div class="testimonial-glow"></div>
+          <div class="testimonial-content">
+            <div class="testimonial-stars">
+              ${'★'.repeat(5)}
+            </div>
+            <blockquote class="testimonial-quote">"${testimonial.quote}"</blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                ${testimonial.author.split(' ').map(n => n[0]).join('').substring(0, 2)}
+              </div>
+              <div class="author-info">
+                <span class="author-name">${testimonial.author}</span>
+                <span class="author-role">${testimonial.role}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        `).join('')}
+      </div>
+    </div>
+  </section>
+  ` : ''}
 
-  <!-- CTA Section - Gradient Background -->
+  ${galleryHTML}
+
+  <!-- CTA Section -->
   <section class="cta" id="contact">
     <div class="cta-bg">
       <div class="cta-glow cta-glow-1"></div>
@@ -262,34 +375,40 @@ class PremiumTemplateGenerator {
     
     <div class="container">
       <div class="cta-content" data-animate="fade-up">
+        <span class="section-badge section-badge-light">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+          Get In Touch
+        </span>
         <h2 class="cta-title">${content.cta.headline}</h2>
-        <p class="cta-subtitle">${content.cta.subheadline}</p>
+        <p class="cta-desc">${content.cta.subheadline}</p>
         
         <div class="cta-buttons">
           ${contactInfo.phone ? `
-          <a href="tel:${contactInfo.phone}" class="btn btn-white btn-lg">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-            </svg>
-            <span>Call ${contactInfo.phone}</span>
+          <a href="tel:${contactInfo.phone}" class="btn btn-white">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>Call Us</span>
           </a>
           ` : ''}
-          <a href="mailto:${contactInfo.email}" class="btn btn-outline-white btn-lg">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,13 2,6"/>
-            </svg>
-            <span>${content.cta.buttonText}</span>
+          <a href="mailto:${contactInfo.email}" class="btn btn-glass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>Email Us</span>
           </a>
         </div>
         
-        <div class="cta-contact-info">
+        <div class="cta-info">
+          ${contactInfo.phone ? `
+          <div class="info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>${contactInfo.phone}</span>
+          </div>
+          ` : ''}
+          <div class="info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>${contactInfo.email}</span>
+          </div>
           ${contactInfo.address ? `
-          <div class="contact-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
+          <div class="info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <span>${contactInfo.address}</span>
           </div>
           ` : ''}
@@ -301,63 +420,52 @@ class PremiumTemplateGenerator {
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-content">
+      <div class="footer-grid">
         <div class="footer-brand">
           ${logoUrl 
             ? `<img src="${logoUrl}" alt="${businessName}" class="footer-logo">`
             : `<span class="footer-logo-text">${businessName}</span>`
           }
-          <p class="footer-tagline">${content.hero.subheadline.substring(0, 100)}...</p>
+          <p class="footer-desc">${content.hero.subheadline.substring(0, 120)}${content.hero.subheadline.length > 120 ? '...' : ''}</p>
+          
+          ${contactInfo.social ? `
+          <div class="footer-social">
+            ${contactInfo.social.facebook ? `<a href="${contactInfo.social.facebook}" target="_blank" rel="noopener" class="social-link" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>` : ''}
+            ${contactInfo.social.instagram ? `<a href="${contactInfo.social.instagram}" target="_blank" rel="noopener" class="social-link" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>` : ''}
+            ${contactInfo.social.linkedin ? `<a href="${contactInfo.social.linkedin}" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>` : ''}
+            ${contactInfo.social.twitter ? `<a href="${contactInfo.social.twitter}" target="_blank" rel="noopener" class="social-link" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>` : ''}
+          </div>
+          ` : ''}
         </div>
         
         <div class="footer-links">
-          <div class="footer-column">
-            <h4>Quick Links</h4>
-            <a href="#services">Services</a>
-            <a href="#about">About Us</a>
-            <a href="#testimonials">Reviews</a>
-            <a href="#contact">Contact</a>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Contact</h4>
-            <a href="mailto:${contactInfo.email}">${contactInfo.email}</a>
-            ${contactInfo.phone ? `<a href="tel:${contactInfo.phone}">${contactInfo.phone}</a>` : ''}
-            ${contactInfo.address ? `<span>${contactInfo.address}</span>` : ''}
-          </div>
+          <h4>Quick Links</h4>
+          <a href="#hero">Home</a>
+          <a href="#services">Services</a>
+          <a href="#about">About</a>
+          ${additionalImages && additionalImages.length > 0 ? '<a href="#gallery">Gallery</a>' : ''}
+          <a href="#contact">Contact</a>
         </div>
         
-        ${contactInfo.social ? `
-        <div class="footer-social">
-          ${contactInfo.social.facebook ? `
-          <a href="${contactInfo.social.facebook}" target="_blank" rel="noopener" aria-label="Facebook" class="social-link">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          </a>
-          ` : ''}
-          ${contactInfo.social.instagram ? `
-          <a href="${contactInfo.social.instagram}" target="_blank" rel="noopener" aria-label="Instagram" class="social-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          </a>
-          ` : ''}
-          ${contactInfo.social.linkedin ? `
-          <a href="${contactInfo.social.linkedin}" target="_blank" rel="noopener" aria-label="LinkedIn" class="social-link">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
-          ` : ''}
-          ${contactInfo.social.twitter ? `
-          <a href="${contactInfo.social.twitter}" target="_blank" rel="noopener" aria-label="Twitter" class="social-link">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-          </a>
-          ` : ''}
+        <div class="footer-links">
+          <h4>Contact Info</h4>
+          <a href="mailto:${contactInfo.email}">${contactInfo.email}</a>
+          ${contactInfo.phone ? `<a href="tel:${contactInfo.phone}">${contactInfo.phone}</a>` : ''}
+          ${contactInfo.address ? `<span>${contactInfo.address}</span>` : ''}
         </div>
-        ` : ''}
       </div>
       
       <div class="footer-bottom">
         <p>&copy; ${new Date().getFullYear()} ${businessName}. All rights reserved.</p>
+        <p>Crafted with ❤️</p>
       </div>
     </div>
   </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
 
   <script src="script.js"></script>
 </body>
@@ -366,90 +474,58 @@ class PremiumTemplateGenerator {
 
   private generateCSS(input: TemplateInput): string {
     const { colors } = input;
+    
+    // Create color variations
+    const primary = colors.primary;
+    const secondary = colors.secondary;
+    const accent = colors.accent;
 
     return `/*
- * STUNNING Premium Website Template
- * Modern, Animated, Professional
+ * ULTIMATE Premium Website Template v3.0
+ * Dark Theme | Glassmorphism | Animations
  */
 
 /* ===== CSS VARIABLES ===== */
 :root {
   /* Brand Colors */
-  --primary: ${colors.primary};
-  --primary-dark: ${this.darkenColor(colors.primary, 15)};
-  --primary-light: ${this.lightenColor(colors.primary, 15)};
-  --secondary: ${colors.secondary};
-  --accent: ${colors.accent};
+  --primary: ${primary};
+  --primary-rgb: ${this.hexToRgb(primary)};
+  --secondary: ${secondary};
+  --accent: ${accent};
   
-  /* Neutral Colors */
-  --white: #ffffff;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-  --black: #000000;
+  /* Dark Theme */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-tertiary: #1a1a1a;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-glass: rgba(255, 255, 255, 0.05);
   
-  /* Typography */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
-  --font-size-4xl: 2.25rem;
-  --font-size-5xl: 3rem;
-  --font-size-6xl: 3.75rem;
-  --font-size-7xl: 4.5rem;
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #71717a;
+  
+  /* Borders */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color-hover: rgba(255, 255, 255, 0.2);
+  
+  /* Fonts */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
   
   /* Spacing */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
-  --space-20: 5rem;
-  --space-24: 6rem;
-  --space-32: 8rem;
+  --section-padding: clamp(4rem, 10vw, 8rem);
   
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --shadow-glow: 0 0 40px -10px var(--primary);
-  
-  /* Border Radius */
-  --radius-sm: 0.375rem;
-  --radius: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-2xl: 2rem;
-  --radius-full: 9999px;
+  /* Effects */
+  --glow: 0 0 60px -15px var(--primary);
+  --glow-lg: 0 0 100px -20px var(--primary);
   
   /* Transitions */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ===== RESET & BASE ===== */
+/* ===== RESET ===== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -458,18 +534,21 @@ class PremiumTemplateGenerator {
 
 html {
   scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 100px;
 }
 
 body {
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  line-height: 1.6;
-  color: var(--gray-700);
-  background: var(--white);
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  line-height: 1.7;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--primary);
+  color: white;
 }
 
 img {
@@ -490,86 +569,103 @@ button {
   background: none;
 }
 
-/* ===== UTILITIES ===== */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-6);
+/* ===== BACKGROUND EFFECTS ===== */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.text-left { text-align: left; }
-.text-center { text-align: center; }
-
-/* ===== CURSOR GLOW (Desktop) ===== */
-.cursor-glow {
+.bg-gradient {
   position: fixed;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: radial-gradient(circle, ${this.hexToRgba(colors.primary, 0.15)} 0%, transparent 70%);
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(var(--primary-rgb), 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(var(--primary-rgb), 0.1), transparent);
   pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.spotlight {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
   opacity: 0;
   transition: opacity 0.3s ease;
+  transform: translate(-50%, -50%);
 }
 
-@media (hover: hover) {
-  .cursor-glow { opacity: 1; }
+body:hover .spotlight {
+  opacity: 1;
 }
 
-/* ===== FLOATING SHAPES ===== */
-.floating-shapes {
+/* ===== ORBS ===== */
+.orbs {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
 }
 
-.shape {
+.orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.3;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: orbFloat 20s ease-in-out infinite;
 }
 
-.shape-1 {
+.orb-1 {
+  width: 500px;
+  height: 500px;
+  background: var(--primary);
+  top: -200px;
+  right: -200px;
+}
+
+.orb-2 {
   width: 400px;
   height: 400px;
-  background: var(--primary-light);
-  top: -100px;
-  right: -100px;
-  animation: float 20s ease-in-out infinite;
-}
-
-.shape-2 {
-  width: 300px;
-  height: 300px;
   background: var(--secondary);
   bottom: 20%;
-  left: -100px;
-  animation: float 25s ease-in-out infinite reverse;
+  left: -200px;
+  animation-delay: -5s;
 }
 
-.shape-3 {
-  width: 200px;
-  height: 200px;
+.orb-3 {
+  width: 300px;
+  height: 300px;
   background: var(--accent);
-  bottom: -50px;
-  right: 20%;
-  animation: float 18s ease-in-out infinite;
+  bottom: -100px;
+  right: 30%;
+  animation-delay: -10s;
 }
 
-@keyframes float {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(20px, -30px) rotate(5deg); }
-  50% { transform: translate(-10px, 20px) rotate(-5deg); }
-  75% { transform: translate(30px, 10px) rotate(3deg); }
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -50px) scale(1.05); }
+  50% { transform: translate(-20px, 30px) scale(0.95); }
+  75% { transform: translate(40px, 20px) scale(1.02); }
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 /* ===== NAVIGATION ===== */
@@ -579,31 +675,32 @@ button {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: var(--space-4) 0;
-  transition: var(--transition);
+  padding: 1rem 0;
+  transition: all 0.4s var(--ease-out-expo);
 }
 
 .nav.scrolled {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(10, 10, 10, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--gray-100);
-  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.75rem 0;
 }
 
-.nav-container {
+.nav-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 2rem;
 }
 
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 0.75rem;
   z-index: 1001;
 }
 
@@ -614,28 +711,25 @@ button {
 }
 
 .logo-text {
-  font-size: var(--font-size-xl);
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--gray-900);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-8);
+  gap: 2rem;
 }
 
 .nav-link {
-  font-size: var(--font-size-sm);
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--gray-600);
-  transition: var(--transition-fast);
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
   position: relative;
-}
-
-.nav-link:hover {
-  color: var(--gray-900);
 }
 
 .nav-link::after {
@@ -646,7 +740,11 @@ button {
   width: 0;
   height: 2px;
   background: var(--primary);
-  transition: var(--transition-fast);
+  transition: width 0.3s var(--ease-out-expo);
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
 }
 
 .nav-link:hover::after {
@@ -654,53 +752,76 @@ button {
 }
 
 .nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
   background: var(--primary);
-  color: var(--white) !important;
-  padding: var(--space-2) var(--space-5);
-  border-radius: var(--radius-full);
-  transition: var(--transition);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 100px;
+  transition: all 0.3s var(--ease-out-expo);
 }
 
-.nav-cta::after { display: none; }
+.nav-cta svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s var(--ease-out-expo);
+}
 
 .nav-cta:hover {
-  background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--glow);
+}
+
+.nav-cta:hover svg {
+  transform: translateX(3px);
 }
 
 .nav-toggle {
   display: none;
   flex-direction: column;
   gap: 5px;
-  padding: var(--space-2);
+  padding: 0.5rem;
   z-index: 1001;
 }
 
 .nav-toggle span {
   width: 24px;
   height: 2px;
-  background: var(--gray-900);
-  transition: var(--transition);
+  background: var(--text-primary);
+  transition: all 0.3s ease;
+  transform-origin: center;
 }
 
-/* Mobile Navigation */
+.nav-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
 @media (max-width: 768px) {
-  .nav-toggle { display: flex; }
+  .nav-toggle {
+    display: flex;
+  }
   
   .nav-links {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--white);
+    inset: 0;
+    background: var(--bg-primary);
     flex-direction: column;
     justify-content: center;
-    gap: var(--space-8);
+    gap: 2rem;
     opacity: 0;
     visibility: hidden;
-    transition: var(--transition);
+    transition: all 0.4s var(--ease-out-expo);
   }
   
   .nav-links.active {
@@ -709,190 +830,154 @@ button {
   }
   
   .nav-link {
-    font-size: var(--font-size-2xl);
+    font-size: 1.5rem;
   }
   
-  .nav-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-  }
-  
-  .nav-toggle.active span:nth-child(2) {
-    opacity: 0;
-  }
-  
-  .nav-toggle.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+  .nav-cta {
+    display: none;
   }
 }
 
-/* ===== HERO SECTION ===== */
+/* ===== HERO ===== */
 .hero {
-  position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  padding: 8rem 1.5rem 4rem;
+  position: relative;
   overflow: hidden;
-  padding: var(--space-32) var(--space-6);
 }
 
-.hero-bg {
+/* Hero Background Image */
+.hero-bg-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
+  inset: 0;
+  background-image: var(--hero-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
 }
 
-.hero-bg-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.6;
-  filter: brightness(0.8);
-}
-
-.hero-gradient {
+.hero-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%),
-    radial-gradient(ellipse at 20% 50%, ${this.hexToRgba(colors.primary, 0.15)} 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 50%, ${this.hexToRgba(colors.secondary, 0.1)} 0%, transparent 50%);
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 10, 10, 0.9) 0%,
+    rgba(10, 10, 10, 0.7) 40%,
+    rgba(10, 10, 10, 0.5) 100%
+  );
+  z-index: 1;
 }
 
 .hero-content {
-  text-align: center;
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
+  text-align: center;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  background: rgba(255, 255, 255, 0.95);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  color: var(--gray-600);
-  margin-bottom: var(--space-6);
+  gap: 0.75rem;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
   backdrop-filter: blur(10px);
 }
 
-.badge-dot {
+.badge-pulse {
   width: 8px;
   height: 8px;
   background: #22c55e;
   border-radius: 50%;
-  animation: pulse 2s infinite;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.2); }
+  50% { opacity: 0.5; transform: scale(1.5); }
 }
 
 .hero-title {
-  font-size: clamp(var(--font-size-4xl), 8vw, var(--font-size-7xl));
-  font-weight: 800;
-  color: #1a1a2e;
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
   line-height: 1.1;
   letter-spacing: -0.03em;
-  margin-bottom: var(--space-6);
-  text-shadow: 0 2px 20px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
 }
 
-.hero-subtitle {
-  font-size: clamp(var(--font-size-lg), 2.5vw, var(--font-size-xl));
-  color: #4a4a5a;
+.title-line {
+  display: block;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
   max-width: 600px;
-  margin: 0 auto var(--space-8);
-  line-height: 1.7;
+  margin: 0 auto 2.5rem;
+  line-height: 1.8;
 }
 
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
   justify-content: center;
-  margin-bottom: var(--space-12);
-}
-
-.hero-stats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-8);
-  flex-wrap: wrap;
-}
-
-.stat {
-  text-align: center;
-}
-
-.stat-number {
-  display: block;
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  color: var(--gray-900);
-}
-
-.stat-label {
-  font-size: var(--font-size-sm);
-  color: var(--gray-500);
-}
-
-.stat-divider {
-  width: 1px;
-  height: 40px;
-  background: var(--gray-200);
+  gap: 1rem;
 }
 
 .hero-scroll {
   position: absolute;
-  bottom: var(--space-8);
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-3);
-  color: var(--gray-400);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
+  gap: 0.75rem;
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.scroll-line {
-  width: 1px;
-  height: 60px;
-  background: var(--gray-200);
+.scroll-indicator {
+  width: 24px;
+  height: 40px;
+  border: 2px solid var(--border-color);
+  border-radius: 100px;
   position: relative;
-  overflow: hidden;
 }
 
 .scroll-dot {
-  width: 3px;
-  height: 10px;
-  background: var(--primary);
-  border-radius: var(--radius-full);
   position: absolute;
-  left: -1px;
-  animation: scroll-down 2s ease-in-out infinite;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 100px;
+  animation: scrollDot 2s ease-in-out infinite;
 }
 
-@keyframes scroll-down {
-  0% { top: 0; opacity: 0; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+@keyframes scrollDot {
+  0%, 100% { top: 6px; opacity: 1; }
+  50% { top: 22px; opacity: 0.3; }
 }
 
 /* ===== BUTTONS ===== */
@@ -900,589 +985,795 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
-  font-size: var(--font-size-sm);
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-lg);
-  transition: var(--transition);
+  border-radius: 100px;
+  transition: all 0.3s var(--ease-out-expo);
   position: relative;
   overflow: hidden;
 }
 
-.btn-lg {
-  padding: var(--space-4) var(--space-8);
-  font-size: var(--font-size-base);
+.btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.btn:hover svg {
+  transform: translateX(3px);
 }
 
 .btn-primary {
   background: var(--primary);
-  color: var(--white);
+  color: white;
 }
 
 .btn-primary:hover {
-  background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--glow);
 }
 
-.btn-secondary {
-  background: var(--gray-100);
-  color: var(--gray-700);
+.btn-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
 }
 
-.btn-secondary:hover {
-  background: var(--gray-200);
-  transform: translateY(-2px);
+.btn-primary:hover .btn-glow {
+  transform: translateX(100%);
+}
+
+.btn-ghost {
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color-hover);
 }
 
 .btn-white {
-  background: var(--white);
-  color: var(--gray-900);
+  background: white;
+  color: var(--bg-primary);
 }
 
 .btn-white:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 10px 30px rgba(255,255,255,0.2);
 }
 
-.btn-outline-white {
-  background: transparent;
-  color: var(--white);
-  border: 2px solid rgba(255, 255, 255, 0.3);
+.btn-glass {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
 }
 
-.btn-outline-white:hover {
-  background: var(--white);
-  color: var(--gray-900);
-  transform: translateY(-2px);
-}
-
-.btn-arrow {
-  width: 18px;
-  height: 18px;
-  transition: var(--transition);
-}
-
-.btn:hover .btn-arrow {
-  transform: translateX(4px);
-}
-
-.btn svg:not(.btn-arrow) {
-  width: 18px;
-  height: 18px;
+.btn-glass:hover {
+  background: rgba(255,255,255,0.2);
 }
 
 /* ===== SECTIONS ===== */
-.section-header {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto var(--space-16);
+section {
+  padding: var(--section-padding) 0;
+  position: relative;
 }
 
-.section-tag {
-  display: inline-block;
-  font-size: var(--font-size-sm);
-  font-weight: 600;
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 4rem;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.section-badge-light {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.badge-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.badge-icon svg {
+  width: 100%;
+  height: 100%;
   color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-4);
+}
+
+.section-badge-light .badge-icon svg {
+  color: white;
 }
 
 .section-title {
-  font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
-  color: var(--gray-900);
+  color: var(--text-primary);
   line-height: 1.2;
   letter-spacing: -0.02em;
-  margin-bottom: var(--space-4);
+  margin-bottom: 1rem;
 }
 
-.section-subtitle {
-  font-size: var(--font-size-lg);
-  color: var(--gray-500);
+.section-title.text-left {
+  text-align: left;
+}
+
+.section-desc {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
-/* ===== SERVICES SECTION ===== */
-.services {
-  padding: var(--space-32) 0;
-  background: var(--gray-50);
-  position: relative;
-}
-
-.services-grid {
+/* ===== BENTO GRID (Services) ===== */
+.bento-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-8);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
 }
 
-.service-card {
-  background: var(--white);
-  border-radius: var(--radius-xl);
-  padding: var(--space-8);
-  transition: var(--transition);
-  border: 1px solid var(--gray-100);
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bento-card {
   position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  transition: all 0.4s var(--ease-out-expo);
   overflow: hidden;
 }
 
-.service-card::before {
-  content: '';
+.bento-featured {
+  grid-column: span 2;
+}
+
+@media (max-width: 640px) {
+  .bento-featured {
+    grid-column: span 1;
+  }
+}
+
+.bento-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+}
+
+.bento-glow {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: var(--transition);
+  height: 200px;
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-.service-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-xl);
+.bento-card:hover .bento-glow {
+  opacity: 1;
 }
 
-.service-card:hover::before {
-  transform: scaleX(1);
+.bento-content {
+  position: relative;
+  z-index: 2;
 }
 
-.service-icon {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, ${this.hexToRgba(colors.primary, 0.1)}, ${this.hexToRgba(colors.secondary, 0.1)});
-  border-radius: var(--radius-lg);
+.bento-icon {
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-6);
-  color: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
 }
 
-.service-icon svg {
-  width: 28px;
-  height: 28px;
+.bento-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
 }
 
-.service-title {
-  font-size: var(--font-size-xl);
-  font-weight: 700;
-  color: var(--gray-900);
-  margin-bottom: var(--space-3);
+.bento-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
 }
 
-.service-desc {
-  color: var(--gray-500);
+.bento-desc {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
   line-height: 1.7;
-  margin-bottom: var(--space-4);
+  margin-bottom: 1.5rem;
 }
 
-.service-link {
+.bento-link {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--font-size-sm);
+  gap: 0.5rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--primary);
-  transition: var(--transition-fast);
+  transition: gap 0.3s var(--ease-out-expo);
 }
 
-.service-link svg {
+.bento-link svg {
   width: 16px;
   height: 16px;
-  transition: var(--transition-fast);
 }
 
-.service-link:hover {
-  gap: var(--space-3);
+.bento-link:hover {
+  gap: 0.75rem;
 }
 
-.service-link:hover svg {
-  transform: translateX(4px);
-}
-
-/* ===== ABOUT SECTION ===== */
-.about {
-  padding: var(--space-32) 0;
-  position: relative;
-}
-
+/* ===== ABOUT ===== */
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-16);
+  gap: 4rem;
   align-items: center;
 }
 
-@media (max-width: 968px) {
+@media (max-width: 1024px) {
   .about-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-12);
+    gap: 3rem;
   }
 }
 
-.about-content .section-title {
-  text-align: left;
+.about-content {
+  max-width: 520px;
 }
 
 .about-text {
-  color: var(--gray-600);
-  line-height: 1.8;
-  margin-bottom: var(--space-6);
+  margin-bottom: 2rem;
+}
+
+.about-text p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.about-text p:last-child {
+  margin-bottom: 0;
+}
+
+.about-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-suffix {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin-top: 0.25rem;
 }
 
 .about-features {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  margin-top: var(--space-8);
+  gap: 1rem;
 }
 
-.feature {
+.feature-item {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  font-weight: 500;
-  color: var(--gray-700);
+  gap: 0.75rem;
+  color: var(--text-secondary);
 }
 
-.feature svg {
+.feature-check {
   width: 24px;
   height: 24px;
-  color: #22c55e;
-}
-
-.about-visual {
-  position: relative;
-}
-
-.about-image-wrapper {
-  position: relative;
-  border-radius: var(--radius-2xl);
-  overflow: hidden;
-  aspect-ratio: 4/5;
-}
-
-.about-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.about-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(34, 197, 94, 0.2);
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.placeholder-text {
-  font-size: var(--font-size-7xl);
-  font-weight: 800;
-  color: var(--white);
-  opacity: 0.5;
+.feature-check svg {
+  width: 14px;
+  height: 14px;
+  color: #22c55e;
 }
 
-.about-image-decoration {
-  position: absolute;
-  top: -20px;
-  right: -20px;
-  bottom: -20px;
-  left: -20px;
-  border: 2px solid var(--primary);
-  border-radius: var(--radius-2xl);
-  z-index: -1;
-  opacity: 0.2;
+/* About Visual */
+.about-visual {
+  display: flex;
+  justify-content: center;
 }
 
 .about-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 2rem;
+  padding: 3rem;
+  text-align: center;
+  max-width: 300px;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.about-card:hover {
+  transform: translateY(-8px);
+}
+
+.about-card-glow {
   position: absolute;
-  bottom: -30px;
-  left: -30px;
-  background: var(--white);
-  border-radius: var(--radius-xl);
-  padding: var(--space-5);
+  inset: -2px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+  border-radius: 2rem;
+  z-index: -1;
+  opacity: 0;
+  filter: blur(20px);
+  transition: opacity 0.4s ease;
+}
+
+.about-card:hover .about-card-glow {
+  opacity: 0.5;
+}
+
+.about-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin: 0 auto 1.5rem;
+}
+
+.about-placeholder {
+  width: 100px;
+  height: 100px;
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  box-shadow: var(--shadow-xl);
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 1.5rem;
+  margin: 0 auto 1.5rem;
 }
 
-.about-card-icon {
-  font-size: var(--font-size-2xl);
-}
-
-.about-card-number {
-  display: block;
-  font-size: var(--font-size-xl);
+.about-placeholder span {
+  font-family: var(--font-heading);
+  font-size: 3rem;
   font-weight: 700;
-  color: var(--gray-900);
+  color: white;
 }
 
-.about-card-label {
-  font-size: var(--font-size-sm);
-  color: var(--gray-500);
+.about-card-content h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
 }
 
-/* ===== TESTIMONIALS SECTION ===== */
+.about-card-content p {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+/* ===== GALLERY ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+}
+
+.gallery-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.gallery-item:hover .gallery-image {
+  transform: scale(1.1);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-zoom {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  color: var(--bg-primary);
+  transition: transform 0.3s var(--ease-out-back);
+}
+
+.gallery-zoom svg {
+  width: 24px;
+  height: 24px;
+}
+
+.gallery-zoom:hover {
+  transform: scale(1.1);
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.lightbox.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-close svg {
+  width: 24px;
+  height: 24px;
+}
+
+.lightbox-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+/* ===== TESTIMONIALS ===== */
 .testimonials {
-  padding: var(--space-32) 0;
-  background: var(--gray-50);
+  background: var(--bg-secondary);
 }
 
 .testimonials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: var(--space-8);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
 .testimonial-card {
-  background: var(--white);
-  border-radius: var(--radius-xl);
-  padding: var(--space-8);
-  border: 1px solid var(--gray-100);
-  transition: var(--transition);
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  transition: all 0.4s var(--ease-out-expo);
+  overflow: hidden;
 }
 
 .testimonial-card:hover {
+  border-color: var(--primary);
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
 }
 
-.testimonial-rating {
+.testimonial-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.testimonial-card:hover .testimonial-glow {
+  opacity: 1;
+}
+
+.testimonial-content {
+  position: relative;
+  z-index: 2;
+}
+
+.testimonial-stars {
   color: #fbbf24;
-  font-size: var(--font-size-lg);
-  margin-bottom: var(--space-4);
-  letter-spacing: 2px;
+  font-size: 1.125rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
 }
 
 .testimonial-quote {
-  font-size: var(--font-size-lg);
-  color: var(--gray-700);
-  line-height: 1.7;
-  margin-bottom: var(--space-6);
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
   font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  border: none;
+  padding: 0;
 }
 
 .testimonial-author {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 0.75rem;
 }
 
 .author-avatar {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--white);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 50%;
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
   font-weight: 600;
-  font-size: var(--font-size-lg);
+  color: white;
+  text-transform: uppercase;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .author-name {
-  display: block;
   font-weight: 600;
-  color: var(--gray-900);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
 }
 
 .author-role {
-  font-size: var(--font-size-sm);
-  color: var(--gray-500);
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
 }
 
-/* ===== CTA SECTION ===== */
+/* ===== CTA ===== */
 .cta {
   position: relative;
-  padding: var(--space-32) 0;
-  background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+  background: linear-gradient(135deg, var(--primary), ${this.darkenColor(colors.primary, 30)});
   overflow: hidden;
 }
 
 .cta-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
+  inset: 0;
+  overflow: hidden;
 }
 
 .cta-glow {
   position: absolute;
+  width: 600px;
+  height: 600px;
   border-radius: 50%;
   filter: blur(100px);
+  opacity: 0.3;
 }
 
 .cta-glow-1 {
-  width: 400px;
-  height: 400px;
-  background: var(--primary);
-  opacity: 0.2;
-  top: -100px;
-  right: -100px;
+  background: white;
+  top: -300px;
+  right: -200px;
 }
 
 .cta-glow-2 {
-  width: 300px;
-  height: 300px;
-  background: var(--secondary);
-  opacity: 0.15;
-  bottom: -50px;
-  left: 10%;
+  background: var(--accent);
+  bottom: -300px;
+  left: -200px;
 }
 
 .cta-content {
   position: relative;
-  z-index: 1;
   text-align: center;
-  max-width: 700px;
+  max-width: 600px;
   margin: 0 auto;
+  color: white;
 }
 
 .cta-title {
-  font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
-  color: var(--white);
   line-height: 1.2;
-  margin-bottom: var(--space-4);
+  margin-bottom: 1rem;
 }
 
-.cta-subtitle {
-  font-size: var(--font-size-lg);
-  color: var(--gray-400);
-  margin-bottom: var(--space-8);
+.cta-desc {
+  font-size: 1.125rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
 }
 
 .cta-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
   justify-content: center;
-  margin-bottom: var(--space-8);
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.cta-contact-info {
+.cta-info {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
   justify-content: center;
+  gap: 2rem;
 }
 
-.contact-item {
+.info-item {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  color: var(--gray-400);
-  font-size: var(--font-size-sm);
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  opacity: 0.9;
 }
 
-.contact-item svg {
+.info-item svg {
   width: 18px;
   height: 18px;
-  color: var(--primary-light);
+  opacity: 0.7;
 }
 
 /* ===== FOOTER ===== */
 .footer {
-  background: var(--gray-900);
-  padding: var(--space-16) 0 var(--space-8);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: 4rem 0 2rem;
 }
 
-.footer-content {
+.footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr auto;
-  gap: var(--space-12);
-  padding-bottom: var(--space-12);
-  border-bottom: 1px solid var(--gray-800);
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 3rem;
 }
 
-@media (max-width: 968px) {
-  .footer-content {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .footer-content {
+@media (max-width: 768px) {
+  .footer-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
-}
-
-.footer-brand {
-  max-width: 300px;
 }
 
 .footer-logo {
   height: 40px;
-  margin-bottom: var(--space-4);
+  width: auto;
+  margin-bottom: 1rem;
 }
 
 .footer-logo-text {
-  font-size: var(--font-size-xl);
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--white);
-  display: block;
-  margin-bottom: var(--space-4);
+  color: var(--text-primary);
 }
 
-.footer-tagline {
-  color: var(--gray-500);
-  font-size: var(--font-size-sm);
-  line-height: 1.7;
-}
-
-.footer-column h4 {
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--white);
-  margin-bottom: var(--space-4);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.footer-column a,
-.footer-column span {
-  display: block;
-  color: var(--gray-500);
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--space-3);
-  transition: var(--transition-fast);
-}
-
-.footer-column a:hover {
-  color: var(--white);
+.footer-desc {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  margin-bottom: 1.5rem;
+  max-width: 300px;
 }
 
 .footer-social {
   display: flex;
-  gap: var(--space-3);
+  gap: 0.75rem;
 }
 
 .social-link {
   width: 40px;
   height: 40px;
-  background: var(--gray-800);
-  border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gray-400);
-  transition: var(--transition);
-}
-
-.social-link:hover {
-  background: var(--primary);
-  color: var(--white);
-  transform: translateY(-2px);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
 }
 
 .social-link svg {
@@ -1490,30 +1781,108 @@ button {
   height: 18px;
 }
 
-.footer-bottom {
-  padding-top: var(--space-8);
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-4);
+.social-link:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  transform: translateY(-3px);
 }
 
-.footer-bottom p {
-  color: var(--gray-600);
-  font-size: var(--font-size-sm);
+.footer-links h4 {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.footer-links a,
+.footer-links span {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--text-primary);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 640px) {
+  .footer-bottom {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+
+/* ===== BACK TO TOP ===== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  color: var(--text-secondary);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  transform: translateY(-3px);
+}
+
+.back-to-top svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* ===== ANIMATIONS ===== */
-.animate-fade-up {
+[data-animate] {
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeUp 0.8s ease forwards;
 }
 
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
-.delay-3 { animation-delay: 0.3s; }
-.delay-4 { animation-delay: 0.4s; }
+[data-animate="fade-up"].animated {
+  animation: fadeUp 0.8s var(--ease-out-expo) forwards;
+}
+
+[data-animate="zoom-in"] {
+  transform: scale(0.9);
+}
+
+[data-animate="zoom-in"].animated {
+  animation: zoomIn 0.8s var(--ease-out-expo) forwards;
+}
 
 @keyframes fadeUp {
   to {
@@ -1522,241 +1891,233 @@ button {
   }
 }
 
-/* Elements with scroll animation (handled by GSAP) */
-[data-animate] {
-  opacity: 0;
+@keyframes zoomIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-[data-animate="fade-up"] {
-  transform: translateY(40px);
-}
-
-[data-animate="scale-in"] {
-  transform: scale(0.9);
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .hero-stats {
-    gap: var(--space-6);
-  }
-  
-  .stat-divider {
-    display: none;
-  }
-  
-  .hero-scroll {
-    display: none;
-  }
-  
-  .about-card {
-    position: relative;
-    bottom: 0;
-    left: 0;
-    margin-top: var(--space-6);
-  }
+/* ===== 3D TILT ===== */
+[data-tilt] {
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
 }
 `;
   }
 
   private generateJS(input: TemplateInput): string {
-    return `/**
- * STUNNING Premium Website - Interactive Scripts
+    return `/*
+ * ULTIMATE Premium Website Template v3.0
+ * Animations & Interactions
  */
 
-// Wait for DOM
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize GSAP
+  // Register GSAP plugins
   gsap.registerPlugin(ScrollTrigger);
+
+  // ===== SPOTLIGHT EFFECT =====
+  const spotlight = document.getElementById('spotlight');
   
-  // Cursor Glow Effect (Desktop)
-  const cursor = document.querySelector('.cursor-glow');
-  if (window.matchMedia('(hover: hover)').matches && cursor) {
+  if (spotlight && window.matchMedia('(hover: hover)').matches) {
     document.addEventListener('mousemove', (e) => {
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.5,
-        ease: 'power2.out'
-      });
+      spotlight.style.left = e.clientX + 'px';
+      spotlight.style.top = e.clientY + 'px';
     });
   }
-  
-  // Navigation Scroll Effect
+
+  // ===== NAVIGATION =====
   const nav = document.getElementById('nav');
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  // Scroll effect
+  let lastScroll = 0;
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 50) {
       nav.classList.add('scrolled');
     } else {
       nav.classList.remove('scrolled');
     }
+    
+    lastScroll = currentScroll;
   });
-  
-  // Mobile Navigation Toggle
-  const navToggle = document.getElementById('navToggle');
-  const navLinks = document.getElementById('navLinks');
-  
-  navToggle?.addEventListener('click', () => {
-    navToggle.classList.toggle('active');
-    navLinks.classList.toggle('active');
-    document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
-  });
-  
-  // Close mobile menu on link click
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      navToggle?.classList.remove('active');
-      navLinks?.classList.remove('active');
-      document.body.style.overflow = '';
+
+  // Mobile toggle
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('active');
+      navLinks.classList.toggle('active');
+      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
     });
-  });
+
+    // Close on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  // ===== SCROLL ANIMATIONS =====
+  const animateElements = document.querySelectorAll('[data-animate]');
   
-  // Scroll Animations with GSAP
-  document.querySelectorAll('[data-animate]').forEach(el => {
-    const animation = el.dataset.animate;
+  animateElements.forEach(el => {
     const delay = parseFloat(el.dataset.delay) || 0;
     
-    const props = {
-      opacity: 1,
-      duration: 0.8,
-      delay: delay,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 85%',
-        toggleActions: 'play none none none'
+    gsap.fromTo(el, 
+      { 
+        opacity: 0, 
+        y: el.dataset.animate === 'zoom-in' ? 0 : 40,
+        scale: el.dataset.animate === 'zoom-in' ? 0.9 : 1
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        delay: delay,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          once: true,
+          onEnter: () => el.classList.add('animated')
+        }
       }
-    };
-    
-    if (animation === 'fade-up') {
-      props.y = 0;
-    } else if (animation === 'scale-in') {
-      props.scale = 1;
-    }
-    
-    gsap.to(el, props);
+    );
   });
+
+  // ===== COUNTER ANIMATION =====
+  const counters = document.querySelectorAll('[data-count]');
   
-  // Counter Animation for Stats
-  document.querySelectorAll('.stat-number').forEach(counter => {
+  counters.forEach(counter => {
     const target = parseInt(counter.dataset.count);
     
     ScrollTrigger.create({
       trigger: counter,
       start: 'top 85%',
+      once: true,
       onEnter: () => {
         gsap.to(counter, {
-          textContent: target,
+          innerHTML: target,
           duration: 2,
           ease: 'power2.out',
-          snap: { textContent: 1 },
+          snap: { innerHTML: 1 },
           onUpdate: function() {
-            counter.textContent = Math.round(this.targets()[0].textContent);
+            counter.innerHTML = Math.round(this.targets()[0].innerHTML);
           }
         });
-      },
-      once: true
+      }
     });
   });
+
+  // ===== 3D TILT EFFECT =====
+  const tiltCards = document.querySelectorAll('[data-tilt]');
   
-  // Parallax Effect for Hero
-  gsap.to('.hero-bg-img', {
-    yPercent: 30,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true
-    }
-  });
+  if (window.matchMedia('(hover: hover)').matches) {
+    tiltCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        
+        card.style.transform = \`perspective(1000px) rotateX(\${rotateX}deg) rotateY(\${rotateY}deg)\`;
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      });
+    });
+  }
+
+  // ===== BACK TO TOP =====
+  const backToTop = document.getElementById('backToTop');
   
-  // Floating Shapes Animation Enhancement
-  gsap.to('.shape-1', {
-    x: 50,
-    y: -30,
-    rotation: 10,
-    duration: 20,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut'
-  });
-  
-  gsap.to('.shape-2', {
-    x: -30,
-    y: 50,
-    rotation: -10,
-    duration: 25,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut'
-  });
-  
-  // Smooth scroll for anchor links
+  if (backToTop) {
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 500) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+    
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // ===== SMOOTH SCROLL =====
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
       const target = document.querySelector(this.getAttribute('href'));
       if (target) {
-        const offset = 80;
-        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
-        window.scrollTo({
-          top: targetPosition,
-          behavior: 'smooth'
-        });
+        target.scrollIntoView({ behavior: 'smooth' });
       }
     });
   });
+
+  // ===== PARALLAX ORBS =====
+  const orbs = document.querySelectorAll('.orb');
   
-  // Button hover ripple effect
-  document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('mouseenter', function(e) {
-      const x = e.clientX - this.getBoundingClientRect().left;
-      const y = e.clientY - this.getBoundingClientRect().top;
-      
-      const ripple = document.createElement('span');
-      ripple.style.cssText = \`
-        position: absolute;
-        background: rgba(255,255,255,0.3);
-        border-radius: 50%;
-        transform: scale(0);
-        animation: ripple 0.6s ease-out forwards;
-        pointer-events: none;
-        width: 100px;
-        height: 100px;
-        left: \${x - 50}px;
-        top: \${y - 50}px;
-      \`;
-      
-      this.appendChild(ripple);
-      
-      setTimeout(() => ripple.remove(), 600);
+  if (window.matchMedia('(hover: hover)').matches && orbs.length) {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.pageYOffset;
+      orbs.forEach((orb, i) => {
+        const speed = (i + 1) * 0.05;
+        orb.style.transform = \`translateY(\${scrollY * speed}px)\`;
+      });
     });
-  });
-  
-  // Add ripple animation keyframes
-  const style = document.createElement('style');
-  style.textContent = \`
-    @keyframes ripple {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
-    }
-  \`;
-  document.head.appendChild(style);
-  
-  console.log('✨ Premium website initialized');
+  }
+
+  console.log('✨ Ultimate Premium Template v3.0 Loaded');
+});
+
+// ===== LIGHTBOX =====
+function openLightbox(src) {
+  const lightbox = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImage');
+  if (lightbox && img) {
+    img.src = src;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  if (lightbox) {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+// Close lightbox on escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
 });
 `;
   }
 
-  // Helper functions for color manipulation
-  private hexToRgba(hex: string, alpha: number): string {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  // ===== UTILITY FUNCTIONS =====
+  private hexToRgb(hex: string): string {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (result) {
+      return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
+    }
+    return '99, 102, 241'; // fallback
   }
 
   private darkenColor(hex: string, percent: number): string {
@@ -1765,7 +2126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const R = Math.max((num >> 16) - amt, 0);
     const G = Math.max((num >> 8 & 0x00FF) - amt, 0);
     const B = Math.max((num & 0x0000FF) - amt, 0);
-    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
   }
 
   private lightenColor(hex: string, percent: number): string {
@@ -1774,8 +2135,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const R = Math.min((num >> 16) + amt, 255);
     const G = Math.min((num >> 8 & 0x00FF) + amt, 255);
     const B = Math.min((num & 0x0000FF) + amt, 255);
-    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
   }
 }
 
-export const premiumTemplateGenerator = new PremiumTemplateGenerator();
+// Export instance as premiumTemplateGenerator (compatible with existing imports)
+export const premiumTemplateGenerator = new UltimatePremiumTemplateGenerator();
+export { UltimatePremiumTemplateGenerator };
