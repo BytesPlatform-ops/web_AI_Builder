@@ -1,0 +1,196 @@
+// Prisma Schema for AI Website Builder
+// Database: PostgreSQL (via Supabase)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Form submissions from users (lead capture)
+model FormSubmission {
+  id              String   @id @default(uuid())
+  businessName    String
+  tagline         String?
+  about           String
+  industry        String?
+  services        String[] // Array of services
+  targetAudience  String?
+  
+  // Contact information
+  email           String
+  phone           String?
+  address         String?
+  socialLinks     Json?    // {facebook: "", instagram: "", etc}
+  
+  // Uploaded files metadata
+  logoUrl         String?  // URL in Supabase Storage
+  heroImageUrl    String?
+  additionalImages String[] // Array of image URLs
+  
+  // Form status
+  status          FormStatus @default(PENDING)
+  
+  // Relationships
+  generatedWebsite GeneratedWebsite?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([email])
+  @@index([createdAt])
+}
+
+// Generated websites
+model GeneratedWebsite {
+  id              String   @id @default(uuid())
+  
+  // User credentials
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Form submission reference
+  formSubmissionId String  @unique
+  formSubmission  FormSubmission @relation(fields: [formSubmissionId], references: [id])
+  
+  // Website data
+  businessName    String
+  templateId      String   @default("universal-premium")
+  
+  // Theme/colors extracted from logo
+  primaryColor    String?
+  secondaryColor  String?
+  accentColor     String?
+  
+  // Generated files location
+  filesPath       String?  // Path in storage
+  previewUrl      String?  // Preview URL before publish
+  
+  // Deployment info
+  deploymentUrl   String?  // Live URL after publish
+  deploymentProvider String? // 'netlify' or 'vercel'
+  deployedAt      DateTime?
+  
+  // Status
+  status          WebsiteStatus @default(GENERATING)
+  
+  // Sales person assignment
+  assignedToId    String?
+  assignedTo      SalesPerson? @relation(fields: [assignedToId], references: [id])
+  sentToSalesAt   DateTime?
+  sentToClientAt  DateTime?
+  
+  // Notes from sales person
+  salesNotes      String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([assignedToId])
+  @@index([userId])
+}
+
+// User accounts (for login after receiving credentials)
+model User {
+  id              String   @id @default(uuid())
+  username        String   @unique
+  email           String   @unique
+  passwordHash    String
+  
+  // Relationship - can have multiple generated websites
+  generatedWebsites GeneratedWebsite[]
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  lastLoginAt     DateTime?
+  
+  @@index([email])
+  @@index([username])
+}
+
+// Sales person accounts
+model SalesPerson {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  
+  // Assigned websites
+  assignedWebsites GeneratedWebsite[]
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([email])
+}
+
+// Email logs for tracking
+model EmailLog {
+  id              String   @id @default(uuid())
+  to              String
+  from            String
+  subject         String
+  emailType       EmailType
+  status          EmailStatus @default(PENDING)
+  
+  // Related records
+  websiteId       String?
+  formSubmissionId String?
+  
+  // Email content (optional)
+  htmlContent     String?
+  
+  // Delivery tracking
+  sentAt          DateTime?
+  openedAt        DateTime?
+  clickedAt       DateTime?
+  
+  // Error handling
+  errorMessage    String?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([emailType])
+  @@index([status])
+  @@index([to])
+}
+
+// Enums
+enum FormStatus {
+  PENDING           // Just submitted
+  GENERATING        // Website being generated
+  GENERATED         // Website ready, sent to sales
+  SENT_TO_CLIENT    // Sales sent to client
+  CLIENT_LOGGED_IN  // Client accessed their site
+  PUBLISHED         // Client published the site
+}
+
+enum WebsiteStatus {
+  GENERATING        // AI is building the site
+  READY             // Ready for sales review
+  SENT_TO_CLIENT    // Sent to client
+  PUBLISHED         // Published to Netlify/Vercel
+  FAILED            // Generation failed
+}
+
+enum EmailType {
+  SALES_NOTIFICATION    // New website ready for sales
+  CLIENT_CREDENTIALS    // Credentials sent to client
+  WEBSITE_PUBLISHED     // Confirmation after publish
+  PASSWORD_RESET        // Password reset link
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  FAILED
+}

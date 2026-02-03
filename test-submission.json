@@ -1,0 +1,17 @@
+{
+  "businessName": "Elite Fitness Studio",
+  "businessType": "gym",
+  "description": "Premium fitness center offering personal training, group classes, and state-of-the-art equipment",
+  "industry": "Health & Fitness",
+  "services": ["Personal Training", "Group Classes", "Yoga"],
+  "targetAudience": "Health-conscious individuals aged 25-45",
+  "email": "info@elitefitness.com",
+  "phone": "(555) 789-0123",
+  "address": "456 Fitness Ave, Downtown",
+  "logoUrl": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop",
+  "heroImageUrl": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&h=1080&fit=crop",
+  "socialLinks": {
+    "facebook": "https://facebook.com/elitefitness",
+    "instagram": "https://instagram.com/elitefitness"
+  }
+}
