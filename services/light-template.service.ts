@@ -120,12 +120,14 @@ class AuroraLightTemplateGenerator {
       </div>
     </section>` : '';
 
-    // Testimonials section
+    // Testimonials section - Premium 3D Carousel
     const testimonialsHTML = content.testimonials && content.testimonials.length > 0 ? `
-    <!-- Testimonials Section -->
+    <!-- Testimonials Section - Premium 3D Carousel -->
     <section class="section testimonials" id="testimonials">
       <div class="testimonials-bg">
         <div class="testimonials-gradient"></div>
+        <div class="testimonials-glow testimonials-glow-1"></div>
+        <div class="testimonials-glow testimonials-glow-2"></div>
       </div>
       <div class="container">
         <div class="section-header light" data-animate="fade-up">
@@ -134,34 +136,65 @@ class AuroraLightTemplateGenerator {
             Testimonials
           </span>
           <h2 class="section-title light">
-            <span class="title-word" data-animate="word">Loved</span>
+            <span class="title-word" data-animate="word">Trusted</span>
             <span class="title-word" data-animate="word">by</span>
-            <span class="title-word gradient-text-light" data-animate="word">Everyone</span>
+            <span class="title-word gradient-text-light" data-animate="word">Hundreds</span>
           </h2>
+          <p class="section-desc light">Real stories from real customers who love what we do.</p>
         </div>
         
-        <div class="testimonials-carousel">
-          <div class="testimonials-track" id="testimonialsTrack">
-            ${content.testimonials.map((testimonial: { quote: string; author?: string; authorName?: string; role?: string; authorRole?: string }, i: number) => `
-            <div class="testimonial-card" data-animate="fade-up" data-delay="${i * 0.15}" data-tilt>
-              <div class="testimonial-quote-mark">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.06 1.514-1.86 2.557-2.4L18.49 5c-.8.396-1.555.898-2.26 1.505-.708.607-1.34 1.305-1.894 2.094-.556.79-.97 1.68-1.24 2.69-.273 1-.345 2.04-.217 3.1.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l-.007.003z"/></svg>
-              </div>
-              <div class="testimonial-rating">
-                ${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'.repeat(5)}
-              </div>
-              <blockquote class="testimonial-text">"${testimonial.quote}"</blockquote>
-              <div class="testimonial-author">
-                <div class="author-avatar">
-                  <span>${((testimonial.authorName || testimonial.author) || 'A').charAt(0).toUpperCase()}</span>
+        <!-- 3D Carousel - Infinite Scroll -->
+        <div class="testimonials-marquee" data-animate="fade-up" data-delay="0.2">
+          <div class="marquee-container">
+            <div class="marquee-track" id="testimonialTrack3D">
+              ${[...content.testimonials, ...content.testimonials].map((testimonial: { quote: string; author?: string; authorName?: string; role?: string; authorRole?: string }, i: number) => `
+              <div class="testimonial-card-3d" data-index="${i}">
+                <div class="card-3d-inner">
+                  <div class="card-3d-glow"></div>
+                  <div class="card-3d-border"></div>
+                  
+                  <!-- Quote Icon -->
+                  <div class="quote-icon-3d">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.06 1.514-1.86 2.557-2.4L18.49 5c-.8.396-1.555.898-2.26 1.505-.708.607-1.34 1.305-1.894 2.094-.556.79-.97 1.68-1.24 2.69-.273 1-.345 2.04-.217 3.1.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l-.007.003z"/></svg>
+                  </div>
+                  
+                  <!-- Animated Stars -->
+                  <div class="star-rating-3d">
+                    ${[1,2,3,4,5].map(star => `
+                    <svg class="star-3d star-3d-${star}" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    `).join('')}
+                  </div>
+                  
+                  <!-- Quote Text -->
+                  <blockquote class="quote-text-3d">"${testimonial.quote}"</blockquote>
+                  
+                  <!-- Author -->
+                  <div class="author-section-3d">
+                    <div class="author-avatar-3d">
+                      <div class="avatar-gradient-3d">
+                        <span>${((testimonial.authorName || testimonial.author) || 'A').charAt(0).toUpperCase()}</span>
+                      </div>
+                      <div class="avatar-ring-3d"></div>
+                    </div>
+                    <div class="author-details-3d">
+                      <span class="author-name-3d">${(testimonial.authorName || testimonial.author) || 'Happy Customer'}</span>
+                      <span class="author-role-3d">${(testimonial.authorRole || testimonial.role) || 'Verified Client'}</span>
+                    </div>
+                    <div class="verified-badge-3d">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </div>
                 </div>
-                <div class="author-info">
-                  <strong>${(testimonial.authorName || testimonial.author) || 'Happy Customer'}</strong>
-                  <span>${(testimonial.authorRole || testimonial.role) || 'Valued Client'}</span>
-                </div>
               </div>
+              `).join('')}
             </div>
-            `).join('')}
+          </div>
+        </div>
+          
+          <!-- Swipe Hint (Mobile) -->
+          <div class="swipe-hint-3d">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <span>Swipe to explore</span>
           </div>
         </div>
       </div>
@@ -801,6 +834,11 @@ body:hover .cursor-dot { opacity: 1; }
 .btn-block { width: 100%; }
 .btn-block .btn-bg { border-radius: 100px; }
 
+/* Button Ripple Effect */
+.btn { position: relative; overflow: hidden; }
+.btn-ripple { position: absolute; border-radius: 50%; background: rgba(var(--primary-rgb), 0.3); transform: scale(0); animation: ripple 0.6s ease-out forwards; pointer-events: none; }
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
 .section { padding: var(--section-padding) 0; position: relative; }
 .section-header { margin-bottom: 60px; }
 .section-header.center { text-align: center; max-width: 700px; margin-left: auto; margin-right: auto; }
@@ -811,7 +849,7 @@ body:hover .cursor-dot { opacity: 1; }
 .section-title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 20px; }
 .section-title.light { color: white; }
 .title-word { display: inline-block; }
-.gradient-text-light { background: linear-gradient(135deg, #fff, rgba(255,255,255,0.7)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.gradient-text-light { background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .section-desc { font-size: 1.125rem; color: var(--text-secondary); line-height: 1.7; }
 
 .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
@@ -902,25 +940,77 @@ body:hover .cursor-dot { opacity: 1; }
 .testimonials { position: relative; overflow: hidden; padding: var(--section-padding) 0; }
 .testimonials-bg { position: absolute; inset: 0; z-index: 0; }
 .testimonials-gradient { position: absolute; inset: 0; background: linear-gradient(135deg, #1e293b, #0f172a 50%, #1e293b); }
+.testimonials-glow { position: absolute; width: 500px; height: 500px; border-radius: 50%; filter: blur(120px); opacity: 0.4; }
+.testimonials-glow-1 { background: var(--primary); top: -200px; left: -100px; animation: testimonialGlow 8s ease-in-out infinite; }
+.testimonials-glow-2 { background: var(--accent); bottom: -200px; right: -100px; animation: testimonialGlow 8s ease-in-out infinite 4s; }
+@keyframes testimonialGlow { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.2); opacity: 0.6; } }
 .testimonials .section-header.light { text-align: center; position: relative; z-index: 2; margin-bottom: 50px; }
-.testimonials-carousel { position: relative; z-index: 2; overflow: hidden; margin: 0 -20px; padding: 20px; }
-.testimonials-track { display: flex; gap: 24px; animation: scroll 50s linear infinite; }
-@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-.testimonials-track:hover { animation-play-state: paused; }
-.testimonial-card { flex: 0 0 380px; padding: 28px 32px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; transition: all 0.4s var(--ease-out-expo); position: relative; overflow: hidden; }
-.testimonial-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)); opacity: 0; transition: opacity 0.4s ease; }
-.testimonial-card:hover::before { opacity: 1; }
-.testimonial-card:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-6px); border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
-.testimonial-quote-mark { margin-bottom: 20px; }
-.testimonial-quote-mark svg { width: 40px; height: 40px; color: var(--primary); opacity: 0.5; }
-.testimonial-rating { display: flex; gap: 4px; margin-bottom: 20px; }
-.testimonial-rating svg { width: 18px; height: 18px; color: #fbbf24; }
-.testimonial-text { font-size: 1rem; color: rgba(255, 255, 255, 0.9); line-height: 1.7; margin-bottom: 24px; }
-.testimonial-author { display: flex; align-items: center; gap: 14px; }
-.author-avatar { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; font-weight: 700; color: white; font-size: 1.125rem; }
-.author-info strong { display: block; font-size: 1rem; font-weight: 600; color: white; margin-bottom: 2px; }
-.author-info span { font-size: 0.875rem; color: rgba(255, 255, 255, 0.6); }
-@media (max-width: 640px) { .testimonial-card { flex: 0 0 300px; padding: 24px; } }
+.section-desc.light { color: rgba(255, 255, 255, 0.7); }
+
+/* Testimonials Marquee - Infinite Scroll */
+.testimonials-marquee { position: relative; z-index: 2; padding: 20px 0; overflow: hidden; }
+.marquee-container { overflow: hidden; margin: 0 -1rem; padding: 1rem; }
+.marquee-track { display: flex; gap: 1.5rem; animation: marqueeScroll 30s linear infinite; width: max-content; }
+.marquee-track:hover { animation-play-state: paused; }
+@keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* 3D Card */
+.testimonial-card-3d { flex: 0 0 380px; max-width: 420px; perspective: 1000px; }
+@media (max-width: 768px) { .testimonial-card-3d { flex: 0 0 320px; } }
+
+.card-3d-inner { position: relative; background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); border: 1px solid rgba(255,255,255,0.12); border-radius: 24px; padding: 2rem; transform-style: preserve-3d; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); overflow: hidden; }
+.testimonial-card-3d:hover .card-3d-inner { transform: translateY(-8px) rotateX(2deg); border-color: rgba(var(--primary-rgb), 0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 60px rgba(var(--primary-rgb), 0.2); }
+
+.card-3d-glow { position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(var(--primary-rgb), 0.2), transparent 60%); opacity: 0; transition: opacity 0.4s ease; }
+.testimonial-card-3d:hover .card-3d-glow { opacity: 1; }
+
+.card-3d-border { position: absolute; inset: -1px; background: linear-gradient(145deg, rgba(var(--primary-rgb), 0.5), transparent 50%); border-radius: 24px; opacity: 0; transition: opacity 0.4s ease; z-index: -1; }
+.testimonial-card-3d:hover .card-3d-border { opacity: 1; }
+
+/* Quote Icon */
+.quote-icon-3d { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; margin-bottom: 1.25rem; transform: rotate(-5deg); }
+.quote-icon-3d svg { width: 24px; height: 24px; color: white; }
+
+/* Animated Stars */
+.star-rating-3d { display: flex; gap: 4px; margin-bottom: 1rem; }
+.star-3d { width: 20px; height: 20px; color: #fbbf24; opacity: 0; transform: scale(0) rotate(-180deg); animation: starPop3d 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.star-3d-1 { animation-delay: 0.1s; }
+.star-3d-2 { animation-delay: 0.2s; }
+.star-3d-3 { animation-delay: 0.3s; }
+.star-3d-4 { animation-delay: 0.4s; }
+.star-3d-5 { animation-delay: 0.5s; }
+@keyframes starPop3d { to { opacity: 1; transform: scale(1) rotate(0deg); } }
+
+/* Quote Text */
+.quote-text-3d { font-size: 1.0625rem; color: rgba(255, 255, 255, 0.9); line-height: 1.75; margin-bottom: 1.5rem; font-style: italic; border: none; padding: 0; }
+
+/* Author Section */
+.author-section-3d { display: flex; align-items: center; gap: 0.875rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.1); }
+.author-avatar-3d { position: relative; width: 52px; height: 52px; }
+.avatar-gradient-3d { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 50%; font-size: 1.125rem; font-weight: 700; color: white; }
+.avatar-ring-3d { position: absolute; inset: -3px; border: 2px solid rgba(var(--primary-rgb), 0.4); border-radius: 50%; animation: ringPulse3d 2s ease-in-out infinite; }
+@keyframes ringPulse3d { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.2; } }
+
+.author-details-3d { flex: 1; }
+.author-name-3d { display: block; font-weight: 600; color: white; font-size: 0.9375rem; margin-bottom: 2px; }
+.author-role-3d { display: block; font-size: 0.8125rem; color: rgba(255, 255, 255, 0.6); }
+
+.verified-badge-3d { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: rgba(34, 197, 94, 0.2); border-radius: 50%; }
+.verified-badge-3d svg { width: 16px; height: 16px; color: #22c55e; }
+
+/* Navigation Dots */
+.carousel-nav-3d { display: flex; justify-content: center; gap: 10px; margin-top: 2rem; }
+.carousel-dot-3d { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); border: none; cursor: pointer; transition: all 0.3s ease; position: relative; }
+.carousel-dot-3d::before { content: ''; position: absolute; inset: -4px; border: 2px solid transparent; border-radius: 50%; transition: all 0.3s ease; }
+.carousel-dot-3d.active { background: var(--primary); transform: scale(1.2); }
+.carousel-dot-3d.active::before { border-color: rgba(var(--primary-rgb), 0.4); }
+.carousel-dot-3d:hover:not(.active) { background: rgba(255,255,255,0.5); }
+
+/* Swipe Hint */
+.swipe-hint-3d { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 1.5rem; color: rgba(255,255,255,0.5); font-size: 0.8125rem; animation: swipeHint3d 2s ease-in-out infinite; }
+.swipe-hint-3d svg { width: 18px; height: 18px; }
+@keyframes swipeHint3d { 0%, 100% { transform: translateX(0); opacity: 0.5; } 50% { transform: translateX(10px); opacity: 1; } }
+@media (min-width: 768px) { .swipe-hint-3d { display: none; } }
 
 .cta { position: relative; overflow: hidden; text-align: center; padding: var(--section-padding) 0; }
 .cta-bg { position: absolute; inset: 0; background: linear-gradient(160deg, #1e293b 0%, #0f172a 50%, #1e293b 100%); z-index: 0; }
@@ -1013,12 +1103,118 @@ body:hover .cursor-dot { opacity: 1; }
 [data-animate] { opacity: 0; }
 [data-animate].animated { opacity: 1; }
 
+/* Reduced Motion - Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .shape, .hero-aurora, .testimonials-glow { animation: none !important; }
+  [data-tilt] { transform: none !important; }
+}
+
+/* Print Styles */
+@media print { .nav, .cursor, .cursor-follow, .hero-aurora, #backToTop { display: none !important; } .hero { min-height: auto; padding: 2rem 0; } }
+
+/* Focus Styles - Accessibility */
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.btn:focus-visible { box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.3); }
+
 @media (max-width: 768px) { .hero { padding: 120px 0 80px; } .hero-stats { gap: 24px; } .stat-divider { display: none; } .hero-scroll { display: none; } .contact-form-wrapper { padding: 24px; } }
 `;
   }
 
   private generateJS(input: LightTemplateInput): string {
-    return `document.addEventListener('DOMContentLoaded',()=>{gsap.registerPlugin(ScrollTrigger);const spotlight=document.getElementById('cursorSpotlight'),cursorDot=document.getElementById('cursorDot'),magneticElements=document.querySelectorAll('.magnetic');if(spotlight&&cursorDot&&window.matchMedia('(hover: hover)').matches){let mouseX=0,mouseY=0,spotX=0,spotY=0,dotX=0,dotY=0;document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});function animateCursor(){spotX+=(mouseX-spotX)*0.08;spotY+=(mouseY-spotY)*0.08;spotlight.style.left=spotX+'px';spotlight.style.top=spotY+'px';dotX+=(mouseX-dotX)*0.2;dotY+=(mouseY-dotY)*0.2;cursorDot.style.left=dotX+'px';cursorDot.style.top=dotY+'px';requestAnimationFrame(animateCursor)}animateCursor();magneticElements.forEach(el=>{el.addEventListener('mousemove',e=>{const rect=el.getBoundingClientRect(),x=e.clientX-rect.left-rect.width/2,y=e.clientY-rect.top-rect.height/2;gsap.to(el,{x:x*0.3,y:y*0.3,duration:0.3,ease:'power2.out'});cursorDot.classList.add('hover')});el.addEventListener('mouseleave',()=>{gsap.to(el,{x:0,y:0,duration:0.5,ease:'elastic.out(1, 0.3)'});cursorDot.classList.remove('hover')})})}const particlesContainer=document.getElementById('particles');if(particlesContainer){for(let i=0;i<30;i++){const particle=document.createElement('div');particle.className='particle';particle.style.left=Math.random()*100+'%';particle.style.top=Math.random()*100+'%';particle.style.animationDelay=Math.random()*15+'s';particle.style.animationDuration=(15+Math.random()*10)+'s';particlesContainer.appendChild(particle)}}const header=document.getElementById('header'),menuToggle=document.getElementById('menuToggle'),navMobile=document.getElementById('navMobile');let lastScroll=0;window.addEventListener('scroll',()=>{const currentScroll=window.pageYOffset;if(currentScroll>50){header.classList.add('scrolled')}else{header.classList.remove('scrolled')}lastScroll=currentScroll});if(menuToggle&&navMobile){menuToggle.addEventListener('click',()=>{menuToggle.classList.toggle('active');navMobile.classList.toggle('active');document.body.style.overflow=navMobile.classList.contains('active')?'hidden':''});navMobile.querySelectorAll('a').forEach(link=>{link.addEventListener('click',()=>{menuToggle.classList.remove('active');navMobile.classList.remove('active');document.body.style.overflow=''})})}const heroTitle=document.querySelector('.hero-title');if(heroTitle){const text=heroTitle.textContent,words=text.split(' ');heroTitle.innerHTML=words.map((word,i)=>{const isGradient=i===1||word.toLowerCase().includes('vision')||word.toLowerCase().includes('transform');return\`<span class="word \${isGradient?'gradient-text':''}">\${word}</span>\`}).join(' ');gsap.fromTo('.hero-title .word',{opacity:0,y:50,rotateX:-30},{opacity:1,y:0,rotateX:0,duration:0.8,stagger:0.1,ease:'power3.out',delay:0.3})}const animateElements=document.querySelectorAll('[data-animate]');animateElements.forEach(el=>{const delay=parseFloat(el.dataset.delay)||0,type=el.dataset.animate;let fromVars={opacity:0};switch(type){case'fade-up':fromVars.y=60;break;case'fade-down':fromVars.y=-60;break;case'fade-left':fromVars.x=60;break;case'fade-right':fromVars.x=-60;break;case'scale':fromVars.scale=0.8;break;case'word':fromVars.y=40;fromVars.rotateX=-20;break}gsap.fromTo(el,fromVars,{opacity:1,x:0,y:0,scale:1,rotateX:0,duration:0.9,delay:delay,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',once:true,onEnter:()=>el.classList.add('animated')}})});const counters=document.querySelectorAll('[data-count]');counters.forEach(counter=>{const target=parseInt(counter.dataset.count);ScrollTrigger.create({trigger:counter,start:'top 85%',once:true,onEnter:()=>{const obj={val:0};gsap.to(obj,{val:target,duration:2.5,ease:'power2.out',onUpdate:()=>{counter.textContent=Math.round(obj.val)}})}})});const tiltCards=document.querySelectorAll('[data-tilt]');if(window.matchMedia('(hover: hover)').matches){tiltCards.forEach(card=>{card.addEventListener('mousemove',e=>{const rect=card.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,centerX=rect.width/2,centerY=rect.height/2,rotateX=(y-centerY)/15,rotateY=(centerX-x)/15;gsap.to(card,{rotateX:-rotateX,rotateY:rotateY,duration:0.5,ease:'power2.out',transformPerspective:1000})});card.addEventListener('mouseleave',()=>{gsap.to(card,{rotateX:0,rotateY:0,duration:0.7,ease:'elastic.out(1, 0.5)'})})})}const shapes=document.querySelectorAll('.shape[data-parallax-speed]');if(shapes.length&&window.matchMedia('(hover: hover)').matches){window.addEventListener('scroll',()=>{const scrollY=window.pageYOffset;shapes.forEach(shape=>{const speed=parseFloat(shape.dataset.parallaxSpeed)||0.05;gsap.to(shape,{y:scrollY*speed*100,duration:0.5,ease:'power1.out'})})})}const backToTop=document.getElementById('backToTop');if(backToTop){window.addEventListener('scroll',()=>{if(window.pageYOffset>500){backToTop.classList.add('visible')}else{backToTop.classList.remove('visible')}});backToTop.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})})}document.querySelectorAll('a[href^="#"]').forEach(anchor=>{anchor.addEventListener('click',function(e){e.preventDefault();const target=document.querySelector(this.getAttribute('href'));if(target){target.scrollIntoView({behavior:'smooth'})}})});const contactForm=document.getElementById('contactForm');if(contactForm){contactForm.addEventListener('submit',e=>{e.preventDefault();alert('Thank you for your message! We will get back to you soon.');contactForm.reset()})}console.log('✨ Aurora Light Premium v2.0 Loaded')});function openLightbox(src){const lightbox=document.getElementById('lightbox'),img=document.getElementById('lightboxImage');if(lightbox&&img){img.src=src;lightbox.classList.add('active');document.body.style.overflow='hidden'}}function closeLightbox(){const lightbox=document.getElementById('lightbox');if(lightbox){lightbox.classList.remove('active');document.body.style.overflow=''}}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});`;
+    return `document.addEventListener('DOMContentLoaded',()=>{
+gsap.registerPlugin(ScrollTrigger);
+const isMobile=window.innerWidth<768||!window.matchMedia('(hover: hover)').matches;
+
+/* Cursor Effects (Desktop Only) */
+const spotlight=document.getElementById('cursorSpotlight'),cursorDot=document.getElementById('cursorDot'),magneticElements=document.querySelectorAll('.magnetic');
+if(spotlight&&cursorDot&&!isMobile){
+let mouseX=0,mouseY=0,spotX=0,spotY=0,dotX=0,dotY=0;
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
+function animateCursor(){spotX+=(mouseX-spotX)*0.08;spotY+=(mouseY-spotY)*0.08;spotlight.style.left=spotX+'px';spotlight.style.top=spotY+'px';dotX+=(mouseX-dotX)*0.2;dotY+=(mouseY-dotY)*0.2;cursorDot.style.left=dotX+'px';cursorDot.style.top=dotY+'px';requestAnimationFrame(animateCursor)}
+animateCursor();
+magneticElements.forEach(el=>{el.addEventListener('mousemove',e=>{const rect=el.getBoundingClientRect(),x=e.clientX-rect.left-rect.width/2,y=e.clientY-rect.top-rect.height/2;gsap.to(el,{x:x*0.3,y:y*0.3,duration:0.3,ease:'power2.out'});cursorDot.classList.add('hover')});el.addEventListener('mouseleave',()=>{gsap.to(el,{x:0,y:0,duration:0.5,ease:'elastic.out(1, 0.3)'});cursorDot.classList.remove('hover')})});
+}
+
+/* Particles */
+const particlesContainer=document.getElementById('particles');
+if(particlesContainer&&!isMobile){for(let i=0;i<30;i++){const particle=document.createElement('div');particle.className='particle';particle.style.left=Math.random()*100+'%';particle.style.top=Math.random()*100+'%';particle.style.animationDelay=Math.random()*15+'s';particle.style.animationDuration=(15+Math.random()*10)+'s';particlesContainer.appendChild(particle)}}
+
+/* Header */
+const header=document.getElementById('header'),menuToggle=document.getElementById('menuToggle'),navMobile=document.getElementById('navMobile');
+window.addEventListener('scroll',()=>{if(window.pageYOffset>50){header.classList.add('scrolled')}else{header.classList.remove('scrolled')}});
+if(menuToggle&&navMobile){menuToggle.addEventListener('click',()=>{menuToggle.classList.toggle('active');navMobile.classList.toggle('active');document.body.style.overflow=navMobile.classList.contains('active')?'hidden':''});navMobile.querySelectorAll('a').forEach(link=>{link.addEventListener('click',()=>{menuToggle.classList.remove('active');navMobile.classList.remove('active');document.body.style.overflow=''})})}
+
+/* Mobile Intersection Observer */
+if(isMobile){
+const mobileObserver=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');entry.target.style.opacity='1';entry.target.style.transform='translateY(0)'}})},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.service-card,.gallery-item,.testimonial-card-3d,.about-card,[data-animate]').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(30px)';el.style.transition='opacity 0.6s ease, transform 0.6s ease';mobileObserver.observe(el)});
+}
+
+/* Hero Title Animation */
+const heroTitle=document.querySelector('.hero-title');
+if(heroTitle){const text=heroTitle.textContent,words=text.split(' ');heroTitle.innerHTML=words.map((word,i)=>{const isGradient=i===1||word.toLowerCase().includes('vision')||word.toLowerCase().includes('transform');return\`<span class="word \${isGradient?'gradient-text':''}">\${word}</span>\`}).join(' ');gsap.fromTo('.hero-title .word',{opacity:0,y:50,rotateX:-30},{opacity:1,y:0,rotateX:0,duration:0.8,stagger:0.1,ease:'power3.out',delay:0.3})}
+
+/* Scroll Animations (Desktop) */
+if(!isMobile){
+const animateElements=document.querySelectorAll('[data-animate]');
+animateElements.forEach(el=>{const delay=parseFloat(el.dataset.delay)||0,type=el.dataset.animate;let fromVars={opacity:0};switch(type){case'fade-up':fromVars.y=60;break;case'fade-down':fromVars.y=-60;break;case'fade-left':fromVars.x=60;break;case'fade-right':fromVars.x=-60;break;case'scale':fromVars.scale=0.8;break;case'word':fromVars.y=40;fromVars.rotateX=-20;break}gsap.fromTo(el,fromVars,{opacity:1,x:0,y:0,scale:1,rotateX:0,duration:0.9,delay:delay,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 85%',once:true,onEnter:()=>el.classList.add('animated')}})});
+}
+
+/* Counters */
+const counters=document.querySelectorAll('[data-count]');
+counters.forEach(counter=>{
+const target=parseInt(counter.dataset.count);
+function animateCounter(){const duration=2000,start=performance.now();function update(){const elapsed=performance.now()-start,progress=Math.min(elapsed/duration,1),eased=1-Math.pow(1-progress,3);counter.textContent=Math.round(target*eased);if(progress<1)requestAnimationFrame(update)}requestAnimationFrame(update)}
+if(isMobile){const obs=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){animateCounter();obs.unobserve(counter)}})},{threshold:0.5});obs.observe(counter)}else{ScrollTrigger.create({trigger:counter,start:'top 85%',once:true,onEnter:animateCounter})}
+});
+
+/* 3D Tilt (Desktop) */
+const tiltCards=document.querySelectorAll('[data-tilt]');
+if(!isMobile){tiltCards.forEach(card=>{card.addEventListener('mousemove',e=>{const rect=card.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,centerX=rect.width/2,centerY=rect.height/2,rotateX=(y-centerY)/15,rotateY=(centerX-x)/15;gsap.to(card,{rotateX:-rotateX,rotateY:rotateY,duration:0.5,ease:'power2.out',transformPerspective:1000})});card.addEventListener('mouseleave',()=>{gsap.to(card,{rotateX:0,rotateY:0,duration:0.7,ease:'elastic.out(1, 0.5)'})})})}
+
+/* Parallax Shapes (Desktop) */
+const shapes=document.querySelectorAll('.shape[data-parallax-speed]');
+if(shapes.length&&!isMobile){window.addEventListener('scroll',()=>{const scrollY=window.pageYOffset;shapes.forEach(shape=>{const speed=parseFloat(shape.dataset.parallaxSpeed)||0.05;gsap.to(shape,{y:scrollY*speed*100,duration:0.5,ease:'power1.out'})})})}
+
+/* Back to Top */
+const backToTop=document.getElementById('backToTop');
+if(backToTop){window.addEventListener('scroll',()=>{backToTop.classList.toggle('visible',window.pageYOffset>500)});backToTop.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'})})}
+
+/* Smooth Scroll */
+document.querySelectorAll('a[href^="#"]').forEach(anchor=>{anchor.addEventListener('click',function(e){e.preventDefault();const target=document.querySelector(this.getAttribute('href'));if(target){target.scrollIntoView({behavior:'smooth'})}})});
+
+/* Contact Form */
+const contactForm=document.getElementById('contactForm');
+if(contactForm){contactForm.addEventListener('submit',e=>{e.preventDefault();alert('Thank you for your message! We will get back to you soon.');contactForm.reset()})}
+
+/* Magnetic Buttons */
+if(!isMobile){
+const magneticButtons=document.querySelectorAll('.btn,.nav-cta,.gallery-zoom,.magnetic');
+magneticButtons.forEach(btn=>{
+btn.addEventListener('mousemove',e=>{
+const rect=btn.getBoundingClientRect(),x=e.clientX-rect.left-rect.width/2,y=e.clientY-rect.top-rect.height/2;
+gsap.to(btn,{x:x*0.3,y:y*0.3,duration:0.3,ease:'power2.out'})});
+btn.addEventListener('mouseleave',()=>{gsap.to(btn,{x:0,y:0,duration:0.5,ease:'elastic.out(1, 0.3)'})})
+})}
+
+/* Ripple Effect */
+const rippleButtons=document.querySelectorAll('.btn');
+rippleButtons.forEach(btn=>{
+btn.addEventListener('click',function(e){
+const rect=this.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;
+const ripple=document.createElement('span');
+ripple.className='btn-ripple';
+ripple.style.left=x+'px';
+ripple.style.top=y+'px';
+this.appendChild(ripple);
+setTimeout(()=>ripple.remove(),600)})});
+
+console.log('✨ Aurora Light Premium v2.1 Loaded');
+});
+function openLightbox(src){const lightbox=document.getElementById('lightbox'),img=document.getElementById('lightboxImage');if(lightbox&&img){img.src=src;lightbox.classList.add('active');document.body.style.overflow='hidden'}}
+function closeLightbox(){const lightbox=document.getElementById('lightbox');if(lightbox){lightbox.classList.remove('active');document.body.style.overflow=''}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});`;
   }
 
   private hexToRgb(hex: string): string {
