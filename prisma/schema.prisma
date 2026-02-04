@@ -25,6 +25,10 @@ model FormSubmission {
   address         String?
   socialLinks     Json?    // {facebook: "", instagram: "", etc}
   
+  // Brand customization
+  testimonials    Json?    // Array of {authorName, authorRole, quote}
+  brandColors     Json?    // {primary, secondary, accent}
+  
   // Uploaded files metadata
   logoUrl         String?  // URL in Supabase Storage
   heroImageUrl    String?

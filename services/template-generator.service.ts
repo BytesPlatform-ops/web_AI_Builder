@@ -349,11 +349,11 @@ class UltimatePremiumTemplateGenerator {
             <blockquote class="testimonial-quote">"${testimonial.quote}"</blockquote>
             <div class="testimonial-author">
               <div class="author-avatar">
-                ${testimonial.author.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                ${(testimonial.authorName || 'User').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
               </div>
               <div class="author-info">
-                <span class="author-name">${testimonial.author}</span>
-                <span class="author-role">${testimonial.role}</span>
+                <span class="author-name">${testimonial.authorName || 'Anonymous'}</span>
+                ${testimonial.authorRole ? `<span class="author-role">${testimonial.authorRole}</span>` : ''}
               </div>
             </div>
           </div>

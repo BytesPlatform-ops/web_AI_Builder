@@ -53,6 +53,35 @@ export async function POST(request: NextRequest) {
       ? JSON.parse(socialLinksField)
       : {};
 
+    // Parse testimonials
+    let testimonials = [];
+    const testimonialsField = formData.get('testimonials');
+    if (testimonialsField && typeof testimonialsField === 'string') {
+      try {
+        testimonials = JSON.parse(testimonialsField);
+      } catch (e) {
+        console.warn('Failed to parse testimonials:', e);
+      }
+    }
+
+    // Parse brand colors
+    let brandColors = {
+      primary: '#3B82F6',
+      secondary: '#1E40AF',
+      accent: '#60A5FA',
+    };
+    const brandColorsField = formData.get('brandColors');
+    if (brandColorsField && typeof brandColorsField === 'string') {
+      try {
+        const parsedColors = JSON.parse(brandColorsField);
+        if (parsedColors.primary && parsedColors.secondary && parsedColors.accent) {
+          brandColors = parsedColors;
+        }
+      } catch (e) {
+        console.warn('Failed to parse brand colors:', e);
+      }
+    }
+
     // Validate required fields
     if (!businessName || !about || !email || services.length === 0) {
       return NextResponse.json(
@@ -145,6 +174,8 @@ export async function POST(request: NextRequest) {
           ...socialLinks,
           _credentials: { username, password: generatedPassword } // Temporary storage in socialLinks JSON
         },
+        testimonials: testimonials.length > 0 ? testimonials : undefined,
+        brandColors: brandColors,
         logoUrl,
         heroImageUrl,
         additionalImages,
@@ -192,7 +223,11 @@ export async function POST(request: NextRequest) {
         accent: '#06b6d4',
       };
 
-      if (logoUrl) {
+      // Use brand colors from form if provided, otherwise extract from logo
+      if (brandColors.primary && brandColors.secondary && brandColors.accent) {
+        extractedColors = brandColors;
+        console.log('🎨 Using brand colors from form:', extractedColors);
+      } else if (logoUrl) {
         try {
           extractedColors = await colorExtractionService.extractFromLogo(logoUrl);
         } catch (colorError) {
@@ -204,7 +239,10 @@ export async function POST(request: NextRequest) {
       console.log('🎨 Step 3: Generating website template...');
       const generatedWebsite = await premiumTemplateGenerator.generate({
         businessName,
-        content: enhancedContent,
+        content: {
+          ...enhancedContent,
+          testimonials: testimonials || [],
+        },
         colors: extractedColors,
         logoUrl: logoUrl || undefined,
         heroImageUrl: heroImageUrl || undefined,
@@ -275,8 +313,24 @@ export async function POST(request: NextRequest) {
         data: { status: 'GENERATED' }
       });
 
-      // Step 8: Send email to sales person with credentials
-      console.log('📧 Step 6: Sending email to sales person...');
+      // Step 8: Send email to customer with credentials
+      console.log('📧 Step 8: Sending login credentials to customer...');
+      try {
+        await resendEmailService.sendCredentialsToUser({
+          businessName,
+          customerEmail: email,
+          customerName: businessName,
+          username,
+          password: generatedPassword,
+          loginUrl,
+        });
+        console.log('✅ Customer credentials email sent!');
+      } catch (emailError) {
+        console.error('⚠️ Failed to send customer email:', emailError);
+      }
+
+      // Step 9: Send email to sales person with credentials
+      console.log('📧 Step 9: Sending email to sales person...');
       try {
         await resendEmailService.sendToSales({
           businessName,

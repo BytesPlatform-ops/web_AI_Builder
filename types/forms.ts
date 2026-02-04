@@ -2,6 +2,18 @@
  * Form and API Types
  */
 
+export interface Testimonial {
+  authorName: string;
+  authorRole: string;
+  quote: string;
+}
+
+export interface BrandColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+}
+
 export interface FormSubmissionData {
   // Business Info
   businessName: string;
@@ -23,6 +35,12 @@ export interface FormSubmissionData {
     linkedin?: string;
     twitter?: string;
   };
+
+  // Brand Colors (optional - if not provided, will be extracted from logo)
+  brandColors?: BrandColors;
+
+  // Testimonials (optional - only show if provided)
+  testimonials?: Testimonial[];
 }
 
 export interface FileUploadResponse {
