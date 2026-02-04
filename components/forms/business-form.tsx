@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FormSubmissionData, Testimonial, BrandColors } from '@/types/forms';
+import { FormSubmissionData, Testimonial, BrandColors, TemplateType, TEMPLATE_OPTIONS } from '@/types/forms';
 
 const COLOR_PRESETS = [
   { name: 'Modern Blue', primary: '#3B82F6', secondary: '#1E40AF', accent: '#60A5FA' },
@@ -35,6 +35,7 @@ export function BusinessForm() {
     accent: '#60A5FA',
   });
   const [selectedAdditionalImages, setSelectedAdditionalImages] = useState<File[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('dark');
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -133,6 +134,9 @@ export function BusinessForm() {
       submitFormData.append('email', formData.email);
       submitFormData.append('phone', formData.phone || '');
       submitFormData.append('address', formData.address || '');
+
+      // Append template type
+      submitFormData.append('templateType', selectedTemplate);
 
       // Append testimonials if any exist
       if (testimonials.length > 0) {
@@ -298,6 +302,93 @@ export function BusinessForm() {
           <option value="ecommerce">E-Commerce</option>
           <option value="other">Other</option>
         </select>
+      </div>
+
+      {/* Template Selection */}
+      <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 rounded-xl border border-indigo-100">
+        <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+          <span className="text-2xl">🎨</span> Choose Your Website Style
+        </h3>
+        <p className="text-sm text-gray-600 mb-4">Select a template that matches your brand vibe</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {TEMPLATE_OPTIONS.map((template) => (
+            <button
+              key={template.id}
+              type="button"
+              onClick={() => setSelectedTemplate(template.id)}
+              className={`relative p-5 rounded-xl text-left transition-all duration-300 transform hover:scale-[1.02] ${
+                selectedTemplate === template.id
+                  ? 'ring-2 ring-indigo-500 shadow-lg shadow-indigo-200/50'
+                  : 'border-2 border-gray-200 hover:border-indigo-300'
+              } ${template.id === 'dark' ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-white'}`}
+            >
+              {/* Selection badge */}
+              {selectedTemplate === template.id && (
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              )}
+              
+              {/* Template preview header */}
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">{template.preview}</span>
+                <div>
+                  <h4 className={`font-bold ${template.id === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    {template.name}
+                  </h4>
+                  <p className={`text-xs ${template.id === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {template.id === 'dark' ? 'Premium Dark Theme' : 'Premium Light Theme'}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Description */}
+              <p className={`text-sm mb-3 ${template.id === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                {template.description}
+              </p>
+              
+              {/* Color preview dots */}
+              <div className="flex items-center gap-2">
+                <span className={`text-xs ${template.id === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Colors:</span>
+                <div className="flex gap-1.5">
+                  {template.colors.map((color, i) => (
+                    <div
+                      key={i}
+                      className="w-5 h-5 rounded-full border border-white/20 shadow-sm"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              {/* Features preview */}
+              <div className={`mt-3 pt-3 border-t ${template.id === 'dark' ? 'border-gray-700' : 'border-gray-100'}`}>
+                <div className="flex flex-wrap gap-1.5">
+                  {template.id === 'dark' ? (
+                    <>
+                      <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 text-xs rounded-full">Glassmorphism</span>
+                      <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 text-xs rounded-full">Neon Accents</span>
+                      <span className="px-2 py-0.5 bg-pink-500/20 text-pink-300 text-xs rounded-full">3D Effects</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">Gradient Mesh</span>
+                      <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">Fluid Motion</span>
+                      <span className="px-2 py-0.5 bg-pink-100 text-pink-700 text-xs rounded-full">3D Parallax</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+        
+        <p className="text-xs text-center text-gray-500 mt-4">
+          ✨ More templates coming soon! We're constantly adding new designs.
+        </p>
       </div>
 
       {/* Services */}

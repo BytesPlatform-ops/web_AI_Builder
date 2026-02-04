@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luma Interiors - Experience elegance and functionality with our focus on natural light and clean lines.</title>
+  <meta name="description" content="At Luma Interiors, we see design as a way to enhance daily living. Our approach brings clarity, light, and beauty into every space, creating environments where you can thrive.">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-wrapper">
+    <div class="mesh-gradient"></div>
+    <div class="floating-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container">
+      <a href="#" class="logo">
+        <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770228466295-Gemini_Generated_Image_iqrosfiqrosfiqro.png" alt="Luma Interiors" class="logo-img">
+      </a>
+      
+      <nav class="nav" id="nav">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#testimonials" class="nav-link">Reviews</a>
+        <a href="#contact" class="nav-link nav-cta">Get in Touch</a>
+      </nav>
+      
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content" data-animate="hero">
+        <div class="hero-badge">
+          <span class="pulse"></span>
+          <span>Soft tones</span>
+        </div>
+        
+        <h1 class="hero-title">
+          <span class="title-line">Transform Your Space into a</span>
+          <span class="title-line gradient-text">Sanctuary with Luma Interiors</span>
+        </h1>
+        
+        <p class="hero-desc">Experience elegance and functionality with our focus on natural light and clean lines.</p>
+        
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary magnetic">
+            <span>Book Consultation</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#services" class="btn btn-secondary magnetic">
+            <span>Explore Gallery</span>
+          </a>
+        </div>
+        
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-value" data-count="500">0</span>+
+            <span class="stat-label">Happy Clients</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value" data-count="10">0</span>+
+            <span class="stat-label">Years Experience</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <span class="stat-value" data-count="98">0</span>%
+            <span class="stat-label">Satisfaction Rate</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="hero-visual" data-animate="hero-image">
+        <div class="hero-card">
+          
+          <div class="hero-placeholder">
+            <div class="placeholder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <span>Luma Interiors</span>
+          </div>
+          
+        </div>
+        
+        <!-- Floating elements -->
+        <div class="floating-card card-1" data-parallax>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Trusted</span>
+        </div>
+        <div class="floating-card card-2" data-parallax>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>5-Star</span>
+        </div>
+        <div class="floating-card card-3" data-parallax>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <span>Pro</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-content" data-animate="fade-right">
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            About Us
+          </div>
+          <h2 class="section-title">Why Choose Luma Interiors?</h2>
+          <p class="about-text">At Luma Interiors, we see design as a way to enhance daily living. Our approach brings clarity, light, and beauty into every space, creating environments where you can thrive. Distinct in our commitment to marrying functionality with style, we emphasize natural illumination and meticulous attention to detail, ensuring every space feels like home.</p>
+          
+          <div class="features-list">
+            
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Soft tones</span>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Spacious layouts</span>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Smooth animations</span>
+            </div>
+            
+          </div>
+          
+          <a href="#contact" class="btn btn-primary magnetic">
+            <span>Contact Us</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        
+        <div class="about-visual" data-animate="fade-left">
+          <div class="about-card">
+            <div class="card-decoration"></div>
+            <div class="experience-badge">
+              <span class="exp-number">10+</span>
+              <span class="exp-text">Years of Excellence</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section services" id="services">
+    <div class="container">
+      <div class="section-header" data-animate="fade-up">
+        <div class="badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Our Services
+        </div>
+        <h2 class="section-title">What We Offer</h2>
+        <p class="section-desc">Let's create something beautiful together. Your dream space awaits.</p>
+      </div>
+      
+      <div class="bento-grid">
+        
+        <div class="bento-item bento-large" data-animate="scale-up" data-delay="0">
+          <div class="service-card">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+            <h3>Soft tones</h3>
+            <p>Craft serene and inviting atmospheres with our expertly chosen soft color palettes.</p>
+            <div class="service-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bento-item " data-animate="scale-up" data-delay="0.1">
+          <div class="service-card">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <h3>Spacious layouts</h3>
+            <p>Maximize your space with designs that breathe openness and fluidity into your environment.</p>
+            <div class="service-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bento-item " data-animate="scale-up" data-delay="0.2">
+          <div class="service-card">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <h3>Smooth animations</h3>
+            <p>Bring your spaces to life with seamless transitions and animations in our digital presentations.</p>
+            <div class="service-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bento-item " data-animate="scale-up" data-delay="0.30000000000000004">
+          <div class="service-card">
+            <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+            <h3>Image-forward sections</h3>
+            <p>Visualize your future space with large, inspiring images that capture the essence of our designs.</p>
+            <div class="service-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  
+    <!-- Gallery Section -->
+    <section class="section gallery" id="gallery">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            Gallery
+          </div>
+          <h2 class="section-title">Our Work Speaks</h2>
+          <p class="section-desc">A glimpse into what we create</p>
+        </div>
+        
+        <div class="gallery-grid">
+          
+          <div class="gallery-item" data-animate="scale-up" data-delay="0">
+            <div class="gallery-card">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228467884-acrh3.webp" alt="Gallery 1" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-btn" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228467884-acrh3.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-animate="scale-up" data-delay="0.1">
+            <div class="gallery-card">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228469500-arch_1.webp" alt="Gallery 2" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-btn" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228469500-arch_1.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-animate="scale-up" data-delay="0.2">
+            <div class="gallery-card">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228470534-arch2.webp" alt="Gallery 3" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-btn" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228470534-arch2.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-animate="scale-up" data-delay="0.30000000000000004">
+            <div class="gallery-card">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228471788-arch4.webp" alt="Gallery 4" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-btn" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770228471788-arch4.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+  
+  
+    <!-- Testimonials Section -->
+    <section class="section testimonials" id="testimonials">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Testimonials
+          </div>
+          <h2 class="section-title">What People Say</h2>
+          <p class="section-desc">Real stories from real customers</p>
+        </div>
+        
+        <div class="testimonials-grid">
+          
+          <div class="testimonial-card" data-animate="flip-up" data-delay="0">
+            <div class="testimonial-content">
+              <div class="quote-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+              </div>
+              <p class="quote">"“Luma Interiors transformed our home into a bright, modern space. The attention to detail was incredible.”"</p>
+              <div class="author">
+                <div class="author-avatar">
+                  OM
+                </div>
+                <div class="author-info">
+                  <strong>Olivia Martinez</strong>
+                  <span>Homeowner</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="testimonial-card" data-animate="flip-up" data-delay="0.15">
+            <div class="testimonial-content">
+              <div class="quote-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+              </div>
+              <p class="quote">"“Clean design, beautiful execution, and very professional. Perfect choice for modern interiors.”"</p>
+              <div class="author">
+                <div class="author-avatar">
+                  AC
+                </div>
+                <div class="author-info">
+                  <strong>Andrew Collins</strong>
+                  <span>Property Developer</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+
+  <!-- Contact Section -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="contact-wrapper">
+        <div class="contact-info" data-animate="fade-right">
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Contact
+          </div>
+          <h2 class="section-title">Ready to Reimagine Your Space?</h2>
+          <p class="contact-desc">Ready to start your project? Get in touch with us today.</p>
+          
+          <div class="contact-details">
+            <a href="mailto:nomansiddiqui872@gmail.com" class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="contact-text">
+                <span class="label">Email</span>
+                <span class="value">nomansiddiqui872@gmail.com</span>
+              </div>
+            </a>
+            
+            
+            <a href="tel:+923353279709" class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div class="contact-text">
+                <span class="label">Phone</span>
+                <span class="value">+923353279709</span>
+              </div>
+            </a>
+            
+            
+            
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="contact-text">
+                <span class="label">Location</span>
+                <span class="value">88 Design Avenue, Los Angeles, CA, USA</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="contact-form-wrapper" data-animate="fade-left">
+          <form class="contact-form" id="contactForm">
+            <div class="form-group">
+              <input type="text" id="name" name="name" required placeholder=" ">
+              <label for="name">Your Name</label>
+            </div>
+            <div class="form-group">
+              <input type="email" id="email" name="email" required placeholder=" ">
+              <label for="email">Email Address</label>
+            </div>
+            <div class="form-group">
+              <input type="tel" id="phone" name="phone" placeholder=" ">
+              <label for="phone">Phone (Optional)</label>
+            </div>
+            <div class="form-group full-width">
+              <textarea id="message" name="message" rows="4" required placeholder=" "></textarea>
+              <label for="message">Your Message</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full magnetic">
+              <span>Send Message</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770228466295-Gemini_Generated_Image_iqrosfiqrosfiqro.png" alt="Luma Interiors" class="footer-logo">
+          <p>Experience elegance and functionality with our focus on natural light and clean lines.</p>
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Navigation</h4>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#contact">Contact</a>
+          </div>
+          
+          <div class="footer-column">
+            <h4>Services</h4>
+            <a href="#services">Soft tones</a><a href="#services">Spacious layouts</a><a href="#services">Smooth animations</a><a href="#services">Image-forward sections</a>
+          </div>
+          
+          <div class="footer-column">
+            <h4>Contact</h4>
+            <a href="mailto:nomansiddiqui872@gmail.com">nomansiddiqui872@gmail.com</a>
+            <a href="tel:+923353279709">+923353279709</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 Luma Interiors. All rights reserved.</p>
+        <div class="footer-socials">
+          
+          
+          
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <img src="" alt="Gallery preview" id="lightboxImage">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

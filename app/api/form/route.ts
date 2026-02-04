@@ -82,6 +82,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Parse template type (default to 'dark')
+    const templateType = (formData.get('templateType') as string) || 'dark';
+
     // Validate required fields
     if (!businessName || !about || !email || services.length === 0) {
       return NextResponse.json(
@@ -176,6 +179,7 @@ export async function POST(request: NextRequest) {
         },
         testimonials: testimonials.length > 0 ? testimonials : undefined,
         brandColors: brandColors,
+        templateType: templateType, // Store selected template type
         logoUrl,
         heroImageUrl,
         additionalImages,
@@ -236,7 +240,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Step 3: Generate website template
-      console.log('🎨 Step 3: Generating website template...');
+      console.log('🎨 Step 3: Generating website template with type:', templateType);
       const generatedWebsite = await premiumTemplateGenerator.generate({
         businessName,
         content: {
@@ -252,7 +256,8 @@ export async function POST(request: NextRequest) {
           phone: phone || undefined,
           address: address || undefined,
           social: socialLinks,
-        }
+        },
+        templateType: templateType as 'dark' | 'light', // Pass template type to generator
       });
 
       // Step 4: Save files locally
@@ -285,7 +290,10 @@ export async function POST(request: NextRequest) {
       });
 
       // Step 6: Create generated website record
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      const forwardedHost = request.headers.get('x-forwarded-host');
+      const host = forwardedHost || request.headers.get('host') || 'localhost:3000';
+      const proto = request.headers.get('x-forwarded-proto') || 'http';
+      const baseUrl = `${proto}://${host}`;
       const previewUrl = `${baseUrl}/api/preview/${formSubmission.id}`;
       const loginUrl = `${baseUrl}/login`;
 

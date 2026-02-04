@@ -39,6 +39,7 @@ export interface TemplateInput {
       twitter?: string;
     };
   };
+  templateType?: 'dark' | 'light'; // Template selection
 }
 
 export interface GeneratedFiles {
@@ -49,7 +50,17 @@ export interface GeneratedFiles {
 
 class UltimatePremiumTemplateGenerator {
   async generate(input: TemplateInput): Promise<GeneratedFiles> {
-    console.log(`🎨 Generating ULTIMATE premium template for ${input.businessName}...`);
+    const templateType = input.templateType || 'dark';
+    
+    // If light theme is selected, use the Aurora Light template
+    if (templateType === 'light') {
+      console.log(`☀️ Generating AURORA LIGHT template for ${input.businessName}...`);
+      const { auroraLightTemplateGenerator } = await import('./light-template.service');
+      return auroraLightTemplateGenerator.generate(input);
+    }
+    
+    // Default: Dark theme (Midnight Pro)
+    console.log(`🌙 Generating MIDNIGHT PRO (dark) template for ${input.businessName}...`);
 
     const html = this.generateHTML(input);
     const css = this.generateCSS(input);
@@ -339,7 +350,7 @@ class UltimatePremiumTemplateGenerator {
       </div>
       
       <div class="testimonials-grid">
-        ${content.testimonials.map((testimonial, i) => `
+        ${content.testimonials.map((testimonial: { quote: string; author?: string; authorName?: string; role?: string; authorRole?: string }, i: number) => `
         <div class="testimonial-card" data-animate="fade-up" data-delay="${i * 0.1}" data-tilt>
           <div class="testimonial-glow"></div>
           <div class="testimonial-content">
@@ -349,11 +360,11 @@ class UltimatePremiumTemplateGenerator {
             <blockquote class="testimonial-quote">"${testimonial.quote}"</blockquote>
             <div class="testimonial-author">
               <div class="author-avatar">
-                ${(testimonial.authorName || 'User').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+                ${((testimonial.authorName || testimonial.author) || 'User').split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()}
               </div>
               <div class="author-info">
-                <span class="author-name">${testimonial.authorName || 'Anonymous'}</span>
-                ${testimonial.authorRole ? `<span class="author-role">${testimonial.authorRole}</span>` : ''}
+                <span class="author-name">${(testimonial.authorName || testimonial.author) || 'Anonymous'}</span>
+                ${(testimonial.authorRole || testimonial.role) ? `<span class="author-role">${testimonial.authorRole || testimonial.role}</span>` : ''}
               </div>
             </div>
           </div>

@@ -29,6 +29,9 @@ model FormSubmission {
   testimonials    Json?    // Array of {authorName, authorRole, quote}
   brandColors     Json?    // {primary, secondary, accent}
   
+  // Template selection
+  templateType    String   @default("dark") // 'dark' or 'light'
+  
   // Uploaded files metadata
   logoUrl         String?  // URL in Supabase Storage
   heroImageUrl    String?

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dive into freshly roasted coffees and artisan pastries in a space designed for connection and creativity.">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>Aurora Brew House | Transform Your Day with Aurora’s Handcrafted Coffees</title>
+  
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Fonts: Inter + Space Grotesk for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770232426090-aurora_logo.png">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-gradient"></div>
+  <div class="spotlight" id="spotlight"></div>
+  
+  <!-- Floating Orbs -->
+  <div class="orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770232426090-aurora_logo.png" alt="Aurora Brew House" class="logo-img">
+      </a>
+      
+      <div class="nav-links" id="navLinks">
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+      
+      <a href="#contact" class="nav-cta">
+        <span>Get Started</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero" style="--hero-bg: url('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/hero/1770232428483-HERO_AURORA.webp')">
+    <div class="hero-bg-image"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badge" data-animate="fade-up">
+        <span class="badge-pulse"></span>
+        <span>Welcome to Aurora Brew House</span>
+      </div>
+      
+      <h1 class="hero-title" data-animate="fade-up" data-delay="0.1">
+        <span class="title-line">Transform Your Day with Aurora’s Handcrafted Coffees</span>
+      </h1>
+      
+      <p class="hero-desc" data-animate="fade-up" data-delay="0.2">
+        Dive into freshly roasted coffees and artisan pastries in a space designed for connection and creativity.
+      </p>
+      
+      <div class="hero-buttons" data-animate="fade-up" data-delay="0.3">
+        <a href="#contact" class="btn btn-primary">
+          <span>Visit Us</span>
+          <div class="btn-glow"></div>
+        </a>
+        <a href="#services" class="btn btn-ghost">
+          <span>View Menu</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    
+    <div class="hero-scroll">
+      <div class="scroll-indicator">
+        <div class="scroll-dot"></div>
+      </div>
+      <span>Scroll down</span>
+    </div>
+  </section>
+
+  <!-- Services Section - Bento Grid -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header" data-animate="fade-up">
+        <span class="section-badge">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+          Our Services
+        </span>
+        <h2 class="section-title">What We Offer</h2>
+        <p class="section-desc">Discover our comprehensive range of professional services designed to help your business thrive.</p>
+      </div>
+      
+      <div class="bento-grid">
+        
+        <div class="bento-card bento-featured" data-animate="fade-up" data-delay="0" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <h3 class="bento-title">Specialty coffee & espresso drinks</h3>
+            <p class="bento-desc">Experience the rich flavors of expertly roasted, small-batch coffee designed to delight your senses.</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="bento-card " data-animate="fade-up" data-delay="0.1" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <h3 class="bento-title">Freshly baked pastries</h3>
+            <p class="bento-desc">Indulge in baked-daily pastries, from croissants to muffins, all made with natural ingredients.</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="bento-card " data-animate="fade-up" data-delay="0.2" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3 class="bento-title">Breakfast & brunch</h3>
+            <p class="bento-desc">Start your day right with our gourmet breakfast and brunch offerings, perfect for fueling your morning.</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="bento-card " data-animate="fade-up" data-delay="0.30000000000000004" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <h3 class="bento-title">Private events & gatherings</h3>
+            <p class="bento-desc">Host memorable events in our stylish, versatile space tailored to your needs.</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        
+        <div class="bento-card " data-animate="fade-up" data-delay="0.4" data-tilt>
+          <div class="bento-glow"></div>
+          <div class="bento-content">
+            <div class="bento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <h3 class="bento-title">Online ordering & takeaway</h3>
+            <p class="bento-desc">Busy day? Grab your favorite coffee and pastries with our convenient online ordering system.</p>
+            <a href="#contact" class="bento-link">
+              Learn more
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-content">
+          <span class="section-badge" data-animate="fade-up">
+            <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
+            About Us
+          </span>
+          <h2 class="section-title text-left" data-animate="fade-up" data-delay="0.1">Why Choose Aurora Brew House?</h2>
+          
+          <div class="about-text" data-animate="fade-up" data-delay="0.2">
+            <p>At Aurora Brew House, we believe every coffee should tell a story. Our dedication to quality begins with selecting the finest beans and extends to the warm, inviting atmosphere we’ve created for our guests.</p><p>What sets us apart? It's our commitment to small-batch roasting, pairing each cup with freshly baked pastries, ensuring a delightful experience with every visit.</p>
+          </div>
+          
+          <div class="about-stats" data-animate="fade-up" data-delay="0.3">
+            <div class="stat">
+              <span class="stat-number" data-count="100">0</span>
+              <span class="stat-suffix">%</span>
+              <span class="stat-label">Satisfaction</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="24">0</span>
+              <span class="stat-suffix">/7</span>
+              <span class="stat-label">Support</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-count="500">0</span>
+              <span class="stat-suffix">+</span>
+              <span class="stat-label">Clients</span>
+            </div>
+          </div>
+          
+          <div class="about-features" data-animate="fade-up" data-delay="0.4">
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Professional Excellence</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Customer Focused</span>
+            </div>
+            <div class="feature-item">
+              <div class="feature-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Quality Guaranteed</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="about-visual" data-animate="zoom-in" data-delay="0.2">
+          <div class="about-card" data-tilt>
+            <div class="about-card-glow"></div>
+            
+            <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770232426090-aurora_logo.png" alt="Aurora Brew House" class="about-logo" />
+            
+            <div class="about-card-content">
+              <h3>Aurora Brew House</h3>
+              <p>Excellence in every detail</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+  
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-badge">
+            <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+            Our Work
+          </span>
+          <h2 class="section-title">Gallery</h2>
+          <p class="section-desc">Take a look at what we do</p>
+        </div>
+        
+        <div class="gallery-grid">
+          
+          <div class="gallery-item" data-animate="zoom-in" data-delay="0">
+            <div class="gallery-image-wrapper">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770232430707-HERO_AURORA.webp" alt="Gallery image 1" class="gallery-image" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-zoom" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770232430707-HERO_AURORA.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-animate="zoom-in" data-delay="0.1">
+            <div class="gallery-image-wrapper">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770232431898-kris-atomic-3b2tADGAWnU-unsplash.webp" alt="Gallery image 2" class="gallery-image" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-zoom" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770232431898-kris-atomic-3b2tADGAWnU-unsplash.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-animate="zoom-in" data-delay="0.2">
+            <div class="gallery-image-wrapper">
+              <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770232433034-nathan-dumlao-6VhPY27jdps-unsplash.webp" alt="Gallery image 3" class="gallery-image" loading="lazy" />
+              <div class="gallery-overlay">
+                <button class="gallery-zoom" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770232433034-nathan-dumlao-6VhPY27jdps-unsplash.webp')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+      <button class="lightbox-close" onclick="closeLightbox()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <img src="" alt="Fullscreen" class="lightbox-image" id="lightboxImage" />
+    </div>
+    
+
+  <!-- CTA Section -->
+  <section class="cta" id="contact">
+    <div class="cta-bg">
+      <div class="cta-glow cta-glow-1"></div>
+      <div class="cta-glow cta-glow-2"></div>
+    </div>
+    
+    <div class="container">
+      <div class="cta-content" data-animate="fade-up">
+        <span class="section-badge section-badge-light">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+          Get In Touch
+        </span>
+        <h2 class="cta-title">Ready for Outstanding Coffee?</h2>
+        <p class="cta-desc">Skip the wait, order online, or join us for a unique cafe experience.</p>
+        
+        <div class="cta-buttons">
+          
+          <a href="tel:+923353279709" class="btn btn-white">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>Call Us</span>
+          </a>
+          
+          <a href="mailto:nomansiddiqui872@gmail.com" class="btn btn-glass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>Email Us</span>
+          </a>
+        </div>
+        
+        <div class="cta-info">
+          
+          <div class="info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>+923353279709</span>
+          </div>
+          
+          <div class="info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>nomansiddiqui872@gmail.com</span>
+          </div>
+          
+          <div class="info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>12 Canal View, Lahore, Pakistan</span>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770232426090-aurora_logo.png" alt="Aurora Brew House" class="footer-logo">
+          <p class="footer-desc">Dive into freshly roasted coffees and artisan pastries in a space designed for connection and creativity.</p>
+          
+          
+          <div class="footer-social">
+            
+            
+            
+            
+          </div>
+          
+        </div>
+        
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <a href="#hero">Home</a>
+          <a href="#services">Services</a>
+          <a href="#about">About</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#contact">Contact</a>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Contact Info</h4>
+          <a href="mailto:nomansiddiqui872@gmail.com">nomansiddiqui872@gmail.com</a>
+          <a href="tel:+923353279709">+923353279709</a>
+          <span>12 Canal View, Lahore, Pakistan</span>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 Aurora Brew House. All rights reserved.</p>
+        <p>Crafted with ❤️</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
