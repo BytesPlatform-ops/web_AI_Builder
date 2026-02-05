@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { resendEmailService } from '@/services/email-resend.service';
+import { sendGridEmailService } from '@/services/email-sendgrid.service';
 
 /**
  * Test endpoint to verify email is working
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 
   try {
     if (type === 'sales') {
-      const result = await resendEmailService.sendToSales({
+      const result = await sendGridEmailService.sendToSales({
         businessName: 'Test Business',
         customerEmail: 'customer@example.com',
         customerPhone: '+1 555-1234',
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
         result: result
       });
     } else if (type === 'credentials') {
-      const result = await resendEmailService.sendCredentialsToUser({
+      const result = await sendGridEmailService.sendCredentialsToUser({
         businessName: 'Test Business',
         customerEmail: process.env.SALES_EMAIL || 'test@example.com',
         customerName: 'Test User',

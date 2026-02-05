@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { netlifyDeploymentService } from "@/services/deployment-netlify.service";
-import { resendEmailService } from "@/services/email-resend.service";
+import { sendGridEmailService } from "@/services/email-sendgrid.service";
 import fs from 'fs';
 import path from 'path';
 
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
 
     // Send notification email to the user that their site is published
     try {
-      await resendEmailService.sendPublishedNotification({
+      await sendGridEmailService.sendPublishedNotification({
         businessName: website.businessName,
         customerEmail: website.formSubmission.email,
         customerName: website.formSubmission.businessName,

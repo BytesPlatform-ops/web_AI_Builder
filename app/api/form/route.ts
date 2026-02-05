@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
       const { aiContentService } = await import('@/services/ai-content.service');
       const { premiumTemplateGenerator } = await import('@/services/template-generator.service');
       const { colorExtractionService } = await import('@/services/color-extraction.service');
-      const { resendEmailService } = await import('@/services/email-resend.service');
+      const { sendGridEmailService } = await import('@/services/email-sendgrid.service');
       const fs = await import('fs');
       const path = await import('path');
 
@@ -324,7 +324,7 @@ export async function POST(request: NextRequest) {
       // Step 8: Send email to customer with credentials
       console.log('📧 Step 8: Sending login credentials to customer...');
       try {
-        await resendEmailService.sendCredentialsToUser({
+        await sendGridEmailService.sendCredentialsToUser({
           businessName,
           customerEmail: email,
           customerName: businessName,
@@ -340,7 +340,7 @@ export async function POST(request: NextRequest) {
       // Step 9: Send email to sales person with credentials
       console.log('📧 Step 9: Sending email to sales person...');
       try {
-        await resendEmailService.sendToSales({
+        await sendGridEmailService.sendToSales({
           businessName,
           customerEmail: email,
           customerPhone: phone || undefined,

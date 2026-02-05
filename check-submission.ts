@@ -1,4 +1,4 @@
-import { prisma } from './lib/prisma.ts';
+import { prisma } from './lib/prisma';
 
 async function checkSubmission() {
   try {
@@ -40,7 +40,7 @@ async function checkSubmission() {
 
     console.log('✨ All fields saved correctly!');
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Error:', error instanceof Error ? error.message : String(error));
   } finally {
     await prisma.$disconnect();
   }
