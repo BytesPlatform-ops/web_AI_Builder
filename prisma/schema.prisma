@@ -85,6 +85,12 @@ model GeneratedWebsite {
   // Status
   status          WebsiteStatus @default(GENERATING)
   
+  // Publish approval (sales must approve before user can publish)
+  publishApproved Boolean   @default(false)
+  publishRequestedAt DateTime?  // When user first clicked publish
+  approvedAt      DateTime?     // When sales approved
+  approvedBy      String?       // Sales person who approved
+  
   // Sales person assignment
   assignedToId    String?
   assignedTo      SalesPerson? @relation(fields: [assignedToId], references: [id])
@@ -183,6 +189,7 @@ enum WebsiteStatus {
   GENERATING        // AI is building the site
   READY             // Ready for sales review
   SENT_TO_CLIENT    // Sent to client
+  PENDING_APPROVAL  // User clicked publish, waiting for sales approval
   PUBLISHED         // Published to Netlify/Vercel
   FAILED            // Generation failed
 }

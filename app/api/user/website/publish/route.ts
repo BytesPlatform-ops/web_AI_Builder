@@ -64,9 +64,55 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: "Website is already published",
-        deploymentUrl: website.deploymentUrl
+        deploymentUrl: website.deploymentUrl,
+        status: 'PUBLISHED'
       });
     }
+
+    // ========================================
+    // NEW FLOW: Check if publish is approved
+    // ========================================
+    
+    if (!website.publishApproved) {
+      // User is NOT approved yet - send notification to sales team
+      console.log(`📧 User ${user.email} requested to publish ${website.businessName} - NOT APPROVED YET`);
+      
+      // Update status to PENDING_APPROVAL and record request time
+      await prisma.generatedWebsite.update({
+        where: { id: websiteId },
+        data: {
+          status: 'PENDING_APPROVAL',
+          publishRequestedAt: new Date(),
+        }
+      });
+      
+      // Send email to sales team about publish request
+      try {
+        await sendGridEmailService.sendPublishRequest({
+          businessName: website.businessName,
+          customerEmail: website.formSubmission.email,
+          customerPhone: website.formSubmission.phone || undefined,
+          websiteId: website.id,
+          previewUrl: website.previewUrl || `${process.env.NEXT_PUBLIC_APP_URL}/api/preview/${website.formSubmissionId}`,
+          dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/admin/sales`,
+        });
+        console.log('✅ Publish request email sent to sales team');
+      } catch (emailError) {
+        console.error('⚠️ Failed to send publish request email:', emailError);
+      }
+      
+      // Return response telling user that sales will contact them
+      return NextResponse.json({
+        success: true,
+        status: 'PENDING_APPROVAL',
+        message: "Your publish request has been received! Our sales team will contact you shortly to complete the process.",
+        requiresApproval: true
+      });
+    }
+
+    // ========================================
+    // User IS APPROVED - Proceed with deployment
+    // ========================================
 
     // NOW deploy to Netlify - this is when actual deployment happens!
     console.log(`🚀 Publishing website ${website.businessName} to Netlify...`);
@@ -134,6 +180,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      status: 'PUBLISHED',
       message: "Website published successfully to Netlify!",
       deploymentUrl: updatedWebsite.deploymentUrl,
       publishedAt: now.toISOString()

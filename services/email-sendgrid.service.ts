@@ -39,6 +39,15 @@ export interface SendPublishedNotificationParams {
   liveUrl: string;
 }
 
+export interface SendPublishRequestParams {
+  businessName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  websiteId: string;
+  previewUrl: string;
+  dashboardUrl: string;
+}
+
 class SendGridEmailService {
   private ensureConfigured() {
     if (!SENDGRID_API_KEY) {
@@ -297,6 +306,98 @@ class SendGridEmailService {
       `🚀 Your Website is Live! - ${businessName}`,
       html
     );
+
+    return result;
+  }
+
+  /**
+   * Send notification to sales team when user clicks publish (needs approval)
+   */
+  async sendPublishRequest(params: SendPublishRequestParams) {
+    const {
+      businessName,
+      customerEmail,
+      customerPhone,
+      websiteId,
+      previewUrl,
+      dashboardUrl,
+    } = params;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔔 Publish Request - ${businessName}</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+    <h1 style="color: white; margin: 0; font-size: 24px;">🔔 Publish Request!</h1>
+    <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">A customer wants to publish their website</p>
+  </div>
+  
+  <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e9ecef;">
+    <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+      <p style="margin: 0; color: #856404;"><strong>⚡ Action Required:</strong> Customer is waiting for your call to complete the payment process.</p>
+    </div>
+
+    <h2 style="color: #f59e0b; margin-top: 0;">📋 Customer Details</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef;"><strong>Business Name:</strong></td>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef;">${businessName}</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef;"><strong>Customer Email:</strong></td>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef;"><a href="mailto:${customerEmail}" style="color: #f59e0b;">${customerEmail}</a></td>
+      </tr>
+      ${customerPhone ? `
+      <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef;"><strong>Phone:</strong></td>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef;"><a href="tel:${customerPhone}" style="color: #f59e0b; font-weight: bold; font-size: 18px;">📞 ${customerPhone}</a></td>
+      </tr>
+      ` : ''}
+      <tr>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef;"><strong>Website ID:</strong></td>
+        <td style="padding: 10px 0; border-bottom: 1px solid #e9ecef; font-family: monospace; font-size: 12px;">${websiteId}</td>
+      </tr>
+    </table>
+
+    <h2 style="color: #f59e0b; margin-top: 30px;">👁️ Preview Website</h2>
+    <div style="text-align: center; margin: 20px 0;">
+      <a href="${previewUrl}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px;">Preview Website →</a>
+    </div>
+
+    <h2 style="color: #f59e0b; margin-top: 30px;">✅ Next Steps</h2>
+    <ol style="color: #666; padding-left: 20px;">
+      <li style="margin-bottom: 10px;"><strong>Call the customer</strong> at the phone number above</li>
+      <li style="margin-bottom: 10px;"><strong>Discuss pricing</strong> and complete payment</li>
+      <li style="margin-bottom: 10px;"><strong>Approve the website</strong> in the sales dashboard</li>
+      <li style="margin-bottom: 10px;">Customer can then publish their website</li>
+    </ol>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="${dashboardUrl}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 15px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">Open Sales Dashboard →</a>
+    </div>
+  </div>
+
+  <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+    <p>This is an automated notification from AI Website Builder</p>
+  </div>
+</body>
+</html>
+    `;
+
+    const result = await this.sendEmail(
+      SALES_EMAIL,
+      `🔔 Publish Request - ${businessName} wants to go live!`,
+      html
+    );
+
+    if (result.success) {
+      console.log(`✅ Publish request notification sent to ${SALES_EMAIL}`);
+    }
 
     return result;
   }

@@ -155,6 +155,9 @@ class NetlifyDeploymentService {
       const content = entries.pathToContent.get(filePath);
       if (!content) continue;
 
+      // Convert Buffer to string for fetch body compatibility
+      const bodyContent = content.toString('utf-8');
+
       const uploadResponse = await fetch(
         `${this.baseUrl}/deploys/${deployId}/files${filePath}`,
         {
@@ -163,7 +166,7 @@ class NetlifyDeploymentService {
             Authorization: `Bearer ${this.apiToken}`,
             'Content-Type': 'application/octet-stream',
           },
-          body: content,
+          body: bodyContent,
         }
       );
 
