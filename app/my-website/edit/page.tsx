@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { X, Loader2, Palette, Pencil } from "lucide-react"
 
@@ -37,6 +37,9 @@ export default function EditWebsitePage() {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState("")
   const [activeTab, setActiveTab] = useState<"colors" | "content">("colors")
+  
+  // Ref to the preview iframe
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   
   // Editable colors
   const [colors, setColors] = useState({
@@ -98,6 +101,33 @@ export default function EditWebsitePage() {
     }
   }
 
+  // Send live updates to the preview iframe via postMessage
+  const sendLiveUpdate = useCallback((updatedColors?: typeof colors, updatedContent?: typeof content) => {
+    const iframe = iframeRef.current
+    if (!iframe?.contentWindow) return
+    iframe.contentWindow.postMessage({
+      type: 'live-edit',
+      payload: {
+        colors: updatedColors || undefined,
+        content: updatedContent || undefined,
+      }
+    }, '*')
+  }, [])
+
+  // Color change handler — updates state + sends live preview
+  const updateColor = (key: keyof typeof colors, value: string) => {
+    const next = { ...colors, [key]: value }
+    setColors(next)
+    sendLiveUpdate(next)
+  }
+
+  // Content change handler — updates state + sends live preview
+  const updateContent = (key: keyof EditableContent, value: string) => {
+    const next = { ...content, [key]: value }
+    setContent(next)
+    sendLiveUpdate(undefined, next)
+  }
+
   const handleSave = async () => {
     if (!website) return
     
@@ -122,6 +152,10 @@ export default function EditWebsitePage() {
       }
       
       setSaved(true)
+      // Reload the preview iframe to pick up saved files
+      if (iframeRef.current) {
+        iframeRef.current.src = `/api/preview/${website.formSubmissionId}?t=${Date.now()}`
+      }
       setTimeout(() => setSaved(false), 3000)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save")
@@ -224,13 +258,13 @@ export default function EditWebsitePage() {
                       <input
                         type="color"
                         value={colors.primary}
-                        onChange={(e) => setColors({ ...colors, primary: e.target.value })}
+                        onChange={(e) => updateColor('primary', e.target.value)}
                         className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent"
                       />
                       <input
                         type="text"
                         value={colors.primary}
-                        onChange={(e) => setColors({ ...colors, primary: e.target.value })}
+                        onChange={(e) => updateColor('primary', e.target.value)}
                         className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm font-mono"
                       />
                     </div>
@@ -246,13 +280,13 @@ export default function EditWebsitePage() {
                       <input
                         type="color"
                         value={colors.secondary}
-                        onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
+                        onChange={(e) => updateColor('secondary', e.target.value)}
                         className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent"
                       />
                       <input
                         type="text"
                         value={colors.secondary}
-                        onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
+                        onChange={(e) => updateColor('secondary', e.target.value)}
                         className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm font-mono"
                       />
                     </div>
@@ -268,13 +302,13 @@ export default function EditWebsitePage() {
                       <input
                         type="color"
                         value={colors.accent}
-                        onChange={(e) => setColors({ ...colors, accent: e.target.value })}
+                        onChange={(e) => updateColor('accent', e.target.value)}
                         className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent"
                       />
                       <input
                         type="text"
                         value={colors.accent}
-                        onChange={(e) => setColors({ ...colors, accent: e.target.value })}
+                        onChange={(e) => updateColor('accent', e.target.value)}
                         className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm font-mono"
                       />
                     </div>
@@ -297,7 +331,11 @@ export default function EditWebsitePage() {
                   ].map((preset) => (
                     <button
                       key={preset.name}
-                      onClick={() => setColors({ primary: preset.primary, secondary: preset.secondary, accent: preset.accent })}
+                      onClick={() => {
+                        const next = { primary: preset.primary, secondary: preset.secondary, accent: preset.accent }
+                        setColors(next)
+                        sendLiveUpdate(next)
+                      }}
                       className="p-2 rounded-lg bg-gray-900/50 hover:bg-gray-700 transition-colors text-left"
                     >
                       <div className="flex gap-1 mb-1">
@@ -326,7 +364,7 @@ export default function EditWebsitePage() {
                     <input
                       type="text"
                       value={content.headline}
-                      onChange={(e) => setContent({ ...content, headline: e.target.value })}
+                      onChange={(e) => updateContent('headline', e.target.value)}
                       placeholder="Your main headline..."
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
@@ -337,7 +375,7 @@ export default function EditWebsitePage() {
                     </label>
                     <textarea
                       value={content.subheadline}
-                      onChange={(e) => setContent({ ...content, subheadline: e.target.value })}
+                      onChange={(e) => updateContent('subheadline', e.target.value)}
                       placeholder="A brief description of your business..."
                       rows={3}
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 resize-none"
@@ -351,7 +389,7 @@ export default function EditWebsitePage() {
                       <input
                         type="text"
                         value={content.ctaPrimary}
-                        onChange={(e) => setContent({ ...content, ctaPrimary: e.target.value })}
+                        onChange={(e) => updateContent('ctaPrimary', e.target.value)}
                         placeholder="Get Started"
                         className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                       />
@@ -363,7 +401,7 @@ export default function EditWebsitePage() {
                       <input
                         type="text"
                         value={content.ctaSecondary}
-                        onChange={(e) => setContent({ ...content, ctaSecondary: e.target.value })}
+                        onChange={(e) => updateContent('ctaSecondary', e.target.value)}
                         placeholder="Learn More"
                         className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                       />
@@ -383,7 +421,7 @@ export default function EditWebsitePage() {
                     <input
                       type="text"
                       value={content.aboutHeadline}
-                      onChange={(e) => setContent({ ...content, aboutHeadline: e.target.value })}
+                      onChange={(e) => updateContent('aboutHeadline', e.target.value)}
                       placeholder="Why choose us?"
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
@@ -394,7 +432,7 @@ export default function EditWebsitePage() {
                     </label>
                     <textarea
                       value={content.aboutText}
-                      onChange={(e) => setContent({ ...content, aboutText: e.target.value })}
+                      onChange={(e) => updateContent('aboutText', e.target.value)}
                       placeholder="Tell your story..."
                       rows={4}
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 resize-none"
@@ -414,7 +452,7 @@ export default function EditWebsitePage() {
                     <input
                       type="text"
                       value={content.ctaHeadline}
-                      onChange={(e) => setContent({ ...content, ctaHeadline: e.target.value })}
+                      onChange={(e) => updateContent('ctaHeadline', e.target.value)}
                       placeholder="Ready to get started?"
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
@@ -426,7 +464,7 @@ export default function EditWebsitePage() {
                     <input
                       type="text"
                       value={content.ctaSubheadline}
-                      onChange={(e) => setContent({ ...content, ctaSubheadline: e.target.value })}
+                      onChange={(e) => updateContent('ctaSubheadline', e.target.value)}
                       placeholder="Contact us today for a free consultation"
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
@@ -510,10 +548,10 @@ export default function EditWebsitePage() {
         {/* Preview iframe */}
         <div className="flex-1 bg-gray-900">
           <iframe
-            src={website.deploymentUrl || `/api/preview/${website.formSubmissionId}`}
+            ref={iframeRef}
+            src={`/api/preview/${website.formSubmissionId}`}
             className="w-full h-full border-0"
             title="Website Preview"
-            key={`preview-${saved}`}
           />
         </div>
       </div>

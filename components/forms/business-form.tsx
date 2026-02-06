@@ -201,6 +201,7 @@ export function BusinessForm() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [newTestimonial, setNewTestimonial] = useState({ authorName: '', authorRole: '', quote: '' });
   const [showTestimonials, setShowTestimonials] = useState(false);
+  const [showCustomColors, setShowCustomColors] = useState(false);
   const [brandColors, setBrandColors] = useState<BrandColors>({
     primary: '#3B82F6',
     secondary: '#1E40AF',
@@ -706,6 +707,57 @@ export function BusinessForm() {
                   ))}
                 </div>
                 <p className="text-xs text-gray-400 mt-2">Or we&apos;ll extract colors from your logo automatically</p>
+
+                {/* Custom color toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowCustomColors(!showCustomColors)}
+                  className="mt-3 text-sm text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1"
+                >
+                  <Palette className="w-3.5 h-3.5" />
+                  {showCustomColors ? 'Hide custom colors' : 'Pick my own colors'}
+                </button>
+
+                <AnimatePresence>
+                  {showCustomColors && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3 space-y-3">
+                        {[
+                          { label: 'Primary', key: 'primary' as const, hint: 'Buttons, links, main accents' },
+                          { label: 'Secondary', key: 'secondary' as const, hint: 'Gradients, backgrounds' },
+                          { label: 'Accent', key: 'accent' as const, hint: 'Highlights, decorative' },
+                        ].map((c) => (
+                          <div key={c.key} className="flex items-center gap-3">
+                            <input
+                              type="color"
+                              value={brandColors[c.key]}
+                              onChange={(e) => setBrandColors((prev) => ({ ...prev, [c.key]: e.target.value }))}
+                              className="w-10 h-10 rounded-lg cursor-pointer border-0 bg-transparent"
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-gray-700">{c.label}</span>
+                                <input
+                                  type="text"
+                                  value={brandColors[c.key]}
+                                  onChange={(e) => setBrandColors((prev) => ({ ...prev, [c.key]: e.target.value }))}
+                                  className="w-20 px-2 py-1 text-xs font-mono border border-gray-200 rounded-md bg-white text-gray-700"
+                                />
+                              </div>
+                              <p className="text-[10px] text-gray-400">{c.hint}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Testimonials — Collapsible */}
@@ -839,7 +891,7 @@ export function BusinessForm() {
             ) : (
               <>
                 <Sparkles className="w-5 h-5" />
-                Build My Website — Free
+                Submit
               </>
             )}
           </button>

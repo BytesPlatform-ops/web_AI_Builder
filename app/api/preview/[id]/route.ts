@@ -45,14 +45,78 @@ export async function GET(
     if (file.endsWith('.css')) contentType = 'text/css';
     if (file.endsWith('.js')) contentType = 'application/javascript';
     
-    // For HTML files, inject base URL for relative resources
+    // For HTML files, inject base URL for relative resources + live edit listener
     let responseContent = content;
     if (file === 'index.html') {
       // Update relative paths to point to this preview API
       const baseUrl = `/api/preview/${id}?file=`;
+      
+      // Inject live-edit listener script before </body>
+      const liveEditScript = `
+<script>
+// Live edit listener for real-time preview updates
+window.addEventListener('message', function(event) {
+  if (!event.data || event.data.type !== 'live-edit') return;
+  var payload = event.data.payload;
+  
+  // Update CSS variables for colors
+  if (payload.colors) {
+    var root = document.documentElement;
+    if (payload.colors.primary) {
+      root.style.setProperty('--primary', payload.colors.primary);
+      var hex = payload.colors.primary.replace('#', '');
+      var r = parseInt(hex.substring(0,2), 16);
+      var g = parseInt(hex.substring(2,4), 16);
+      var b = parseInt(hex.substring(4,6), 16);
+      root.style.setProperty('--primary-rgb', r + ', ' + g + ', ' + b);
+    }
+    if (payload.colors.secondary) {
+      root.style.setProperty('--secondary', payload.colors.secondary);
+      var hex2 = payload.colors.secondary.replace('#', '');
+      var r2 = parseInt(hex2.substring(0,2), 16);
+      var g2 = parseInt(hex2.substring(2,4), 16);
+      var b2 = parseInt(hex2.substring(4,6), 16);
+      root.style.setProperty('--secondary-rgb', r2 + ', ' + g2 + ', ' + b2);
+    }
+    if (payload.colors.accent) {
+      root.style.setProperty('--accent', payload.colors.accent);
+      var hex3 = payload.colors.accent.replace('#', '');
+      var r3 = parseInt(hex3.substring(0,2), 16);
+      var g3 = parseInt(hex3.substring(2,4), 16);
+      var b3 = parseInt(hex3.substring(4,6), 16);
+      root.style.setProperty('--accent-rgb', r3 + ', ' + g3 + ', ' + b3);
+    }
+  }
+  
+  // Update text content
+  if (payload.content) {
+    var map = {
+      headline: '.hero-title .title-line, .hero-title',
+      subheadline: '.hero-desc, .hero-subtitle',
+      ctaPrimary: '.btn-primary span, .hero-actions .btn-primary .btn-text',
+      ctaSecondary: '.btn-ghost span, .hero-actions .btn-outline .btn-text',
+      aboutHeadline: '#about .section-title, #about h2',
+      aboutText: '#about .section-desc, #about .about-text',
+      ctaHeadline: '#contact .section-title, .cta-section h2, .cta h2',
+      ctaSubheadline: '#contact .section-desc, .cta-section p, .cta p'
+    };
+    for (var key in payload.content) {
+      if (payload.content[key] && map[key]) {
+        var selectors = map[key].split(', ');
+        for (var i = 0; i < selectors.length; i++) {
+          var el = document.querySelector(selectors[i]);
+          if (el) { el.textContent = payload.content[key]; break; }
+        }
+      }
+    }
+  }
+});
+</script>`;
+
       responseContent = content
         .replace('href="styles.css"', `href="${baseUrl}styles.css"`)
-        .replace('src="script.js"', `src="${baseUrl}script.js"`);
+        .replace('src="script.js"', `src="${baseUrl}script.js"`)
+        .replace('</body>', liveEditScript + '\n</body>');
     }
     
     return new NextResponse(responseContent, {

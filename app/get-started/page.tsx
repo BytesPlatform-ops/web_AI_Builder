@@ -1,7 +1,7 @@
 'use client';
 
 import { BusinessForm } from '@/components/forms/business-form';
-import { Shield, Clock, CreditCard, Star } from 'lucide-react';
+import { Shield, Clock, Star } from 'lucide-react';
 
 export default function GetStartedPage() {
   return (
@@ -9,10 +9,6 @@ export default function GetStartedPage() {
       {/* Trust Bar */}
       <div className="border-b border-gray-100 bg-white/80 backdrop-blur-sm">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-center gap-6 sm:gap-10 text-sm text-gray-600">
-          <span className="flex items-center gap-1.5">
-            <CreditCard className="w-4 h-4 text-green-500" />
-            100% Free
-          </span>
           <span className="flex items-center gap-1.5">
             <Clock className="w-4 h-4 text-indigo-500" />
             Ready in 2 min

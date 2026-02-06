@@ -16,6 +16,9 @@ import {
   LogOut,
   RefreshCw,
   Loader2,
+  Link2,
+  Copy,
+  X,
 } from "lucide-react"
 
 interface GeneratedWebsite {
@@ -41,6 +44,8 @@ export default function MyWebsitePage() {
   const [publishing, setPublishing] = useState(false)
   const [error, setError] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const [showDomainModal, setShowDomainModal] = useState(false)
+  const [customDomain, setCustomDomain] = useState("")
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -329,6 +334,17 @@ export default function MyWebsitePage() {
                 View Live Site
               </a>
             )}
+
+            {/* Custom Domain - Only if published */}
+            {website.status === "PUBLISHED" && website.deploymentUrl && (
+              <button
+                onClick={() => setShowDomainModal(true)}
+                className="flex-1 sm:flex-none border border-purple-300 text-purple-700 bg-purple-50 px-6 py-3 rounded-xl hover:bg-purple-100 transition-all font-medium flex items-center justify-center gap-2"
+              >
+                <Link2 className="w-5 h-5" />
+                Custom Domain
+              </button>
+            )}
           </div>
 
           {/* Status Info */}
@@ -400,6 +416,182 @@ export default function MyWebsitePage() {
           </div>
         )}
       </main>
+
+      {/* Custom Domain Modal */}
+      {showDomainModal && website?.deploymentUrl && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">Connect Custom Domain</h3>
+                <p className="text-sm text-gray-500 mt-1">Point your own domain to your website</p>
+              </div>
+              <button
+                onClick={() => setShowDomainModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Current Netlify URL */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Your Current Site URL</label>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 font-mono truncate">
+                    {website.deploymentUrl}
+                  </code>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(website.deploymentUrl || "")
+                    }}
+                    className="p-2.5 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    title="Copy URL"
+                  >
+                    <Copy className="w-4 h-4 text-gray-500" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Steps */}
+              <div>
+                <h4 className="text-sm font-semibold text-gray-900 mb-3">Setup Instructions</h4>
+                <div className="space-y-4">
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Go to your domain registrar</p>
+                      <p className="text-xs text-gray-500 mt-0.5">GoDaddy, Namecheap, Cloudflare, Google Domains, etc.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Add a CNAME record</p>
+                      <p className="text-xs text-gray-500 mt-0.5">Point your domain to your Netlify site</p>
+                      <div className="mt-2 bg-gray-50 border border-gray-200 rounded-lg p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500">Type</span>
+                          <code className="text-xs font-mono font-semibold text-gray-800">CNAME</code>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500">Name / Host</span>
+                          <code className="text-xs font-mono font-semibold text-gray-800">www</code>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500">Value / Points to</span>
+                          <div className="flex items-center gap-1.5">
+                            <code className="text-xs font-mono font-semibold text-gray-800">
+                              {website.deploymentUrl?.replace('https://', '').replace('http://', '').replace(/\/$/, '')}
+                            </code>
+                            <button
+                              onClick={() => {
+                                const target = website.deploymentUrl?.replace('https://', '').replace('http://', '').replace(/\/$/, '') || ""
+                                navigator.clipboard.writeText(target)
+                              }}
+                              className="p-1 hover:bg-gray-200 rounded"
+                              title="Copy"
+                            >
+                              <Copy className="w-3 h-3 text-gray-400" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">For root domain (no www)</p>
+                      <p className="text-xs text-gray-500 mt-0.5">Add an A record pointing to Netlify&apos;s load balancer</p>
+                      <div className="mt-2 bg-gray-50 border border-gray-200 rounded-lg p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500">Type</span>
+                          <code className="text-xs font-mono font-semibold text-gray-800">A</code>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500">Name / Host</span>
+                          <code className="text-xs font-mono font-semibold text-gray-800">@</code>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-500">Value / Points to</span>
+                          <div className="flex items-center gap-1.5">
+                            <code className="text-xs font-mono font-semibold text-gray-800">75.2.60.5</code>
+                            <button
+                              onClick={() => navigator.clipboard.writeText("75.2.60.5")}
+                              className="p-1 hover:bg-gray-200 rounded"
+                              title="Copy"
+                            >
+                              <Copy className="w-3 h-3 text-gray-400" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Enter your domain below</p>
+                      <p className="text-xs text-gray-500 mt-0.5">We&apos;ll configure it on our end and set up free SSL</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Domain Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Your Custom Domain</label>
+                <input
+                  type="text"
+                  value={customDomain}
+                  onChange={(e) => setCustomDomain(e.target.value)}
+                  placeholder="e.g., www.yourbusiness.com"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                />
+                <p className="text-xs text-gray-400 mt-1.5">
+                  DNS changes can take up to 48 hours to propagate
+                </p>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDomainModal(false)}
+                  className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    if (!customDomain.trim()) return
+                    // For now, open the Netlify domain settings page
+                    const siteName = website.deploymentUrl?.replace('https://', '').replace('.netlify.app', '').replace(/\/$/, '')
+                    window.open(`https://app.netlify.com/sites/${siteName}/domain-management`, '_blank')
+                    setShowDomainModal(false)
+                  }}
+                  disabled={!customDomain.trim()}
+                  className="flex-1 px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <Link2 className="w-4 h-4" />
+                  Connect Domain
+                </button>
+              </div>
+
+              {/* Help note */}
+              <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+                <p className="text-xs text-indigo-700">
+                  <strong>Need help?</strong> Contact our sales team and we&apos;ll set up your custom domain for you at no extra charge.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
