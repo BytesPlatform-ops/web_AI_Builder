@@ -96,50 +96,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Process file uploads
+    // Capture file uploads for background processing
     let logoUrl: string | null = null;
     let heroImageUrl: string | null = null;
-    const additionalImages: string[] = [];
+    let additionalImages: string[] = [];
 
-    // Process logo
+    let logoBuffer: Buffer | null = null;
+    let logoFilename: string | null = null;
+
+    let heroBuffer: Buffer | null = null;
+    let heroFilename: string | null = null;
+
+    const additionalFiles: Array<{ buffer: Buffer; filename: string }> = [];
+
     const logoFile = formData.get('logo') as File | null;
     if (logoFile) {
       const buffer = await logoFile.arrayBuffer();
-      const result = await imageProcessingService.processLogo(
-        Buffer.from(buffer),
-        logoFile.name
-      );
-      logoUrl = result.originalUrl;
-      console.log('✅ Logo processed:', logoUrl);
+      logoBuffer = Buffer.from(buffer);
+      logoFilename = logoFile.name;
     }
 
-    // Process hero image
     const heroFile = formData.get('heroImage') as File | null;
     if (heroFile) {
       const buffer = await heroFile.arrayBuffer();
-      const result = await imageProcessingService.processImage(
-        Buffer.from(buffer),
-        heroFile.name,
-        'images/hero'
-      );
-      heroImageUrl = result.webpUrl;
-      console.log('✅ Hero image processed:', heroImageUrl);
+      heroBuffer = Buffer.from(buffer);
+      heroFilename = heroFile.name;
     }
 
-    // Process additional images
     const additionalFilesCount = parseInt(
-      formData.get('additionalImagesCount') as string || '0'
+      (formData.get('additionalImagesCount') as string) || '0'
     );
     for (let i = 0; i < additionalFilesCount; i++) {
       const file = formData.get(`additionalImage_${i}`) as File | null;
       if (file) {
         const buffer = await file.arrayBuffer();
-        const result = await imageProcessingService.processImage(
-          Buffer.from(buffer),
-          file.name,
-          'images/additional'
-        );
-        additionalImages.push(result.webpUrl);
+        additionalFiles.push({ buffer: Buffer.from(buffer), filename: file.name });
       }
     }
 
@@ -213,7 +204,45 @@ export async function POST(request: NextRequest) {
           data: { status: 'GENERATING' }
         });
 
-        // Step 1: Generate AI content
+        // Step 1: Process images (moved to background to avoid request timeout)
+        if (logoBuffer && logoFilename) {
+          const result = await imageProcessingService.processLogo(logoBuffer, logoFilename);
+          logoUrl = result.originalUrl;
+          console.log('✅ Logo processed:', logoUrl);
+        }
+
+        if (heroBuffer && heroFilename) {
+          const result = await imageProcessingService.processImage(
+            heroBuffer,
+            heroFilename,
+            'images/hero'
+          );
+          heroImageUrl = result.webpUrl;
+          console.log('✅ Hero image processed:', heroImageUrl);
+        }
+
+        if (additionalFiles.length > 0) {
+          for (const file of additionalFiles) {
+            const result = await imageProcessingService.processImage(
+              file.buffer,
+              file.filename,
+              'images/additional'
+            );
+            additionalImages.push(result.webpUrl);
+          }
+        }
+
+        // Update submission with image URLs
+        await prisma.formSubmission.update({
+          where: { id: formSubmission.id },
+          data: {
+            logoUrl,
+            heroImageUrl,
+            additionalImages,
+          },
+        });
+
+        // Step 2: Generate AI content
         console.log('✨ Step 1: Generating AI content...');
         const enhancedContent = await aiContentService.generateWebsiteContent({
           businessName,
@@ -224,7 +253,7 @@ export async function POST(request: NextRequest) {
           targetAudience: targetAudience || undefined,
         });
 
-        // Step 2: Extract colors from logo
+        // Step 3: Extract colors from logo
         console.log('🎨 Step 2: Extracting brand colors...');
         let extractedColors = {
           primary: '#6366f1',
@@ -244,7 +273,7 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // Step 3: Generate website template
+        // Step 4: Generate website template
         console.log('🎨 Step 3: Generating website template with type:', templateType);
         const generatedWebsite = await premiumTemplateGenerator.generate({
           businessName,
@@ -265,7 +294,7 @@ export async function POST(request: NextRequest) {
           templateType: templateType as 'dark' | 'light', // Pass template type to generator
         });
 
-        // Step 4: Save files locally
+        // Step 5: Save files locally
         console.log('💾 Step 4: Saving website files...');
         const filesDir = path.join(process.cwd(), 'generated-sites', formSubmission.id);
         await fs.promises.mkdir(filesDir, { recursive: true });
@@ -281,7 +310,7 @@ export async function POST(request: NextRequest) {
         }
         console.log('💾 Files saved to:', filesDir);
 
-        // Step 5: Create user account
+        // Step 6: Create user account
         console.log('🔑 Step 5: Creating user account...');
         const user = await prisma.user.upsert({
           where: { email },
@@ -294,7 +323,7 @@ export async function POST(request: NextRequest) {
           }
         });
 
-        // Step 6: Create generated website record
+        // Step 7: Create generated website record
         const previewUrl = `${baseUrl}/api/preview/${formSubmission.id}`;
         const loginUrl = `${baseUrl}/login`;
 
@@ -316,13 +345,13 @@ export async function POST(request: NextRequest) {
           }
         });
 
-        // Step 7: Update form submission status
+        // Step 8: Update form submission status
         await prisma.formSubmission.update({
           where: { id: formSubmission.id },
           data: { status: 'GENERATED' }
         });
 
-        // Step 8: Send email to customer with credentials
+        // Step 9: Send email to customer with credentials
         console.log('📧 Step 8: Sending login credentials to customer...');
         try {
           await sendGridEmailService.sendCredentialsToUser({
@@ -338,7 +367,7 @@ export async function POST(request: NextRequest) {
           console.error('⚠️ Failed to send customer email:', emailError);
         }
 
-        // Step 9: Send email to sales person with credentials
+        // Step 10: Send email to sales person with credentials
         console.log('📧 Step 9: Sending email to sales person...');
         try {
           await sendGridEmailService.sendToSales({
