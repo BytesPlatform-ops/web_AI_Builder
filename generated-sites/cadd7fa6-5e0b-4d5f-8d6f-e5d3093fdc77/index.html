@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bytes Platform - Bytes Platform delivers bespoke technology solutions that drive real business growth and efficiency.</title>
+  <meta name="description" content="At Bytes Platform, we're not just digital experts; we're your partners in navigating the complex digital landscape. Our mission is to make technology accessible">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+</head>
+<body>
+  <!-- Aurora Background -->
+  <div class="aurora-bg">
+    <div class="aurora aurora-1"></div>
+    <div class="aurora aurora-2"></div>
+    <div class="aurora aurora-3"></div>
+    <div class="noise-overlay"></div>
+    <div class="grid-pattern"></div>
+  </div>
+
+  <!-- Cursor Spotlight -->
+  <div class="cursor-spotlight" id="cursorSpotlight"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Navigation -->
+  <header class="header" id="header">
+    <div class="container">
+      <a href="#" class="logo magnetic">
+        <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770404379409-bytes-logo.png" alt="Bytes Platform" class="logo-img">
+      </a>
+      
+      <nav class="nav-desktop" id="navDesktop">
+        <a href="#about" class="nav-link magnetic">About</a>
+        <a href="#services" class="nav-link magnetic">Services</a>
+        <a href="#gallery" class="nav-link magnetic">Gallery</a>
+        <a href="#contact" class="nav-link magnetic">Contact</a>
+      </nav>
+      
+      <a href="#contact" class="nav-cta magnetic">
+        <span>Get Started</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <div class="nav-mobile" id="navMobile">
+    <nav class="nav-mobile-links">
+      <a href="#about" class="nav-mobile-link">About</a>
+      <a href="#services" class="nav-mobile-link">Services</a>
+      <a href="#gallery" class="nav-mobile-link">Gallery</a>
+      <a href="#contact" class="nav-mobile-link">Contact</a>
+    </nav>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    
+    <div class="hero-image-container">
+      <div class="hero-image-wrapper" data-parallax>
+        <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/hero/1770404381725-bytes-hero.webp" alt="Bytes Platform" class="hero-image">
+        <div class="hero-image-overlay"></div>
+      </div>
+    </div>
+    
+    
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge" data-animate="fade-up">
+          <span class="badge-glow"></span>
+          <span class="badge-dot"></span>
+          <span>Welcome to Bytes Platform</span>
+        </div>
+        
+        <h1 class="hero-title" data-animate="split-text">
+          Elevate Your Brand with Cutting-Edge Digital Tools
+        </h1>
+        
+        <p class="hero-subtitle" data-animate="fade-up" data-delay="0.2">
+          Bytes Platform delivers bespoke technology solutions that drive real business growth and efficiency.
+        </p>
+        
+        <div class="hero-actions" data-animate="fade-up" data-delay="0.4">
+          <a href="#contact" class="btn btn-primary magnetic">
+            <span class="btn-bg"></span>
+            <span class="btn-text">Explore Services</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#about" class="btn btn-outline magnetic">
+            <span class="btn-text">Why Bytes?</span>
+          </a>
+        </div>
+
+        <div class="hero-stats" data-animate="fade-up" data-delay="0.6">
+          <div class="stat-item">
+            <span class="stat-number" data-count="500">0</span>
+            <span class="stat-plus">+</span>
+            <span class="stat-label">Happy Clients</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="98">0</span>
+            <span class="stat-plus">%</span>
+            <span class="stat-label">Satisfaction</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="10">0</span>
+            <span class="stat-plus">+</span>
+            <span class="stat-label">Years Experience</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll" data-animate="fade-up" data-delay="0.8">
+      <span>Scroll to explore</span>
+      <div class="scroll-indicator">
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+
+    <!-- 3D Floating Elements -->
+    <div class="hero-shapes">
+      <div class="shape shape-1" data-parallax-speed="0.05"></div>
+      <div class="shape shape-2" data-parallax-speed="0.08"></div>
+      <div class="shape shape-3" data-parallax-speed="0.03"></div>
+      <div class="shape shape-4" data-parallax-speed="0.06"></div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-content" data-animate="fade-right">
+          <span class="section-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            About Us
+          </span>
+          <h2 class="section-title">
+            <span class="title-word" data-animate="word">Crafting</span>
+            <span class="title-word gradient-text" data-animate="word">Excellence</span>
+            <span class="title-word" data-animate="word">Together</span>
+          </h2>
+          <div class="about-text">
+            <p>At Bytes Platform, we're not just digital experts; we're your partners in navigating the complex digital landscape. Our mission is to make technology accessible and effective for your business growth.</p><p>What sets us apart? We combine creativity with technology to deliver tailored solutions that are both innovative and functional. Our commitment to data-driven strategies ensures your digital assets perform optimally.</p>
+          </div>
+          <div class="about-features">
+            
+            <div class="feature-item" data-animate="fade-up" data-delay="0">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Website design & development</span>
+            </div>
+            
+            <div class="feature-item" data-animate="fade-up" data-delay="0.1">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>Mobile app development</span>
+            </div>
+            
+            <div class="feature-item" data-animate="fade-up" data-delay="0.2">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span>SEO & analytics</span>
+            </div>
+            
+          </div>
+          <a href="#contact" class="btn btn-primary magnetic" data-animate="fade-up" data-delay="0.3">
+            <span class="btn-bg"></span>
+            <span class="btn-text">Work With Us</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        
+        <div class="about-visual" data-animate="fade-left">
+          <div class="about-card-stack">
+            <div class="about-card about-card-1">
+              <div class="card-shine"></div>
+              <div class="card-content">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="card-text">
+                  <h4>Innovation First</h4>
+                  <p>Pushing boundaries with cutting-edge solutions</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-card about-card-2">
+              <div class="card-shine"></div>
+              <div class="card-content">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="card-text">
+                  <h4>On-Time Delivery</h4>
+                  <p>Reliable service that respects your timeline</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-card about-card-3">
+              <div class="card-shine"></div>
+              <div class="card-content">
+                <div class="card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </div>
+                <div class="card-text">
+                  <h4>Client Focused</h4>
+                  <p>Your success is our ultimate priority</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section services" id="services">
+    <div class="services-bg">
+      <div class="services-gradient"></div>
+    </div>
+    <div class="container">
+      <div class="section-header center" data-animate="fade-up">
+        <span class="section-eyebrow">
+          <span class="eyebrow-line"></span>
+          What We Do
+          <span class="eyebrow-line"></span>
+        </span>
+        <h2 class="section-title">
+          <span class="title-word" data-animate="word">Our</span>
+          <span class="title-word gradient-text" data-animate="word">Premium</span>
+          <span class="title-word" data-animate="word">Services</span>
+        </h2>
+        <p class="section-desc">Let's discuss how we can tailor our solutions to meet your unique needs.</p>
+      </div>
+      
+      <div class="services-grid">
+        
+        <div class="service-card" data-animate="fade-up" data-delay="0">
+          <div class="service-glow"></div>
+          <div class="service-shine"></div>
+          <div class="service-content">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3 class="service-title">Website design & development</h3>
+            <p class="service-desc">Tailored, cutting-edge sites designed to captivate your audience and keep them engaged.</p>
+            <div class="service-link">
+              <span>Learn more</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+          <div class="service-number">01</div>
+        </div>
+        
+        <div class="service-card" data-animate="fade-up" data-delay="0.1">
+          <div class="service-glow"></div>
+          <div class="service-shine"></div>
+          <div class="service-content">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3 class="service-title">Mobile app development</h3>
+            <p class="service-desc">Streamline your services with intuitive apps that enhance user experience and boost engagement.</p>
+            <div class="service-link">
+              <span>Learn more</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+          <div class="service-number">02</div>
+        </div>
+        
+        <div class="service-card" data-animate="fade-up" data-delay="0.2">
+          <div class="service-glow"></div>
+          <div class="service-shine"></div>
+          <div class="service-content">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3 class="service-title">SEO & analytics</h3>
+            <p class="service-desc">Boost your visibility with strategic SEO and precise analytics that drive traffic and conversions.</p>
+            <div class="service-link">
+              <span>Learn more</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+          <div class="service-number">03</div>
+        </div>
+        
+        <div class="service-card" data-animate="fade-up" data-delay="0.30000000000000004">
+          <div class="service-glow"></div>
+          <div class="service-shine"></div>
+          <div class="service-content">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            </div>
+            <h3 class="service-title">Digital marketing</h3>
+            <p class="service-desc">Dynamic marketing strategies that amplify your message and connect with your target audience.</p>
+            <div class="service-link">
+              <span>Learn more</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+          <div class="service-number">04</div>
+        </div>
+        
+        <div class="service-card" data-animate="fade-up" data-delay="0.4">
+          <div class="service-glow"></div>
+          <div class="service-shine"></div>
+          <div class="service-content">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20.84 5A10 10 0 0 0 12 2v10h10a10 10 0 0 0-1.16-7"/></svg>
+            </div>
+            <h3 class="service-title">AI chatbots & automation</h3>
+            <p class="service-desc">Enhance customer interaction with AI-driven solutions that save time and reduce workload.</p>
+            <div class="service-link">
+              <span>Learn more</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+          <div class="service-number">05</div>
+        </div>
+        
+        <div class="service-card" data-animate="fade-up" data-delay="0.5">
+          <div class="service-glow"></div>
+          <div class="service-shine"></div>
+          <div class="service-content">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            </div>
+            <h3 class="service-title">CRM & system integrations</h3>
+            <p class="service-desc">Seamlessly integrate powerful CRM systems to enhance operational efficiency and customer relationships.</p>
+            <div class="service-link">
+              <span>Learn more</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+          <div class="service-number">06</div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  
+    <!-- Gallery Section -->
+    <section class="section gallery" id="gallery">
+      <div class="container">
+        <div class="section-header" data-animate="fade-up">
+          <span class="section-eyebrow">
+            <span class="eyebrow-line"></span>
+            Portfolio
+            <span class="eyebrow-line"></span>
+          </span>
+          <h2 class="section-title">
+            <span class="title-word" data-animate="word">Our</span>
+            <span class="title-word gradient-text" data-animate="word">Creative</span>
+            <span class="title-word" data-animate="word">Work</span>
+          </h2>
+          <p class="section-desc">A showcase of excellence and innovation</p>
+        </div>
+        
+        <div class="gallery-masonry">
+          
+          <div class="gallery-item" data-animate="scale" data-delay="0">
+            <div class="gallery-card">
+              <div class="gallery-image-wrapper">
+                <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770404383585-HERO_AURORA.webp" alt="Gallery 1" loading="lazy" />
+                <div class="gallery-shine"></div>
+              </div>
+              <div class="gallery-overlay">
+                <div class="gallery-content">
+                  <span class="gallery-tag">Project 1</span>
+                  <h4>Creative Excellence</h4>
+                  <button class="gallery-zoom magnetic" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770404383585-HERO_AURORA.webp')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-animate="scale" data-delay="0.1">
+            <div class="gallery-card">
+              <div class="gallery-image-wrapper">
+                <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770404384626-interllimaint.webp" alt="Gallery 2" loading="lazy" />
+                <div class="gallery-shine"></div>
+              </div>
+              <div class="gallery-overlay">
+                <div class="gallery-content">
+                  <span class="gallery-tag">Project 2</span>
+                  <h4>Creative Excellence</h4>
+                  <button class="gallery-zoom magnetic" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770404384626-interllimaint.webp')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-animate="scale" data-delay="0.2">
+            <div class="gallery-card">
+              <div class="gallery-image-wrapper">
+                <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770404385230-quantiva.webp" alt="Gallery 3" loading="lazy" />
+                <div class="gallery-shine"></div>
+              </div>
+              <div class="gallery-overlay">
+                <div class="gallery-content">
+                  <span class="gallery-tag">Project 3</span>
+                  <h4>Creative Excellence</h4>
+                  <button class="gallery-zoom magnetic" onclick="openLightbox('https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/images/additional/1770404385230-quantiva.webp')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  
+  
+    <!-- Testimonials Section - Premium 3D Carousel -->
+    <section class="section testimonials" id="testimonials">
+      <div class="testimonials-bg">
+        <div class="testimonials-gradient"></div>
+        <div class="testimonials-glow testimonials-glow-1"></div>
+        <div class="testimonials-glow testimonials-glow-2"></div>
+      </div>
+      <div class="container">
+        <div class="section-header light" data-animate="fade-up">
+          <span class="section-eyebrow light">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Testimonials
+          </span>
+          <h2 class="section-title light">
+            <span class="title-word" data-animate="word">Trusted</span>
+            <span class="title-word" data-animate="word">by</span>
+            <span class="title-word gradient-text-light" data-animate="word">Hundreds</span>
+          </h2>
+          <p class="section-desc light">Real stories from real customers who love what we do.</p>
+        </div>
+        
+        <!-- 3D Carousel - Infinite Scroll -->
+        <div class="testimonials-marquee" data-animate="fade-up" data-delay="0.2">
+          <div class="marquee-container">
+            <div class="marquee-track" id="testimonialTrack3D">
+              
+              <div class="testimonial-card-3d" data-index="0">
+                <div class="card-3d-inner">
+                  <div class="card-3d-glow"></div>
+                  <div class="card-3d-border"></div>
+                  
+                  <!-- Quote Icon -->
+                  <div class="quote-icon-3d">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.06 1.514-1.86 2.557-2.4L18.49 5c-.8.396-1.555.898-2.26 1.505-.708.607-1.34 1.305-1.894 2.094-.556.79-.97 1.68-1.24 2.69-.273 1-.345 2.04-.217 3.1.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l-.007.003z"/></svg>
+                  </div>
+                  
+                  <!-- Animated Stars -->
+                  <div class="star-rating-3d">
+                    
+                    <svg class="star-3d star-3d-1" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-2" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-3" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-5" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                  </div>
+                  
+                  <!-- Quote Text -->
+                  <blockquote class="quote-text-3d">"“Bytes Platform transformed our online presence. The website looks premium and performs exceptionally well.”"</blockquote>
+                  
+                  <!-- Author -->
+                  <div class="author-section-3d">
+                    <div class="author-avatar-3d">
+                      <div class="avatar-gradient-3d">
+                        <span>M</span>
+                      </div>
+                      <div class="avatar-ring-3d"></div>
+                    </div>
+                    <div class="author-details-3d">
+                      <span class="author-name-3d">Michael Anderson</span>
+                      <span class="author-role-3d">Startup Founder</span>
+                    </div>
+                    <div class="verified-badge-3d">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="testimonial-card-3d" data-index="1">
+                <div class="card-3d-inner">
+                  <div class="card-3d-glow"></div>
+                  <div class="card-3d-border"></div>
+                  
+                  <!-- Quote Icon -->
+                  <div class="quote-icon-3d">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.06 1.514-1.86 2.557-2.4L18.49 5c-.8.396-1.555.898-2.26 1.505-.708.607-1.34 1.305-1.894 2.094-.556.79-.97 1.68-1.24 2.69-.273 1-.345 2.04-.217 3.1.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l-.007.003z"/></svg>
+                  </div>
+                  
+                  <!-- Animated Stars -->
+                  <div class="star-rating-3d">
+                    
+                    <svg class="star-3d star-3d-1" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-2" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-3" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                    <svg class="star-3d star-3d-5" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    
+                  </div>
+                  
+                  <!-- Quote Text -->
+                  <blockquote class="quote-text-3d">"“Bytes Platform transformed our online presence. The website looks premium and performs exceptionally well.”"</blockquote>
+                  
+                  <!-- Author -->
+                  <div class="author-section-3d">
+                    <div class="author-avatar-3d">
+                      <div class="avatar-gradient-3d">
+                        <span>M</span>
+                      </div>
+                      <div class="avatar-ring-3d"></div>
+                    </div>
+                    <div class="author-details-3d">
+                      <span class="author-name-3d">Michael Anderson</span>
+                      <span class="author-role-3d">Startup Founder</span>
+                    </div>
+                    <div class="verified-badge-3d">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+          
+          <!-- Swipe Hint (Mobile) -->
+          <div class="swipe-hint-3d">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <span>Swipe to explore</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  <!-- CTA Section -->
+  <section class="section cta" id="cta">
+    <div class="cta-bg">
+      <div class="cta-aurora cta-aurora-1"></div>
+      <div class="cta-aurora cta-aurora-2"></div>
+      <div class="cta-particles"></div>
+    </div>
+    <div class="container">
+      <div class="cta-content" data-animate="fade-up">
+        <h2 class="cta-title">
+          <span class="title-word" data-animate="word">Ready to Transform Your Digital Presence?</span>
+          <span class="title-word gradient-text-light" data-animate="word">Transform</span>
+          <span class="title-word" data-animate="word">Your Vision?</span>
+        </h2>
+        <p class="cta-desc">Let's discuss how we can tailor our solutions to meet your unique needs.</p>
+        <div class="cta-actions">
+          <a href="#contact" class="btn btn-white magnetic">
+            <span class="btn-text">Get Started</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info" data-animate="fade-right">
+          <span class="section-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Get in Touch
+          </span>
+          <h2 class="section-title">
+            <span class="title-word" data-animate="word">Let's</span>
+            <span class="title-word gradient-text" data-animate="word">Connect</span>
+          </h2>
+          <p class="contact-desc">Ready to start your project? Reach out and let's discuss how we can help bring your vision to life.</p>
+          
+          <div class="contact-methods">
+            <a href="mailto:nomansiddiqui872@gmail.com" class="contact-method magnetic" data-tilt>
+              <div class="method-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </div>
+              <div class="method-content">
+                <span class="method-label">Email Us</span>
+                <span class="method-value">nomansiddiqui872@gmail.com</span>
+              </div>
+            </a>
+            
+            <a href="tel:+923353279709" class="contact-method magnetic" data-tilt>
+              <div class="method-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div class="method-content">
+                <span class="method-label">Call Us</span>
+                <span class="method-value">+923353279709</span>
+              </div>
+            </a>
+            
+            
+            <div class="contact-method" data-tilt>
+              <div class="method-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="method-content">
+                <span class="method-label">Visit Us</span>
+                <span class="method-value">Hno 4q block 2 P.E.C.H.S karachi</span>
+              </div>
+            </div>
+            
+          </div>
+
+          
+        </div>
+        
+        <div class="contact-form-wrapper" data-animate="fade-left">
+          <form class="contact-form" id="contactForm">
+            <div class="form-header">
+              <h3>Send us a message</h3>
+              <p>We'll get back to you within 24 hours</p>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text" id="name" name="name" required placeholder=" ">
+                <label for="name">Your Name</label>
+                <div class="input-highlight"></div>
+              </div>
+              <div class="form-group">
+                <input type="email" id="email" name="email" required placeholder=" ">
+                <label for="email">Your Email</label>
+                <div class="input-highlight"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="text" id="subject" name="subject" required placeholder=" ">
+              <label for="subject">Subject</label>
+              <div class="input-highlight"></div>
+            </div>
+            <div class="form-group">
+              <textarea id="message" name="message" rows="5" required placeholder=" "></textarea>
+              <label for="message">Your Message</label>
+              <div class="input-highlight"></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block magnetic">
+              <span class="btn-bg"></span>
+              <span class="btn-text">Send Message</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="https://jpmoucdgerlnvxbtkrzi.supabase.co/storage/v1/object/public/website-assets/logos/1770404379409-bytes-logo.png" alt="Bytes Platform" class="footer-logo">
+            <p class="footer-desc">Bytes Platform delivers bespoke technology solutions that drive real business growth and efficiency.</p>
+          </div>
+          
+          <div class="footer-links-group">
+            <h4>Quick Links</h4>
+            <nav class="footer-links">
+              <a href="#about">About Us</a>
+              <a href="#services">Services</a>
+              <a href="#gallery">Gallery</a>
+              <a href="#contact">Contact</a>
+            </nav>
+          </div>
+          
+          <div class="footer-links-group">
+            <h4>Services</h4>
+            <nav class="footer-links">
+              <a href="#services">Website design & development</a><a href="#services">Mobile app development</a><a href="#services">SEO & analytics</a><a href="#services">Digital marketing</a>
+            </nav>
+          </div>
+          
+          <div class="footer-links-group">
+            <h4>Contact</h4>
+            <nav class="footer-links">
+              <a href="mailto:nomansiddiqui872@gmail.com">nomansiddiqui872@gmail.com</a>
+              <a href="tel:+923353279709">+923353279709</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 Bytes Platform. All rights reserved.</p>
+        <div class="footer-social">
+          
+          
+          
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button class="back-to-top magnetic" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img src="" alt="" id="lightboxImage">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

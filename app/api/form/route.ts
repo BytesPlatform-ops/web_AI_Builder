@@ -210,58 +210,79 @@ export async function POST(request: NextRequest) {
         });
         console.log(`[GENERATE] Status set to GENERATING`);
 
-        // Step 1: Process images
+        // Step 1: Process images (one at a time, save to DB after each)
         console.log(`[GENERATE] Step 1: Processing images...`);
-        try {
-          if (logoBuffer && logoFilename) {
-            console.log(`[GENERATE]   Processing logo: ${logoFilename} (${logoBuffer.length} bytes)`);
+
+        // 1a: Logo
+        if (logoBuffer && logoFilename) {
+          try {
+            console.log(`[GENERATE]   Processing logo: ${logoFilename} (${(logoBuffer.length / 1024 / 1024).toFixed(1)}MB)`);
             const result = await imageProcessingService.processLogo(logoBuffer, logoFilename);
             logoUrl = result.originalUrl;
-            console.log(`[GENERATE]   Logo uploaded: ${logoUrl}`);
+            // Free memory immediately
+            logoBuffer = null;
+            // Save to DB right away so it's not lost if process crashes
+            await prisma.formSubmission.update({
+              where: { id: formSubmission.id },
+              data: { logoUrl },
+            });
+            console.log(`[GENERATE]   Logo saved to DB`);
+          } catch (logoError) {
+            console.error(`[GENERATE]   Logo FAILED:`, (logoError as Error).message);
+            logoBuffer = null;
           }
+        }
 
-          if (heroBuffer && heroFilename) {
-            console.log(`[GENERATE]   Processing hero: ${heroFilename} (${heroBuffer.length} bytes)`);
+        // 1b: Hero image
+        if (heroBuffer && heroFilename) {
+          try {
+            console.log(`[GENERATE]   Processing hero: ${heroFilename} (${(heroBuffer.length / 1024 / 1024).toFixed(1)}MB)`);
             const result = await imageProcessingService.processImage(
               heroBuffer,
               heroFilename,
               'images/hero'
             );
             heroImageUrl = result.webpUrl;
-            console.log(`[GENERATE]   Hero uploaded: ${heroImageUrl}`);
+            heroBuffer = null;
+            await prisma.formSubmission.update({
+              where: { id: formSubmission.id },
+              data: { heroImageUrl },
+            });
+            console.log(`[GENERATE]   Hero saved to DB`);
+          } catch (heroError) {
+            console.error(`[GENERATE]   Hero FAILED:`, (heroError as Error).message);
+            heroBuffer = null;
           }
+        }
 
-          if (additionalFiles.length > 0) {
-            console.log(`[GENERATE]   Processing ${additionalFiles.length} additional images...`);
-            for (const file of additionalFiles) {
-              console.log(`[GENERATE]     Processing: ${file.filename} (${file.buffer.length} bytes)`);
+        // 1c: Additional images (one at a time, save after each)
+        if (additionalFiles.length > 0) {
+          console.log(`[GENERATE]   Processing ${additionalFiles.length} additional images...`);
+          for (let i = 0; i < additionalFiles.length; i++) {
+            try {
+              const file = additionalFiles[i];
+              console.log(`[GENERATE]     [${i + 1}/${additionalFiles.length}] ${file.filename} (${(file.buffer.length / 1024 / 1024).toFixed(1)}MB)`);
               const result = await imageProcessingService.processImage(
                 file.buffer,
                 file.filename,
                 'images/additional'
               );
               additionalImages.push(result.webpUrl);
-              console.log(`[GENERATE]     Uploaded: ${result.webpUrl}`);
+              // Free buffer
+              additionalFiles[i] = { buffer: Buffer.alloc(0), filename: '' };
+              // Save progress after each image
+              await prisma.formSubmission.update({
+                where: { id: formSubmission.id },
+                data: { additionalImages },
+              });
+              console.log(`[GENERATE]     [${i + 1}/${additionalFiles.length}] Saved to DB`);
+            } catch (addError) {
+              console.error(`[GENERATE]     [${i + 1}] FAILED:`, (addError as Error).message);
+              additionalFiles[i] = { buffer: Buffer.alloc(0), filename: '' };
             }
           }
-
-          // Update submission with image URLs
-          await prisma.formSubmission.update({
-            where: { id: formSubmission.id },
-            data: {
-              logoUrl,
-              heroImageUrl,
-              additionalImages,
-            },
-          });
-          console.log(`[GENERATE] Step 1 complete - images saved to DB`);
-        } catch (imgError) {
-          console.error(`[GENERATE] Step 1 FAILED - image processing error:`, imgError);
-          console.error(`[GENERATE]   Error name: ${(imgError as Error).name}`);
-          console.error(`[GENERATE]   Error message: ${(imgError as Error).message}`);
-          console.error(`[GENERATE]   Error stack: ${(imgError as Error).stack}`);
-          // Continue with generation even if images fail
         }
+        console.log(`[GENERATE] Step 1 complete - logo=${!!logoUrl}, hero=${!!heroImageUrl}, additional=${additionalImages.length}`);
 
         // Step 2: Generate AI content
         console.log(`[GENERATE] Step 2: Generating AI content...`);

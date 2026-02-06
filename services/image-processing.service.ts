@@ -2,6 +2,9 @@ import sharp from 'sharp';
 import path from 'path';
 import { uploadFile } from '@/lib/supabase';
 
+// Limit Sharp concurrency to reduce peak memory on low-RAM servers (Render)
+sharp.concurrency(1);
+
 export interface ProcessedImage {
   originalUrl: string;
   webpUrl: string;
@@ -13,18 +16,19 @@ export interface ProcessedImage {
 
 /**
  * ImageProcessingService
- * Handles image optimization, compression, and format conversion
- * CRITICAL: This must produce PREMIUM quality images (not pathetic like old system)
+ * Memory-safe: resizes large input ONCE, then derives variants sequentially
  */
 class ImageProcessingService {
   private readonly MAX_WIDTH = 1920;
   private readonly MAX_HEIGHT = 1080;
-  private readonly QUALITY = 85; // High quality
+  private readonly QUALITY = 85;
   private readonly THUMBNAIL_SIZE = 400;
+  // Files larger than 3MB get pre-resized to limit memory usage
+  private readonly PRE_RESIZE_THRESHOLD = 3 * 1024 * 1024;
 
   /**
    * Process and optimize an uploaded image
-   * Creates: WebP version, thumbnail, optimized original
+   * Memory-safe: pre-resizes large files, processes sequentially (not in parallel)
    */
   async processImage(
     buffer: Buffer,
@@ -32,10 +36,26 @@ class ImageProcessingService {
     folder: string = 'uploads'
   ): Promise<ProcessedImage> {
     try {
-      const metadata = await sharp(buffer).metadata();
-      
-      // 1. Optimize original (resize if too large, keep quality high)
-      const optimizedBuffer = await sharp(buffer)
+      console.log(`[IMG] Processing ${filename} (${(buffer.length / 1024 / 1024).toFixed(1)}MB)`);
+
+      // Step 1: Pre-resize large images to limit peak memory
+      let workingBuffer = buffer;
+      if (buffer.length > this.PRE_RESIZE_THRESHOLD) {
+        console.log(`[IMG]   Large file, pre-resizing to limit memory...`);
+        workingBuffer = await sharp(buffer, { limitInputPixels: 100_000_000 })
+          .resize(this.MAX_WIDTH, this.MAX_HEIGHT, {
+            fit: 'inside',
+            withoutEnlargement: true,
+          })
+          .jpeg({ quality: 90 })
+          .toBuffer();
+        console.log(`[IMG]   Pre-resized: ${(workingBuffer.length / 1024 / 1024).toFixed(1)}MB`);
+      }
+
+      const metadata = await sharp(workingBuffer).metadata();
+
+      // Step 2: Create optimized JPEG
+      const optimizedBuffer = await sharp(workingBuffer)
         .resize(this.MAX_WIDTH, this.MAX_HEIGHT, {
           fit: 'inside',
           withoutEnlargement: true,
@@ -43,17 +63,13 @@ class ImageProcessingService {
         .jpeg({ quality: this.QUALITY })
         .toBuffer();
 
-      // 2. Generate WebP version (better compression, modern browsers)
-      const webpBuffer = await sharp(buffer)
-        .resize(this.MAX_WIDTH, this.MAX_HEIGHT, {
-          fit: 'inside',
-          withoutEnlargement: true,
-        })
+      // Step 3: Create WebP from the already-optimized buffer (much smaller)
+      const webpBuffer = await sharp(optimizedBuffer)
         .webp({ quality: this.QUALITY })
         .toBuffer();
 
-      // 3. Generate thumbnail
-      const thumbnailBuffer = await sharp(buffer)
+      // Step 4: Create thumbnail from the optimized buffer
+      const thumbnailBuffer = await sharp(optimizedBuffer)
         .resize(this.THUMBNAIL_SIZE, this.THUMBNAIL_SIZE, {
           fit: 'cover',
           position: 'center',
@@ -61,20 +77,21 @@ class ImageProcessingService {
         .webp({ quality: 80 })
         .toBuffer();
 
-      // Upload to Supabase Storage
+      // Upload sequentially to limit concurrent memory
       const timestamp = Date.now();
       const baseName = path.parse(filename).name;
-      
-      const originalPath = `${folder}/${timestamp}-${baseName}.jpg`;
-      const webpPath = `${folder}/${timestamp}-${baseName}.webp`;
-      const thumbnailPath = `${folder}/${timestamp}-${baseName}-thumb.webp`;
 
-      // Upload all versions
-      const [originalUrl, webpUrl, thumbnailUrl] = await Promise.all([
-        uploadFile('website-assets', originalPath, optimizedBuffer, 'image/jpeg'),
-        uploadFile('website-assets', webpPath, webpBuffer, 'image/webp'),
-        uploadFile('website-assets', thumbnailPath, thumbnailBuffer, 'image/webp'),
-      ]);
+      const originalPath = `${folder}/${timestamp}-${baseName}.jpg`;
+      const originalUrl = await uploadFile('website-assets', originalPath, optimizedBuffer, 'image/jpeg');
+      console.log(`[IMG]   JPEG uploaded`);
+
+      const webpPath = `${folder}/${timestamp}-${baseName}.webp`;
+      const webpUrl = await uploadFile('website-assets', webpPath, webpBuffer, 'image/webp');
+      console.log(`[IMG]   WebP uploaded`);
+
+      const thumbnailPath = `${folder}/${timestamp}-${baseName}-thumb.webp`;
+      const thumbnailUrl = await uploadFile('website-assets', thumbnailPath, thumbnailBuffer, 'image/webp');
+      console.log(`[IMG]   Thumbnail uploaded`);
 
       return {
         originalUrl,
@@ -85,8 +102,8 @@ class ImageProcessingService {
         size: optimizedBuffer.length,
       };
     } catch (error) {
-      console.error('❌ Image processing failed:', error);
-      throw new Error('Failed to process image');
+      console.error(`[IMG] Processing failed for ${filename}:`, error);
+      throw new Error(`Failed to process image: ${(error as Error).message}`);
     }
   }
 
@@ -95,15 +112,15 @@ class ImageProcessingService {
    */
   async processLogo(buffer: Buffer, filename: string): Promise<ProcessedImage> {
     try {
-      const logoMetadata = await sharp(buffer).metadata();
+      console.log(`[IMG] Processing logo: ${filename} (${(buffer.length / 1024 / 1024).toFixed(1)}MB)`);
+      const logoMetadata = await sharp(buffer, { limitInputPixels: 50_000_000 }).metadata();
 
-      // Process logo (keep transparency if exists)
-      const processedBuffer = await sharp(buffer)
+      const processedBuffer = await sharp(buffer, { limitInputPixels: 50_000_000 })
         .resize(800, 800, {
           fit: 'inside',
           withoutEnlargement: true,
         })
-        .png({ quality: 90 }) // PNG for transparency
+        .png({ quality: 90 })
         .toBuffer();
 
       const timestamp = Date.now();
@@ -111,18 +128,19 @@ class ImageProcessingService {
       const logoPath = `logos/${timestamp}-${baseName}.png`;
 
       const publicUrl = await uploadFile('website-assets', logoPath, processedBuffer, 'image/png');
+      console.log(`[IMG]   Logo uploaded: ${publicUrl}`);
 
       return {
         originalUrl: publicUrl,
-        webpUrl: publicUrl, // Same for logo
+        webpUrl: publicUrl,
         thumbnailUrl: publicUrl,
         width: logoMetadata.width || 0,
         height: logoMetadata.height || 0,
         size: processedBuffer.length,
       };
     } catch (error) {
-      console.error('❌ Logo processing failed:', error);
-      throw new Error('Failed to process logo');
+      console.error(`[IMG] Logo processing failed for ${filename}:`, error);
+      throw new Error(`Failed to process logo: ${(error as Error).message}`);
     }
   }
 
