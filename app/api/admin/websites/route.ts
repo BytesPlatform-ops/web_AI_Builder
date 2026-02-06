@@ -1,6 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+type WebsiteWithRelations = {
+  id: string;
+  businessName: string;
+  status: string;
+  publishApproved: boolean;
+  previewUrl: string | null;
+  publishRequestedAt: Date | null;
+  createdAt: Date;
+  approvedAt: Date | null;
+  approvedBy: string | null;
+  deploymentUrl: string | null;
+  deployedAt: Date | null;
+  formSubmission: {
+    email: string;
+    phone: string | null;
+  };
+  user: {
+    username: string;
+    email: string;
+  };
+};
+
 // Simple admin auth check
 const ADMIN_SECRET = process.env.ADMIN_SECRET || 'bytesadmin123';
 
@@ -36,9 +58,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         createdAt: 'desc'
       }
-    });
-
-    type WebsiteWithRelations = (typeof websites)[number];
+    }) as WebsiteWithRelations[];
 
     // Group by status for easier dashboard view
     const pendingApproval = websites.filter(w => w.status === 'PENDING_APPROVAL');
