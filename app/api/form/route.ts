@@ -189,185 +189,188 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Form submission saved:', formSubmission.id);
 
-    // Trigger website generation synchronously (not background queue)
-    // This ensures the website is generated before the response is sent
-    console.log('🚀 Triggering website generation...');
-    
-    try {
-      // Import and use the generation service directly
-      const { aiContentService } = await import('@/services/ai-content.service');
-      const { premiumTemplateGenerator } = await import('@/services/template-generator.service');
-      const { colorExtractionService } = await import('@/services/color-extraction.service');
-      const { sendGridEmailService } = await import('@/services/email-sendgrid.service');
-      const fs = await import('fs');
-      const path = await import('path');
+    // Trigger website generation in the background
+    console.log('🚀 Triggering website generation (background)...');
 
-      // Update status to GENERATING
-      await prisma.formSubmission.update({
-        where: { id: formSubmission.id },
-        data: { status: 'GENERATING' }
-      });
+    const forwardedHost = request.headers.get('x-forwarded-host');
+    const host = forwardedHost || request.headers.get('host') || 'localhost:3000';
+    const proto = request.headers.get('x-forwarded-proto') || 'http';
+    const baseUrl = `${proto}://${host}`;
 
-      // Step 1: Generate AI content
-      console.log('✨ Step 1: Generating AI content...');
-      const enhancedContent = await aiContentService.generateWebsiteContent({
-        businessName,
-        tagline: tagline || '',
-        about,
-        services,
-        industry: industry || undefined,
-        targetAudience: targetAudience || undefined,
-      });
+    const generateWebsiteInBackground = async () => {
+      try {
+        // Import and use the generation service directly
+        const { aiContentService } = await import('@/services/ai-content.service');
+        const { premiumTemplateGenerator } = await import('@/services/template-generator.service');
+        const { colorExtractionService } = await import('@/services/color-extraction.service');
+        const { sendGridEmailService } = await import('@/services/email-sendgrid.service');
+        const fs = await import('fs');
+        const path = await import('path');
 
-      // Step 2: Extract colors from logo
-      console.log('🎨 Step 2: Extracting brand colors...');
-      let extractedColors = {
-        primary: '#6366f1',
-        secondary: '#8b5cf6',
-        accent: '#06b6d4',
-      };
+        // Update status to GENERATING
+        await prisma.formSubmission.update({
+          where: { id: formSubmission.id },
+          data: { status: 'GENERATING' }
+        });
 
-      // Use brand colors from form if provided, otherwise extract from logo
-      if (brandColors.primary && brandColors.secondary && brandColors.accent) {
-        extractedColors = brandColors;
-        console.log('🎨 Using brand colors from form:', extractedColors);
-      } else if (logoUrl) {
+        // Step 1: Generate AI content
+        console.log('✨ Step 1: Generating AI content...');
+        const enhancedContent = await aiContentService.generateWebsiteContent({
+          businessName,
+          tagline: tagline || '',
+          about,
+          services,
+          industry: industry || undefined,
+          targetAudience: targetAudience || undefined,
+        });
+
+        // Step 2: Extract colors from logo
+        console.log('🎨 Step 2: Extracting brand colors...');
+        let extractedColors = {
+          primary: '#6366f1',
+          secondary: '#8b5cf6',
+          accent: '#06b6d4',
+        };
+
+        // Use brand colors from form if provided, otherwise extract from logo
+        if (brandColors.primary && brandColors.secondary && brandColors.accent) {
+          extractedColors = brandColors;
+          console.log('🎨 Using brand colors from form:', extractedColors);
+        } else if (logoUrl) {
+          try {
+            extractedColors = await colorExtractionService.extractFromLogo(logoUrl);
+          } catch (colorError) {
+            console.warn('Could not extract colors, using defaults:', colorError);
+          }
+        }
+
+        // Step 3: Generate website template
+        console.log('🎨 Step 3: Generating website template with type:', templateType);
+        const generatedWebsite = await premiumTemplateGenerator.generate({
+          businessName,
+          content: {
+            ...enhancedContent,
+            testimonials: testimonials || [],
+          },
+          colors: extractedColors,
+          logoUrl: logoUrl || undefined,
+          heroImageUrl: heroImageUrl || undefined,
+          additionalImages: additionalImages || [],
+          contactInfo: {
+            email,
+            phone: phone || undefined,
+            address: address || undefined,
+            social: socialLinks,
+          },
+          templateType: templateType as 'dark' | 'light', // Pass template type to generator
+        });
+
+        // Step 4: Save files locally
+        console.log('💾 Step 4: Saving website files...');
+        const filesDir = path.join(process.cwd(), 'generated-sites', formSubmission.id);
+        await fs.promises.mkdir(filesDir, { recursive: true });
+
+        const files = {
+          'index.html': generatedWebsite['index.html'],
+          'styles.css': generatedWebsite['styles.css'] || '',
+          'script.js': generatedWebsite['script.js'] || '',
+        };
+
+        for (const [filename, content] of Object.entries(files)) {
+          await fs.promises.writeFile(path.join(filesDir, filename), content, 'utf-8');
+        }
+        console.log('💾 Files saved to:', filesDir);
+
+        // Step 5: Create user account
+        console.log('🔑 Step 5: Creating user account...');
+        const user = await prisma.user.upsert({
+          where: { email },
+          update: { passwordHash, username },
+          create: {
+            id: `user-${formSubmission.id.substring(0, 8)}`,
+            username,
+            email,
+            passwordHash,
+          }
+        });
+
+        // Step 6: Create generated website record
+        const previewUrl = `${baseUrl}/api/preview/${formSubmission.id}`;
+        const loginUrl = `${baseUrl}/login`;
+
+        await prisma.generatedWebsite.create({
+          data: {
+            formSubmissionId: formSubmission.id,
+            userId: user.id,
+            businessName,
+            templateId: 'universal-premium',
+            primaryColor: extractedColors.primary,
+            secondaryColor: extractedColors.secondary,
+            accentColor: extractedColors.accent,
+            filesPath: filesDir,
+            previewUrl,
+            deploymentUrl: null,
+            deploymentProvider: null,
+            deployedAt: null,
+            status: 'READY',
+          }
+        });
+
+        // Step 7: Update form submission status
+        await prisma.formSubmission.update({
+          where: { id: formSubmission.id },
+          data: { status: 'GENERATED' }
+        });
+
+        // Step 8: Send email to customer with credentials
+        console.log('📧 Step 8: Sending login credentials to customer...');
         try {
-          extractedColors = await colorExtractionService.extractFromLogo(logoUrl);
-        } catch (colorError) {
-          console.warn('Could not extract colors, using defaults:', colorError);
+          await sendGridEmailService.sendCredentialsToUser({
+            businessName,
+            customerEmail: email,
+            customerName: businessName,
+            username,
+            password: generatedPassword,
+            loginUrl,
+          });
+          console.log('✅ Customer credentials email sent!');
+        } catch (emailError) {
+          console.error('⚠️ Failed to send customer email:', emailError);
         }
-      }
 
-      // Step 3: Generate website template
-      console.log('🎨 Step 3: Generating website template with type:', templateType);
-      const generatedWebsite = await premiumTemplateGenerator.generate({
-        businessName,
-        content: {
-          ...enhancedContent,
-          testimonials: testimonials || [],
-        },
-        colors: extractedColors,
-        logoUrl: logoUrl || undefined,
-        heroImageUrl: heroImageUrl || undefined,
-        additionalImages: additionalImages || [],
-        contactInfo: {
-          email,
-          phone: phone || undefined,
-          address: address || undefined,
-          social: socialLinks,
-        },
-        templateType: templateType as 'dark' | 'light', // Pass template type to generator
-      });
-
-      // Step 4: Save files locally
-      console.log('💾 Step 4: Saving website files...');
-      const filesDir = path.join(process.cwd(), 'generated-sites', formSubmission.id);
-      await fs.promises.mkdir(filesDir, { recursive: true });
-
-      const files = {
-        'index.html': generatedWebsite['index.html'],
-        'styles.css': generatedWebsite['styles.css'] || '',
-        'script.js': generatedWebsite['script.js'] || '',
-      };
-
-      for (const [filename, content] of Object.entries(files)) {
-        await fs.promises.writeFile(path.join(filesDir, filename), content, 'utf-8');
-      }
-      console.log('💾 Files saved to:', filesDir);
-
-      // Step 5: Create user account
-      console.log('🔑 Step 5: Creating user account...');
-      const user = await prisma.user.upsert({
-        where: { email },
-        update: { passwordHash, username },
-        create: {
-          id: `user-${formSubmission.id.substring(0, 8)}`,
-          username,
-          email,
-          passwordHash,
+        // Step 9: Send email to sales person with credentials
+        console.log('📧 Step 9: Sending email to sales person...');
+        try {
+          await sendGridEmailService.sendToSales({
+            businessName,
+            customerEmail: email,
+            customerPhone: phone || undefined,
+            previewUrl,
+            loginUrl,
+            submissionId: formSubmission.id,
+            username,
+            password: generatedPassword,
+          });
+          console.log('✅ Sales notification email sent!');
+        } catch (emailError) {
+          console.error('⚠️ Failed to send sales email:', emailError);
         }
-      });
 
-      // Step 6: Create generated website record
-      const forwardedHost = request.headers.get('x-forwarded-host');
-      const host = forwardedHost || request.headers.get('host') || 'localhost:3000';
-      const proto = request.headers.get('x-forwarded-proto') || 'http';
-      const baseUrl = `${proto}://${host}`;
-      const previewUrl = `${baseUrl}/api/preview/${formSubmission.id}`;
-      const loginUrl = `${baseUrl}/login`;
-
-      const generatedSite = await prisma.generatedWebsite.create({
-        data: {
-          formSubmissionId: formSubmission.id,
-          userId: user.id,
-          businessName,
-          templateId: 'universal-premium',
-          primaryColor: extractedColors.primary,
-          secondaryColor: extractedColors.secondary,
-          accentColor: extractedColors.accent,
-          filesPath: filesDir,
-          previewUrl,
-          deploymentUrl: null,
-          deploymentProvider: null,
-          deployedAt: null,
-          status: 'READY',
-        }
-      });
-
-      // Step 7: Update form submission status
-      await prisma.formSubmission.update({
-        where: { id: formSubmission.id },
-        data: { status: 'GENERATED' }
-      });
-
-      // Step 8: Send email to customer with credentials
-      console.log('📧 Step 8: Sending login credentials to customer...');
-      try {
-        await sendGridEmailService.sendCredentialsToUser({
-          businessName,
-          customerEmail: email,
-          customerName: businessName,
-          username,
-          password: generatedPassword,
-          loginUrl,
+        console.log('✅ Website generated successfully!');
+        console.log('   Preview URL:', previewUrl);
+        console.log('   Username:', username);
+        console.log('   Password:', generatedPassword);
+      } catch (generationError) {
+        console.error('⚠️ Website generation error:', generationError);
+        // Update status back to PENDING so it can be retried
+        await prisma.formSubmission.update({
+          where: { id: formSubmission.id },
+          data: { status: 'PENDING' }
         });
-        console.log('✅ Customer credentials email sent!');
-      } catch (emailError) {
-        console.error('⚠️ Failed to send customer email:', emailError);
       }
+    };
 
-      // Step 9: Send email to sales person with credentials
-      console.log('📧 Step 9: Sending email to sales person...');
-      try {
-        await sendGridEmailService.sendToSales({
-          businessName,
-          customerEmail: email,
-          customerPhone: phone || undefined,
-          previewUrl,
-          loginUrl,
-          submissionId: formSubmission.id,
-          username,
-          password: generatedPassword,
-        });
-        console.log('✅ Sales notification email sent!');
-      } catch (emailError) {
-        console.error('⚠️ Failed to send sales email:', emailError);
-      }
-
-      console.log('✅ Website generated successfully!');
-      console.log('   Preview URL:', previewUrl);
-      console.log('   Username:', username);
-      console.log('   Password:', generatedPassword);
-
-    } catch (generationError) {
-      console.error('⚠️ Website generation error:', generationError);
-      // Update status back to PENDING so it can be retried
-      await prisma.formSubmission.update({
-        where: { id: formSubmission.id },
-        data: { status: 'PENDING' }
-      });
-    }
+    void generateWebsiteInBackground();
 
     return NextResponse.json(
       {

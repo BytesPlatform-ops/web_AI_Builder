@@ -172,10 +172,21 @@ export function BusinessForm() {
         body: submitFormData,
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+      const data = responseText ? (() => {
+        try {
+          return JSON.parse(responseText);
+        } catch {
+          return null;
+        }
+      })() : null;
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit form');
+        throw new Error(data?.error || `Failed to submit form (status ${response.status})`);
+      }
+
+      if (!data) {
+        throw new Error('Unexpected response from server. Please try again.');
       }
 
       setSubmitted(true);
