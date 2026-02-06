@@ -65,7 +65,7 @@ export default function HomePage() {
               variants={fadeInUp}
             >
               <Sparkles className="w-4 h-4 text-primary-600" />
-              <span className="text-sm font-medium text-primary-700">AI-Powered Website Generation</span>
+              <span className="text-sm font-medium text-primary-700">Professional Website Builder</span>
             </motion.div>
 
             {/* Main Headline */}
@@ -82,8 +82,8 @@ export default function HomePage() {
               className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mb-10"
               variants={fadeInUp}
             >
-              Transform your business idea into a professional website with AI. 
-              Just describe your business and watch the magic happen.
+              Transform your business idea into a stunning, professional website. 
+              Just add your details and we'll handle the rest.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -194,7 +194,7 @@ export default function HomePage() {
               className="text-xl text-gray-600"
               variants={fadeInUp}
             >
-              Our AI handles the heavy lifting so you can focus on what matters - your business.
+              We handle the heavy lifting so you can focus on what matters - your business.
             </motion.p>
           </motion.div>
 
@@ -372,7 +372,7 @@ export default function HomePage() {
                 Ready to Build Your Website?
               </h2>
               <p className="text-xl text-white/90 max-w-2xl mx-auto mb-10">
-                Join thousands of businesses who've created stunning websites with our AI-powered builder. 
+                Join thousands of businesses who've launched stunning, professional websites. 
                 Start for free, no credit card required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -415,8 +415,8 @@ export default function HomePage() {
 const features = [
   {
     icon: Sparkles,
-    title: 'AI Content Generation',
-    description: 'Our AI writes compelling copy for your website, optimized for engagement and conversions.',
+    title: 'Smart Content Creation',
+    description: 'Get compelling copy for your website, optimized for engagement and conversions.',
     color: 'bg-primary-500',
   },
   {
@@ -458,7 +458,7 @@ const steps = [
   },
   {
     title: 'Add Your Content',
-    description: 'Enter your business details and let our AI enhance your content automatically.',
+    description: 'Enter your business details and we will create polished content for your site.',
   },
   {
     title: 'Launch Your Site',

@@ -59,7 +59,7 @@ function SuccessContent() {
             animate="visible"
             transition={{ delay: 0.2 }}
           >
-            Website Generation Started! 🚀
+            Website Generation Started!
           </motion.h1>
 
           <motion.p 
@@ -69,7 +69,7 @@ function SuccessContent() {
             animate="visible"
             transition={{ delay: 0.3 }}
           >
-            Your website is being created with AI-powered intelligence. This typically takes 30-60 seconds.
+            Your website is being created. This typically takes 30-60 seconds.
           </motion.p>
 
           {/* Details Box */}
@@ -124,7 +124,7 @@ function SuccessContent() {
                   <span className="text-secondary-700 font-bold">2</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">AI Content Generation</h3>
+                  <h3 className="font-semibold text-gray-900 mb-1">Content Generation</h3>
                   <p className="text-gray-600">Creating compelling copy, headlines, and section content...</p>
                 </div>
               </div>
@@ -175,7 +175,7 @@ function SuccessContent() {
             transition={{ delay: 0.7 }}
           >
             <p className="text-sm text-gray-600">
-              <strong>💡 Tip:</strong> You'll be able to review, customize, and deploy your website from the dashboard. Check back in a few moments!
+              <strong>Tip:</strong> You'll be able to review, customize, and deploy your website from the dashboard. Check back in a few moments!
             </p>
           </motion.div>
         </motion.div>

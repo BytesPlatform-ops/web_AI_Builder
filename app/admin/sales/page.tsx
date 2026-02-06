@@ -87,7 +87,7 @@ export default function SalesDashboard() {
         throw new Error(data.error || "Failed to approve website")
       }
       
-      setSuccessMessage(`✅ ${businessName} has been approved! Customer can now publish.`)
+      setSuccessMessage(`${businessName} has been approved! Customer can now publish.`)
       
       // Refresh the list
       await fetchWebsites()
@@ -108,7 +108,7 @@ export default function SalesDashboard() {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
           <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            🔐 Sales Dashboard
+            Sales Dashboard
           </h1>
           
           <form onSubmit={handleLogin} className="space-y-4">
@@ -151,15 +151,18 @@ export default function SalesDashboard() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">📊 Sales Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Sales Dashboard</h1>
             <p className="text-gray-600 mt-1">Manage website publish approvals</p>
           </div>
           <button
             onClick={fetchWebsites}
             disabled={loading}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-2"
           >
-            {loading ? "Refreshing..." : "🔄 Refresh"}
+            {loading ? "Refreshing..." : "Refresh"}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
           </button>
         </div>
 
@@ -172,19 +175,19 @@ export default function SalesDashboard() {
             </div>
             <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-4">
               <p className="text-3xl font-bold text-orange-600">{summary.pendingApproval}</p>
-              <p className="text-sm text-orange-700">⏳ Pending Approval</p>
+              <p className="text-sm text-orange-700">Pending Approval</p>
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
               <p className="text-3xl font-bold text-blue-600">{summary.approved}</p>
-              <p className="text-sm text-blue-700">✅ Approved</p>
+              <p className="text-sm text-blue-700">Approved</p>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-xl p-4">
               <p className="text-3xl font-bold text-green-600">{summary.published}</p>
-              <p className="text-sm text-green-700">🚀 Published</p>
+              <p className="text-sm text-green-700">Published</p>
             </div>
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
               <p className="text-3xl font-bold text-gray-600">{summary.ready}</p>
-              <p className="text-sm text-gray-600">📋 Ready</p>
+              <p className="text-sm text-gray-600">Ready</p>
             </div>
           </div>
         )}
@@ -205,14 +208,14 @@ export default function SalesDashboard() {
         <div className="bg-white rounded-xl shadow-lg mb-8">
           <div className="bg-orange-500 text-white px-6 py-4 rounded-t-xl">
             <h2 className="text-xl font-bold flex items-center gap-2">
-              🔔 Pending Approval ({websites?.pendingApproval.length || 0})
+              Pending Approval ({websites?.pendingApproval.length || 0})
             </h2>
             <p className="text-orange-100 text-sm">These customers have clicked "Publish" and are waiting for your call</p>
           </div>
           
           <div className="p-6">
             {websites?.pendingApproval.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No pending approvals at the moment 🎉</p>
+              <p className="text-gray-500 text-center py-8">No pending approvals at the moment</p>
             ) : (
               <div className="space-y-4">
                 {websites?.pendingApproval.map((website) => (
@@ -221,12 +224,12 @@ export default function SalesDashboard() {
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-gray-900">{website.businessName}</h3>
                         <div className="mt-2 space-y-1 text-sm">
-                          <p><span className="text-gray-500">📧 Email:</span> <a href={`mailto:${website.customerEmail}`} className="text-indigo-600 hover:underline">{website.customerEmail}</a></p>
+                          <p><span className="text-gray-500">Email:</span> <a href={`mailto:${website.customerEmail}`} className="text-indigo-600 hover:underline">{website.customerEmail}</a></p>
                           {website.customerPhone && (
-                            <p><span className="text-gray-500">📞 Phone:</span> <a href={`tel:${website.customerPhone}`} className="text-indigo-600 hover:underline font-bold text-lg">{website.customerPhone}</a></p>
+                            <p><span className="text-gray-500">Phone:</span> <a href={`tel:${website.customerPhone}`} className="text-indigo-600 hover:underline font-bold text-lg">{website.customerPhone}</a></p>
                           )}
-                          <p><span className="text-gray-500">👤 Username:</span> <code className="bg-white px-2 py-1 rounded">{website.username}</code></p>
-                          <p><span className="text-gray-500">⏰ Requested:</span> {website.publishRequestedAt ? new Date(website.publishRequestedAt).toLocaleString() : 'N/A'}</p>
+                          <p><span className="text-gray-500">Username:</span> <code className="bg-white px-2 py-1 rounded">{website.username}</code></p>
+                          <p><span className="text-gray-500">Requested:</span> {website.publishRequestedAt ? new Date(website.publishRequestedAt).toLocaleString() : 'N/A'}</p>
                         </div>
                       </div>
                       
@@ -238,7 +241,7 @@ export default function SalesDashboard() {
                             rel="noopener noreferrer"
                             className="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg text-center hover:bg-indigo-200 transition-colors"
                           >
-                            👁️ Preview
+                            Preview
                           </a>
                         )}
                         <button
@@ -246,7 +249,7 @@ export default function SalesDashboard() {
                           disabled={approvingId === website.id}
                           className="bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 disabled:opacity-50 transition-colors"
                         >
-                          {approvingId === website.id ? "Approving..." : "✅ Approve for Publish"}
+                          {approvingId === website.id ? "Approving..." : "Approve for Publish"}
                         </button>
                       </div>
                     </div>
@@ -260,7 +263,7 @@ export default function SalesDashboard() {
         {/* Approved Section */}
         <div className="bg-white rounded-xl shadow mb-8">
           <div className="bg-blue-500 text-white px-6 py-4 rounded-t-xl">
-            <h2 className="text-xl font-bold">✅ Approved ({websites?.approved.length || 0})</h2>
+            <h2 className="text-xl font-bold">Approved ({websites?.approved.length || 0})</h2>
             <p className="text-blue-100 text-sm">Waiting for customer to publish</p>
           </div>
           <div className="p-6">
@@ -288,7 +291,7 @@ export default function SalesDashboard() {
         {/* Published Section */}
         <div className="bg-white rounded-xl shadow">
           <div className="bg-green-500 text-white px-6 py-4 rounded-t-xl">
-            <h2 className="text-xl font-bold">🚀 Published ({websites?.published.length || 0})</h2>
+            <h2 className="text-xl font-bold">Published ({websites?.published.length || 0})</h2>
             <p className="text-green-100 text-sm">Live websites</p>
           </div>
           <div className="p-6">
@@ -310,7 +313,7 @@ export default function SalesDashboard() {
                           rel="noopener noreferrer"
                           className="text-green-600 hover:underline text-sm"
                         >
-                          🔗 {website.deploymentUrl}
+                          {website.deploymentUrl}
                         </a>
                       )}
                       <p className="text-xs text-gray-500 mt-1">

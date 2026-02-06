@@ -197,7 +197,7 @@ export function BusinessForm() {
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Website is Being Generated!</h2>
           <p className="text-lg text-gray-600 mb-6">
-            Our AI is working on creating your stunning website. This may take a few minutes.
+            Our team is creating your website now. This may take a few minutes.
           </p>
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-left">
             <h3 className="font-semibold text-blue-900 mb-3">What happens next?</h3>
@@ -225,7 +225,7 @@ export function BusinessForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-8">
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
           {error}
@@ -243,7 +243,7 @@ export function BusinessForm() {
           value={formData.businessName}
           onChange={handleInputChange}
           placeholder="e.g., ABC Plumbing Services"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
           required
         />
       </div>
@@ -259,7 +259,7 @@ export function BusinessForm() {
           value={formData.tagline}
           onChange={handleInputChange}
           placeholder="e.g., Quality plumbing solutions since 1995"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
         />
       </div>
 
@@ -274,7 +274,7 @@ export function BusinessForm() {
           onChange={handleInputChange}
           placeholder="Tell us about your business, your story, what you do..."
           rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
           required
         />
       </div>
@@ -288,7 +288,7 @@ export function BusinessForm() {
           name="industry"
           value={formData.industry}
           onChange={handleInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
         >
           <option value="">Select an industry</option>
           <option value="plumbing">Plumbing</option>
@@ -307,7 +307,7 @@ export function BusinessForm() {
       {/* Template Selection */}
       <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 rounded-xl border border-indigo-100">
         <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-          <span className="text-2xl">🎨</span> Choose Your Website Style
+          Choose Your Website Style
         </h3>
         <p className="text-sm text-gray-600 mb-4">Select a template that matches your brand vibe</p>
         
@@ -387,7 +387,7 @@ export function BusinessForm() {
         </div>
         
         <p className="text-xs text-center text-gray-500 mt-4">
-          ✨ More templates coming soon! We're constantly adding new designs.
+          More templates coming soon! We're constantly adding new designs.
         </p>
       </div>
 
@@ -401,7 +401,7 @@ export function BusinessForm() {
           onChange={e => setServices(e.target.value)}
           placeholder="e.g., Emergency repairs, Water heater installation, Drain cleaning"
           rows={3}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
           required
         />
         <p className="text-sm text-gray-500 mt-1">Separate services with commas</p>
@@ -418,7 +418,7 @@ export function BusinessForm() {
           value={formData.email}
           onChange={handleInputChange}
           placeholder="your@email.com"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
           required
         />
       </div>
@@ -434,7 +434,7 @@ export function BusinessForm() {
           value={formData.phone}
           onChange={handleInputChange}
           placeholder="+1 (555) 000-0000"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
         />
       </div>
 
@@ -449,7 +449,7 @@ export function BusinessForm() {
           value={formData.address}
           onChange={handleInputChange}
           placeholder="Your business address"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
         />
       </div>
 
@@ -462,7 +462,7 @@ export function BusinessForm() {
           id="logo"
           type="file"
           accept="image/*"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-700 shadow-sm"
         />
         <p className="text-sm text-gray-500 mt-1">Max 5MB. We'll extract your brand colors.</p>
       </div>
@@ -476,7 +476,7 @@ export function BusinessForm() {
           id="heroImage"
           type="file"
           accept="image/*"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-700 shadow-sm"
         />
         <p className="text-sm text-gray-500 mt-1">Max 10MB. This will be your homepage hero section.</p>
       </div>
@@ -484,7 +484,7 @@ export function BusinessForm() {
       {/* Additional Images */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Additional Images (Optional) - 📸 Select Multiple
+          Additional Images (Optional) - Select Multiple
         </label>
         <div className="relative">
           <input
@@ -493,21 +493,21 @@ export function BusinessForm() {
             multiple={true}
             accept="image/*"
             onChange={handleAdditionalImagesChange}
-            className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition"
+            className="w-full rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-slate-600 cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/40 transition"
           />
           <p className="absolute top-2 right-4 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded pointer-events-none">
             Hold Ctrl/Cmd to select multiple
           </p>
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          ✅ You can select up to 10 images at once. Max 5MB each.
+          You can select up to 10 images at once. Max 5MB each.
         </p>
 
         {/* Preview of selected images */}
         {selectedAdditionalImages.length > 0 && (
           <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm font-semibold text-green-900 mb-3">
-              ✅ {selectedAdditionalImages.length} Image{selectedAdditionalImages.length !== 1 ? 's' : ''} Selected for Gallery
+              {selectedAdditionalImages.length} Image{selectedAdditionalImages.length !== 1 ? 's' : ''} Selected for Gallery
             </p>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {selectedAdditionalImages.map((file, index) => (
@@ -534,7 +534,7 @@ export function BusinessForm() {
               ))}
             </div>
             <p className="text-xs text-green-700 mt-3">
-              💡 These {selectedAdditionalImages.length} image{selectedAdditionalImages.length !== 1 ? 's' : ''} will appear in the Gallery section of your website
+              These {selectedAdditionalImages.length} image{selectedAdditionalImages.length !== 1 ? 's' : ''} will appear in the Gallery section of your website
             </p>
           </div>
         )}

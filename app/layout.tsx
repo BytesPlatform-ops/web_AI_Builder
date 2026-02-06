@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Website Builder",
-  description: "Generate professional websites with AI",
+  title: "Starter Sites - Professional Website Builder",
+  description: "Create stunning, professional websites for your business in minutes",
 };
 
 export default function RootLayout({

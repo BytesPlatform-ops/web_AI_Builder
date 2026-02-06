@@ -109,7 +109,11 @@ export default function MyWebsitePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="text-red-600 text-5xl mb-4">⚠️</div>
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Website</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
@@ -127,7 +131,11 @@ export default function MyWebsitePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="text-gray-400 text-5xl mb-4">🚧</div>
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">No Website Yet</h2>
           <p className="text-gray-600 mb-6">
             Your website is being generated. This usually takes a few minutes.
@@ -170,7 +178,9 @@ export default function MyWebsitePage() {
         {/* Success Message */}
         {successMessage && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 flex items-center gap-3">
-            <span className="text-2xl">✅</span>
+            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
             <p>{successMessage}</p>
           </div>
         )}
@@ -178,7 +188,9 @@ export default function MyWebsitePage() {
         {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 flex items-center gap-3">
-            <span className="text-2xl">⚠️</span>
+            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
             <p>{error}</p>
           </div>
         )}
@@ -203,7 +215,7 @@ export default function MyWebsitePage() {
                   {website.status === "READY" 
                     ? "Ready to Publish" 
                     : website.status === "PENDING_APPROVAL"
-                    ? "⏳ Waiting for Approval"
+                    ? "Waiting for Approval"
                     : website.status}
                 </span>
                 {website.deployedAt && (
@@ -327,7 +339,10 @@ export default function MyWebsitePage() {
           {website.status === "READY" && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100 mb-4">
               <div className="flex items-start gap-3">
-                <span className="text-2xl">👁️</span>
+                <svg className="w-6 h-6 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
                 <div>
                   <p className="font-medium text-blue-900">Your website is ready for preview!</p>
                   <p className="text-sm text-blue-700 mt-1">
@@ -343,7 +358,7 @@ export default function MyWebsitePage() {
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">🌐 Live Website URL</p>
+                  <p className="text-sm font-medium text-gray-700 mb-1">Live Website URL</p>
                   <a
                     href={website.deploymentUrl}
                     target="_blank"
@@ -353,8 +368,11 @@ export default function MyWebsitePage() {
                     {website.deploymentUrl}
                   </a>
                 </div>
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                  ✓ Live
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Live
                 </span>
               </div>
             </div>
