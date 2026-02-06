@@ -10,14 +10,12 @@ export const TEMPLATE_OPTIONS = [
     id: 'dark' as TemplateType,
     name: 'Midnight Pro',
     description: 'Sleek dark theme with neon accents, glassmorphism, and smooth animations',
-    preview: '🌙',
     colors: ['#0a0a0f', '#1a1a2e', '#6366f1'],
   },
   {
     id: 'light' as TemplateType,
     name: 'Aurora Light',
     description: 'Stunning light theme with vibrant gradients, 3D effects, and fluid animations',
-    preview: '☀️',
     colors: ['#ffffff', '#f8fafc', '#3b82f6'],
   },
 ];

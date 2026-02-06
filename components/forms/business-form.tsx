@@ -1,8 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ArrowRight,
+  ArrowLeft,
+  Building2,
+  Palette,
+  CheckCircle2,
+  X,
+  ImagePlus,
+  FileText,
+  Sparkles,
+  Plus,
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  Star,
+  Loader2,
+} from 'lucide-react';
 import { FormSubmissionData, Testimonial, BrandColors, TemplateType, TEMPLATE_OPTIONS } from '@/types/forms';
 
+// ─── Constants ───────────────────────────────────────────────────────
 const COLOR_PRESETS = [
   { name: 'Modern Blue', primary: '#3B82F6', secondary: '#1E40AF', accent: '#60A5FA' },
   { name: 'Forest', primary: '#059669', secondary: '#065F46', accent: '#34D399' },
@@ -12,10 +31,162 @@ const COLOR_PRESETS = [
   { name: 'Fresh', primary: '#EC4899', secondary: '#BE185D', accent: '#F472B6' },
 ];
 
+const STEPS = [
+  { id: 1, title: 'Business', subtitle: 'Tell us about you', icon: Building2 },
+  { id: 2, title: 'Details', subtitle: 'Services & contact', icon: FileText },
+  { id: 3, title: 'Style', subtitle: 'Design & uploads', icon: Palette },
+];
+
+const INDUSTRIES = [
+  'Plumbing', 'Electrical', 'HVAC', 'Landscaping', 'Roofing',
+  'Restaurant', 'Salon/Spa', 'Consulting', 'E-Commerce',
+  'Fitness', 'Real Estate', 'Photography', 'Construction', 'Other',
+];
+
+// ─── DropZone Component ──────────────────────────────────────────────
+
+function DropZone({
+  id,
+  label,
+  hint,
+  accept,
+  multiple,
+  files,
+  onFiles,
+  onRemove,
+}: {
+  id: string;
+  label: string;
+  hint: string;
+  accept: string;
+  multiple?: boolean;
+  files: File[];
+  onFiles: (files: File[]) => void;
+  onRemove?: (index: number) => void;
+}) {
+  const [dragOver, setDragOver] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragOver(false);
+      const dropped = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith('image/'));
+      if (dropped.length) onFiles(multiple ? [...files, ...dropped] : [dropped[0]]);
+    },
+    [files, multiple, onFiles]
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files || []);
+    if (selected.length) onFiles(multiple ? [...files, ...selected] : [selected[0]]);
+    e.target.value = '';
+  };
+
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+        onClick={() => inputRef.current?.click()}
+        className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 ${
+          dragOver
+            ? 'border-indigo-500 bg-indigo-50 scale-[1.01]'
+            : files.length > 0
+            ? 'border-green-300 bg-green-50/50'
+            : 'border-gray-300 bg-gray-50/50 hover:border-indigo-400 hover:bg-indigo-50/30'
+        }`}
+      >
+        <input
+          ref={inputRef}
+          id={id}
+          type="file"
+          accept={accept}
+          multiple={multiple}
+          onChange={handleChange}
+          className="hidden"
+        />
+
+        {files.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8 px-4">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-colors ${
+              dragOver ? 'bg-indigo-100' : 'bg-gray-100'
+            }`}>
+              <ImagePlus className={`w-6 h-6 ${dragOver ? 'text-indigo-600' : 'text-gray-400'}`} />
+            </div>
+            <p className="text-sm font-medium text-gray-700">
+              Drop {multiple ? 'images' : 'image'} here or <span className="text-indigo-600">browse</span>
+            </p>
+            <p className="text-xs text-gray-500 mt-1">{hint}</p>
+          </div>
+        ) : !multiple ? (
+          <div className="relative p-3">
+            <div className="flex items-center gap-3">
+              <img
+                src={URL.createObjectURL(files[0])}
+                alt="Preview"
+                className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{files[0].name}</p>
+                <p className="text-xs text-gray-500">{(files[0].size / 1024 / 1024).toFixed(1)} MB</p>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onFiles([]); }}
+                className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="p-3" onClick={(e) => e.stopPropagation()}>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-2">
+              {files.map((file, i) => (
+                <div key={i} className="relative group aspect-square">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Preview ${i + 1}`}
+                    className="w-full h-full object-cover rounded-lg border border-gray-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => onRemove?.(i)}
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center hover:border-indigo-400 hover:bg-indigo-50 transition-colors"
+              >
+                <Plus className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+            <p className="text-xs text-gray-500">{files.length} image{files.length !== 1 ? 's' : ''} selected</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Form ───────────────────────────────────────────────────────
+
 export function BusinessForm() {
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [direction, setDirection] = useState(1);
+
+  // Form state
   const [formData, setFormData] = useState<FormSubmissionData>({
     businessName: '',
     tagline: '',
@@ -29,102 +200,72 @@ export function BusinessForm() {
   const [services, setServices] = useState('');
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [newTestimonial, setNewTestimonial] = useState({ authorName: '', authorRole: '', quote: '' });
+  const [showTestimonials, setShowTestimonials] = useState(false);
   const [brandColors, setBrandColors] = useState<BrandColors>({
     primary: '#3B82F6',
     secondary: '#1E40AF',
     accent: '#60A5FA',
   });
-  const [selectedAdditionalImages, setSelectedAdditionalImages] = useState<File[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('dark');
+
+  // File state
+  const [logoFiles, setLogoFiles] = useState<File[]>([]);
+  const [heroFiles, setHeroFiles] = useState<File[]>([]);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ─── Validation ───────────────────────────────────────────────────
+  const validateStep = (s: number): string | null => {
+    if (s === 1) {
+      if (!formData.businessName.trim()) return 'Business name is required';
+      if (!formData.email.trim()) return 'Email is required';
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) return 'Please enter a valid email';
+    }
+    if (s === 2) {
+      if (!formData.about.trim()) return 'Please tell us about your business';
+      const servicesList = services.split(',').map((s) => s.trim()).filter(Boolean);
+      if (servicesList.length === 0) return 'Please add at least one service';
+    }
+    return null;
+  };
+
+  const goNext = () => {
+    const err = validateStep(step);
+    if (err) { setError(err); return; }
+    setError(null);
+    setDirection(1);
+    setStep((s) => Math.min(s + 1, 3));
+  };
+
+  const goBack = () => {
+    setError(null);
+    setDirection(-1);
+    setStep((s) => Math.max(s - 1, 1));
+  };
+
+  // ─── Testimonials ─────────────────────────────────────────────────
   const handleAddTestimonial = () => {
-    if (!newTestimonial.quote.trim()) {
-      setError('Please enter a testimonial quote');
-      return;
-    }
-    if (!newTestimonial.authorName.trim()) {
-      setError('Please enter author name');
-      return;
-    }
-    
+    if (!newTestimonial.quote.trim() || !newTestimonial.authorName.trim()) return;
     setTestimonials([...testimonials, newTestimonial]);
     setNewTestimonial({ authorName: '', authorRole: '', quote: '' });
+  };
+
+  // ─── Submit ───────────────────────────────────────────────────────
+  const handleSubmit = async () => {
+    const err = validateStep(step);
+    if (err) { setError(err); return; }
     setError(null);
-  };
-
-  const handleRemoveTestimonial = (index: number) => {
-    setTestimonials(testimonials.filter((_, i) => i !== index));
-  };
-
-  const handleColorPreset = (preset: typeof COLOR_PRESETS[0]) => {
-    setBrandColors({
-      primary: preset.primary,
-      secondary: preset.secondary,
-      accent: preset.accent,
-    });
-  };
-
-  const handleColorChange = (field: keyof BrandColors, value: string) => {
-    setBrandColors(prev => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleAdditionalImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setSelectedAdditionalImages(files);
-  };
-
-  const removeAdditionalImage = (index: number) => {
-    const newFiles = selectedAdditionalImages.filter((_, i) => i !== index);
-    setSelectedAdditionalImages(newFiles);
-    // Update the file input
-    const additionalInput = document.getElementById('additionalImages') as HTMLInputElement;
-    if (additionalInput) {
-      const dataTransfer = new DataTransfer();
-      newFiles.forEach(file => dataTransfer.items.add(file));
-      additionalInput.files = dataTransfer.files;
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
-      // Validate required fields
-      if (!formData.businessName.trim()) {
-        throw new Error('Business name is required');
-      }
-      if (!formData.about.trim()) {
-        throw new Error('About your business is required');
-      }
-      if (!formData.email.trim()) {
-        throw new Error('Email is required');
-      }
-
-      const servicesList = services
-        .split(',')
-        .map(s => s.trim())
-        .filter(s => s.length > 0);
-
-      if (servicesList.length === 0) {
-        throw new Error('Please add at least one service');
-      }
-
-      // Create FormData for file upload
+      const servicesList = services.split(',').map((s) => s.trim()).filter(Boolean);
       const submitFormData = new FormData();
       submitFormData.append('businessName', formData.businessName);
       submitFormData.append('tagline', formData.tagline || '');
@@ -134,60 +275,29 @@ export function BusinessForm() {
       submitFormData.append('email', formData.email);
       submitFormData.append('phone', formData.phone || '');
       submitFormData.append('address', formData.address || '');
-
-      // Append template type
       submitFormData.append('templateType', selectedTemplate);
+      submitFormData.append('brandColors', JSON.stringify(brandColors));
 
-      // Append testimonials if any exist
       if (testimonials.length > 0) {
         submitFormData.append('testimonials', JSON.stringify(testimonials));
       }
 
-      // Append brand colors
-      submitFormData.append('brandColors', JSON.stringify(brandColors));
+      if (logoFiles[0]) submitFormData.append('logo', logoFiles[0]);
+      if (heroFiles[0]) submitFormData.append('heroImage', heroFiles[0]);
 
-      // Handle file uploads
-      const logoInput = document.getElementById('logo') as HTMLInputElement;
-      const heroInput = document.getElementById('heroImage') as HTMLInputElement;
-
-      if (logoInput?.files?.[0]) {
-        submitFormData.append('logo', logoInput.files[0]);
-      }
-
-      if (heroInput?.files?.[0]) {
-        submitFormData.append('heroImage', heroInput.files[0]);
-      }
-
-      // Use state instead of DOM to ensure consistency
-      if (selectedAdditionalImages.length > 0) {
-        submitFormData.append('additionalImagesCount', selectedAdditionalImages.length.toString());
-        selectedAdditionalImages.forEach((file, index) => {
+      if (galleryFiles.length > 0) {
+        submitFormData.append('additionalImagesCount', galleryFiles.length.toString());
+        galleryFiles.forEach((file, index) => {
           submitFormData.append(`additionalImage_${index}`, file);
         });
       }
 
-      // Submit form
-      const response = await fetch('/api/form', {
-        method: 'POST',
-        body: submitFormData,
-      });
+      const response = await fetch('/api/form', { method: 'POST', body: submitFormData });
+      const text = await response.text();
+      const data = text ? (() => { try { return JSON.parse(text); } catch { return null; } })() : null;
 
-      const responseText = await response.text();
-      const data = responseText ? (() => {
-        try {
-          return JSON.parse(responseText);
-        } catch {
-          return null;
-        }
-      })() : null;
-
-      if (!response.ok) {
-        throw new Error(data?.error || `Failed to submit form (status ${response.status})`);
-      }
-
-      if (!data) {
-        throw new Error('Unexpected response from server. Please try again.');
-      }
+      if (!response.ok) throw new Error(data?.error || `Submission failed (${response.status})`);
+      if (!data) throw new Error('Unexpected response. Please try again.');
 
       setSubmitted(true);
     } catch (err) {
@@ -197,545 +307,544 @@ export function BusinessForm() {
     }
   };
 
+  // ─── Success State ────────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="text-center py-12 px-6">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="text-center py-12 px-6"
+      >
         <div className="max-w-md mx-auto">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Website is Being Generated!</h2>
-          <p className="text-lg text-gray-600 mb-6">
-            Our AI is working on creating your stunning website. This may take a few minutes.
-          </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-left">
-            <h3 className="font-semibold text-blue-900 mb-3">What happens next?</h3>
-            <ul className="space-y-3 text-blue-800">
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center text-sm font-medium">1</span>
-                <span>Our team will receive your website details</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center text-sm font-medium">2</span>
-                <span>You'll receive login credentials via email or phone</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center text-sm font-medium">3</span>
-                <span>Login to preview, customize, and publish your website</span>
-              </li>
-            </ul>
-          </div>
-          <p className="text-gray-500 mt-6 text-sm">
-            We'll be in touch soon! If you have questions, reach out to our team.
-          </p>
-        </div>
-      </div>
-    );
-  }
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+            className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/25"
+          >
+            <CheckCircle2 className="w-10 h-10 text-white" />
+          </motion.div>
 
-  return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-          {error}
-        </div>
-      )}
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-3xl font-bold text-gray-900 mb-3"
+          >
+            Your website is being built!
+          </motion.h2>
 
-      {/* Business Name */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Business Name *
-        </label>
-        <input
-          type="text"
-          name="businessName"
-          value={formData.businessName}
-          onChange={handleInputChange}
-          placeholder="e.g., ABC Plumbing Services"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          required
-        />
-      </div>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-lg text-gray-600 mb-8"
+          >
+            We&apos;ll send your login credentials to<br />
+            <span className="font-semibold text-gray-900">{formData.email}</span>
+          </motion.p>
 
-      {/* Tagline */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Tagline (Optional)
-        </label>
-        <input
-          type="text"
-          name="tagline"
-          value={formData.tagline}
-          onChange={handleInputChange}
-          placeholder="e.g., Quality plumbing solutions since 1995"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
-
-      {/* About */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          About Your Business *
-        </label>
-        <textarea
-          name="about"
-          value={formData.about}
-          onChange={handleInputChange}
-          placeholder="Tell us about your business, your story, what you do..."
-          rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          required
-        />
-      </div>
-
-      {/* Industry */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Industry (Optional)
-        </label>
-        <select
-          name="industry"
-          value={formData.industry}
-          onChange={handleInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        >
-          <option value="">Select an industry</option>
-          <option value="plumbing">Plumbing</option>
-          <option value="electrical">Electrical</option>
-          <option value="hvac">HVAC</option>
-          <option value="landscaping">Landscaping</option>
-          <option value="roofing">Roofing</option>
-          <option value="restaurant">Restaurant</option>
-          <option value="salon">Salon/Spa</option>
-          <option value="consulting">Consulting</option>
-          <option value="ecommerce">E-Commerce</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-
-      {/* Template Selection */}
-      <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6 rounded-xl border border-indigo-100">
-        <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-          <span className="text-2xl">🎨</span> Choose Your Website Style
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">Select a template that matches your brand vibe</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {TEMPLATE_OPTIONS.map((template) => (
-            <button
-              key={template.id}
-              type="button"
-              onClick={() => setSelectedTemplate(template.id)}
-              className={`relative p-5 rounded-xl text-left transition-all duration-300 transform hover:scale-[1.02] ${
-                selectedTemplate === template.id
-                  ? 'ring-2 ring-indigo-500 shadow-lg shadow-indigo-200/50'
-                  : 'border-2 border-gray-200 hover:border-indigo-300'
-              } ${template.id === 'dark' ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 'bg-white'}`}
-            >
-              {/* Selection badge */}
-              {selectedTemplate === template.id && (
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center shadow-lg">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              )}
-              
-              {/* Template preview header */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-3xl">{template.preview}</span>
-                <div>
-                  <h4 className={`font-bold ${template.id === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                    {template.name}
-                  </h4>
-                  <p className={`text-xs ${template.id === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {template.id === 'dark' ? 'Premium Dark Theme' : 'Premium Light Theme'}
-                  </p>
-                </div>
-              </div>
-              
-              {/* Description */}
-              <p className={`text-sm mb-3 ${template.id === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                {template.description}
-              </p>
-              
-              {/* Color preview dots */}
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${template.id === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Colors:</span>
-                <div className="flex gap-1.5">
-                  {template.colors.map((color, i) => (
-                    <div
-                      key={i}
-                      className="w-5 h-5 rounded-full border border-white/20 shadow-sm"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
-              
-              {/* Features preview */}
-              <div className={`mt-3 pt-3 border-t ${template.id === 'dark' ? 'border-gray-700' : 'border-gray-100'}`}>
-                <div className="flex flex-wrap gap-1.5">
-                  {template.id === 'dark' ? (
-                    <>
-                      <span className="px-2 py-0.5 bg-indigo-500/20 text-indigo-300 text-xs rounded-full">Glassmorphism</span>
-                      <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 text-xs rounded-full">Neon Accents</span>
-                      <span className="px-2 py-0.5 bg-pink-500/20 text-pink-300 text-xs rounded-full">3D Effects</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">Gradient Mesh</span>
-                      <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full">Fluid Motion</span>
-                      <span className="px-2 py-0.5 bg-pink-100 text-pink-700 text-xs rounded-full">3D Parallax</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-        
-        <p className="text-xs text-center text-gray-500 mt-4">
-          ✨ More templates coming soon! We're constantly adding new designs.
-        </p>
-      </div>
-
-      {/* Services */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Services You Offer *
-        </label>
-        <textarea
-          value={services}
-          onChange={e => setServices(e.target.value)}
-          placeholder="e.g., Emergency repairs, Water heater installation, Drain cleaning"
-          rows={3}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          required
-        />
-        <p className="text-sm text-gray-500 mt-1">Separate services with commas</p>
-      </div>
-
-      {/* Email */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Email *
-        </label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          placeholder="your@email.com"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          required
-        />
-      </div>
-
-      {/* Phone */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Phone (Optional)
-        </label>
-        <input
-          type="tel"
-          name="phone"
-          value={formData.phone}
-          onChange={handleInputChange}
-          placeholder="+1 (555) 000-0000"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
-
-      {/* Address */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Address (Optional)
-        </label>
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleInputChange}
-          placeholder="Your business address"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
-
-      {/* Logo Upload */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Logo (PNG, JPG, SVG)
-        </label>
-        <input
-          id="logo"
-          type="file"
-          accept="image/*"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-        />
-        <p className="text-sm text-gray-500 mt-1">Max 5MB. We'll extract your brand colors.</p>
-      </div>
-
-      {/* Hero Image Upload */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Hero Image (PNG, JPG, WebP)
-        </label>
-        <input
-          id="heroImage"
-          type="file"
-          accept="image/*"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-        />
-        <p className="text-sm text-gray-500 mt-1">Max 10MB. This will be your homepage hero section.</p>
-      </div>
-
-      {/* Additional Images */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Additional Images (Optional) - 📸 Select Multiple
-        </label>
-        <div className="relative">
-          <input
-            id="additionalImages"
-            type="file"
-            multiple={true}
-            accept="image/*"
-            onChange={handleAdditionalImagesChange}
-            className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition"
-          />
-          <p className="absolute top-2 right-4 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded pointer-events-none">
-            Hold Ctrl/Cmd to select multiple
-          </p>
-        </div>
-        <p className="text-sm text-gray-500 mt-2">
-          ✅ You can select up to 10 images at once. Max 5MB each.
-        </p>
-
-        {/* Preview of selected images */}
-        {selectedAdditionalImages.length > 0 && (
-          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm font-semibold text-green-900 mb-3">
-              ✅ {selectedAdditionalImages.length} Image{selectedAdditionalImages.length !== 1 ? 's' : ''} Selected for Gallery
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {selectedAdditionalImages.map((file, index) => (
-                <div key={index} className="relative group">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt={`Preview ${index + 1}`}
-                    className="w-full h-24 object-cover rounded-lg border-2 border-green-300"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 rounded-lg transition flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <button
-                      type="button"
-                      onClick={() => removeAdditionalImage(index)}
-                      className="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
-                      title="Remove image"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-left"
+          >
+            <h3 className="font-semibold text-gray-900 mb-4">What happens next</h3>
+            <div className="space-y-4">
+              {[
+                { num: '1', text: 'Your website is being generated now', sub: 'This takes about 2 minutes' },
+                { num: '2', text: 'You\'ll receive login credentials via email', sub: 'Check your inbox shortly' },
+                { num: '3', text: 'Login to preview and publish your website', sub: 'Make it live with one click' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-7 h-7 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-sm font-bold">
+                    {item.num}
+                  </span>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{item.text}</p>
+                    <p className="text-xs text-gray-500">{item.sub}</p>
                   </div>
-                  <p className="text-xs text-gray-600 mt-1 truncate">{file.name}</p>
                 </div>
               ))}
             </div>
-            <p className="text-xs text-green-700 mt-3">
-              💡 These {selectedAdditionalImages.length} image{selectedAdditionalImages.length !== 1 ? 's' : ''} will appear in the Gallery section of your website
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Brand Colors Section */}
-      <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Brand Colors (Optional)</h3>
-        <p className="text-sm text-gray-600 mb-4">Choose your brand colors. If not specified, we'll extract them from your logo.</p>
-
-        {/* Color Presets */}
-        <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-3">Quick Presets</label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {COLOR_PRESETS.map((preset) => (
-              <button
-                key={preset.name}
-                type="button"
-                onClick={() => handleColorPreset(preset)}
-                className="p-3 border-2 rounded-lg transition hover:border-blue-500"
-                style={{
-                  borderColor: brandColors.primary === preset.primary ? '#3B82F6' : '#E5E7EB',
-                }}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div
-                    className="w-4 h-4 rounded"
-                    style={{ backgroundColor: preset.primary }}
-                  />
-                  <div
-                    className="w-4 h-4 rounded"
-                    style={{ backgroundColor: preset.secondary }}
-                  />
-                  <div
-                    className="w-4 h-4 rounded"
-                    style={{ backgroundColor: preset.accent }}
-                  />
-                </div>
-                <span className="text-xs font-medium text-gray-700">{preset.name}</span>
-              </button>
-            ))}
-          </div>
+          </motion.div>
         </div>
+      </motion.div>
+    );
+  }
 
-        {/* Custom Colors */}
-        <div className="space-y-3">
-          {/* Primary Color */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Primary Color</label>
-            <div className="flex gap-3">
-              <input
-                type="color"
-                value={brandColors.primary}
-                onChange={(e) => handleColorChange('primary', e.target.value)}
-                className="w-12 h-10 rounded cursor-pointer border border-gray-300"
-              />
-              <input
-                type="text"
-                value={brandColors.primary}
-                onChange={(e) => handleColorChange('primary', e.target.value)}
-                placeholder="#3B82F6"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
-              />
-            </div>
-          </div>
+  // ─── Slide animation ──────────────────────────────────────────────
+  const slideVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
+  };
 
-          {/* Secondary Color */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Secondary Color</label>
-            <div className="flex gap-3">
-              <input
-                type="color"
-                value={brandColors.secondary}
-                onChange={(e) => handleColorChange('secondary', e.target.value)}
-                className="w-12 h-10 rounded cursor-pointer border border-gray-300"
-              />
-              <input
-                type="text"
-                value={brandColors.secondary}
-                onChange={(e) => handleColorChange('secondary', e.target.value)}
-                placeholder="#1E40AF"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
-              />
-            </div>
-          </div>
-
-          {/* Accent Color */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Accent Color</label>
-            <div className="flex gap-3">
-              <input
-                type="color"
-                value={brandColors.accent}
-                onChange={(e) => handleColorChange('accent', e.target.value)}
-                className="w-12 h-10 rounded cursor-pointer border border-gray-300"
-              />
-              <input
-                type="text"
-                value={brandColors.accent}
-                onChange={(e) => handleColorChange('accent', e.target.value)}
-                placeholder="#60A5FA"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Testimonials Section */}
-      <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Customer Testimonials (Optional)</h3>
-        <p className="text-sm text-gray-600 mb-4">Add real customer testimonials to build trust. Leave empty if you don't have any yet.</p>
-
-        {/* Existing Testimonials */}
-        {testimonials.length > 0 && (
-          <div className="mb-6 space-y-3">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg border border-blue-200">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <p className="font-semibold text-gray-900">{testimonial.authorName}</p>
-                    {testimonial.authorRole && (
-                      <p className="text-sm text-gray-600">{testimonial.authorRole}</p>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTestimonial(index)}
-                    className="text-red-600 hover:text-red-700 text-sm font-medium"
+  // ─── Render ───────────────────────────────────────────────────────
+  return (
+    <div className="w-full">
+      {/* ── Progress Bar ─────────────────────────────────────────── */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-3">
+          {STEPS.map((s, i) => {
+            const Icon = s.icon;
+            const isActive = step === s.id;
+            const isDone = step > s.id;
+            return (
+              <div key={s.id} className="flex items-center flex-1">
+                <div className="flex flex-col items-center flex-shrink-0">
+                  <div
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                      isDone
+                        ? 'bg-green-500 text-white shadow-md shadow-green-500/25'
+                        : isActive
+                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25'
+                        : 'bg-gray-100 text-gray-400'
+                    }`}
                   >
-                    Remove
-                  </button>
+                    {isDone ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+                  </div>
+                  <span className={`text-xs mt-1.5 font-medium hidden sm:block ${
+                    isActive ? 'text-indigo-600' : isDone ? 'text-green-600' : 'text-gray-400'
+                  }`}>
+                    {s.title}
+                  </span>
                 </div>
-                <p className="text-gray-700 text-sm italic">"{testimonial.quote}"</p>
+                {i < STEPS.length - 1 && (
+                  <div className="flex-1 mx-3 h-0.5 rounded-full bg-gray-100 overflow-hidden">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full"
+                      initial={false}
+                      animate={{ width: isDone ? '100%' : '0%' }}
+                      transition={{ duration: 0.4 }}
+                    />
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
+        <p className="text-center text-sm text-gray-500">
+          Step {step} of 3 — {STEPS[step - 1].subtitle}
+        </p>
+      </div>
+
+      {/* ── Error Banner ─────────────────────────────────────────── */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-6 overflow-hidden"
+          >
+            <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+              <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                <X className="w-3 h-3" />
+              </div>
+              {error}
+            </div>
+          </motion.div>
         )}
+      </AnimatePresence>
 
-        {/* Add New Testimonial */}
-        <div className="bg-white p-4 rounded-lg border border-blue-200 space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Author Name</label>
-            <input
-              type="text"
-              value={newTestimonial.authorName}
-              onChange={(e) => setNewTestimonial({ ...newTestimonial, authorName: e.target.value })}
-              placeholder="John Smith"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+      {/* ── Step Content ─────────────────────────────────────────── */}
+      <div className="min-h-[420px]">
+        <AnimatePresence mode="wait" custom={direction}>
+          {/* ── STEP 1: Business Basics ──────────────────────────── */}
+          {step === 1 && (
+            <motion.div
+              key="step1"
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="space-y-5"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Business Name <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="businessName"
+                  value={formData.businessName}
+                  onChange={handleInputChange}
+                  placeholder="e.g., Sunrise Plumbing Co."
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                />
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Author Role (Optional)</label>
-            <input
-              type="text"
-              value={newTestimonial.authorRole}
-              onChange={(e) => setNewTestimonial({ ...newTestimonial, authorRole: e.target.value })}
-              placeholder="e.g., Owner, Manager, Customer"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Email <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="you@company.com"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                />
+                <p className="text-xs text-gray-400 mt-1.5">We&apos;ll send your login credentials here</p>
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Testimonial Quote</label>
-            <textarea
-              value={newTestimonial.quote}
-              onChange={(e) => setNewTestimonial({ ...newTestimonial, quote: e.target.value })}
-              placeholder="What they said about your business..."
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Tagline <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  name="tagline"
+                  value={formData.tagline}
+                  onChange={handleInputChange}
+                  placeholder="e.g., Quality plumbing solutions since 1995"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                />
+              </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Industry</label>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {INDUSTRIES.map((ind) => (
+                    <button
+                      key={ind}
+                      type="button"
+                      onClick={() => setFormData((p) => ({ ...p, industry: ind.toLowerCase() }))}
+                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                        formData.industry === ind.toLowerCase()
+                          ? 'bg-indigo-600 text-white shadow-sm'
+                          : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
+                      }`}
+                    >
+                      {ind}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── STEP 2: Details ──────────────────────────────────── */}
+          {step === 2 && (
+            <motion.div
+              key="step2"
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="space-y-5"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  About Your Business <span className="text-red-400">*</span>
+                </label>
+                <textarea
+                  name="about"
+                  value={formData.about}
+                  onChange={handleInputChange}
+                  placeholder="Tell us your story — what makes your business special, your mission, experience, etc."
+                  rows={4}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400 resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Services You Offer <span className="text-red-400">*</span>
+                </label>
+                <textarea
+                  value={services}
+                  onChange={(e) => setServices(e.target.value)}
+                  placeholder="e.g., Emergency repairs, Water heater installation, Drain cleaning"
+                  rows={3}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400 resize-none"
+                />
+                <p className="text-xs text-gray-400 mt-1.5">Separate services with commas</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Phone <span className="text-gray-400 font-normal">(optional)</span>
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="+1 (555) 000-0000"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Address <span className="text-gray-400 font-normal">(optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="Business address"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ── STEP 3: Style & Uploads ──────────────────────────── */}
+          {step === 3 && (
+            <motion.div
+              key="step3"
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="space-y-6"
+            >
+              {/* Template Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">Choose Your Website Style</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {TEMPLATE_OPTIONS.map((template) => (
+                    <button
+                      key={template.id}
+                      type="button"
+                      onClick={() => setSelectedTemplate(template.id)}
+                      className={`relative p-4 rounded-xl text-left transition-all duration-200 ${
+                        selectedTemplate === template.id
+                          ? 'ring-2 ring-indigo-500 shadow-lg'
+                          : 'border border-gray-200 hover:border-indigo-300'
+                      } ${template.id === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
+                    >
+                      {selectedTemplate === template.id && (
+                        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center shadow">
+                          <CheckCircle2 className="w-3 h-3 text-white" />
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2.5 mb-2">
+                        <div className="flex gap-1">
+                          {template.colors.map((c, i) => (
+                            <div key={i} className="w-4 h-4 rounded-full border border-white/20" style={{ backgroundColor: c }} />
+                          ))}
+                        </div>
+                        <h4 className={`font-semibold text-sm ${template.id === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          {template.name}
+                        </h4>
+                      </div>
+                      <p className={`text-xs ${template.id === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {template.description}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* File Uploads */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <DropZone
+                  id="logo"
+                  label="Logo"
+                  hint="PNG, JPG, SVG — max 5MB"
+                  accept="image/*"
+                  files={logoFiles}
+                  onFiles={setLogoFiles}
+                />
+                <DropZone
+                  id="heroImage"
+                  label="Hero Image"
+                  hint="PNG, JPG, WebP — max 10MB"
+                  accept="image/*"
+                  files={heroFiles}
+                  onFiles={setHeroFiles}
+                />
+              </div>
+
+              <DropZone
+                id="additionalImages"
+                label="Gallery Images (optional)"
+                hint="Up to 10 images — max 5MB each"
+                accept="image/*"
+                multiple
+                files={galleryFiles}
+                onFiles={setGalleryFiles}
+                onRemove={(i) => setGalleryFiles((f) => f.filter((_, idx) => idx !== i))}
+              />
+
+              {/* Color Presets */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Brand Colors</label>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                  {COLOR_PRESETS.map((preset) => (
+                    <button
+                      key={preset.name}
+                      type="button"
+                      onClick={() => setBrandColors({ primary: preset.primary, secondary: preset.secondary, accent: preset.accent })}
+                      className={`p-2.5 rounded-lg transition-all text-center ${
+                        brandColors.primary === preset.primary
+                          ? 'ring-2 ring-indigo-500 bg-indigo-50'
+                          : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
+                      }`}
+                    >
+                      <div className="flex justify-center gap-1 mb-1.5">
+                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: preset.primary }} />
+                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: preset.secondary }} />
+                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: preset.accent }} />
+                      </div>
+                      <span className="text-[10px] font-medium text-gray-600">{preset.name}</span>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 mt-2">Or we&apos;ll extract colors from your logo automatically</p>
+              </div>
+
+              {/* Testimonials — Collapsible */}
+              <div className="border border-gray-200 rounded-xl overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setShowTestimonials(!showTestimonials)}
+                  className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm font-medium text-gray-700">
+                      Customer Testimonials
+                      {testimonials.length > 0 && (
+                        <span className="ml-2 px-1.5 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs">
+                          {testimonials.length}
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-xs text-gray-400">optional</span>
+                  </div>
+                  {showTestimonials ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                </button>
+
+                <AnimatePresence>
+                  {showTestimonials && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-4 pt-0 space-y-3">
+                        {testimonials.map((t, i) => (
+                          <div key={i} className="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-gray-700 italic">&ldquo;{t.quote}&rdquo;</p>
+                              <p className="text-xs text-gray-500 mt-1">— {t.authorName}{t.authorRole ? `, ${t.authorRole}` : ''}</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setTestimonials((ts) => ts.filter((_, idx) => idx !== i))}
+                              className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-500"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+
+                        <div className="space-y-2">
+                          <div className="grid grid-cols-2 gap-2">
+                            <input
+                              type="text"
+                              value={newTestimonial.authorName}
+                              onChange={(e) => setNewTestimonial({ ...newTestimonial, authorName: e.target.value })}
+                              placeholder="Name"
+                              className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                            />
+                            <input
+                              type="text"
+                              value={newTestimonial.authorRole}
+                              onChange={(e) => setNewTestimonial({ ...newTestimonial, authorRole: e.target.value })}
+                              placeholder="Role (optional)"
+                              className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                            />
+                          </div>
+                          <textarea
+                            value={newTestimonial.quote}
+                            onChange={(e) => setNewTestimonial({ ...newTestimonial, quote: e.target.value })}
+                            placeholder="What they said about your business..."
+                            rows={2}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleAddTestimonial}
+                            disabled={!newTestimonial.quote.trim() || !newTestimonial.authorName.trim()}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* ── Navigation ───────────────────────────────────────────── */}
+      <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
+        {step > 1 ? (
           <button
             type="button"
-            onClick={handleAddTestimonial}
-            className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+            onClick={goBack}
+            className="flex items-center gap-2 px-5 py-2.5 text-gray-600 hover:text-gray-900 font-medium rounded-xl hover:bg-gray-100 transition-all"
           >
-            Add Testimonial
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </button>
-        </div>
+        ) : (
+          <div />
+        )}
+
+        {step < 3 ? (
+          <button
+            type="button"
+            onClick={goNext}
+            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-500/25 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[0.98]"
+          >
+            Continue
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/35 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Building Your Website...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                Build My Website — Free
+              </>
+            )}
+          </button>
+        )}
       </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-      >
-        {loading ? 'Creating Your Website...' : 'Create My Website'}
-      </button>
-    </form>
+    </div>
   );
 }

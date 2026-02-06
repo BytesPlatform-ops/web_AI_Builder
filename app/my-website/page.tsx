@@ -3,6 +3,20 @@
 import { useSession, signOut } from "next-auth/react"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import {
+  AlertTriangle,
+  Construction,
+  CheckCircle2,
+  Clock,
+  Eye,
+  Globe,
+  Pencil,
+  CloudUpload,
+  ExternalLink,
+  LogOut,
+  RefreshCw,
+  Loader2,
+} from "lucide-react"
 
 interface GeneratedWebsite {
   id: string
@@ -78,9 +92,9 @@ export default function MyWebsitePage() {
       
       // Check if it was a pending approval response
       if (data.status === 'PENDING_APPROVAL' || data.requiresApproval) {
-        setSuccessMessage("📞 " + data.message)
+        setSuccessMessage(data.message)
       } else if (data.status === 'PUBLISHED') {
-        setSuccessMessage("🎉 Website published successfully! Your site is now live.")
+        setSuccessMessage("Website published successfully! Your site is now live.")
       } else {
         setSuccessMessage(data.message || "Request processed successfully!")
       }
@@ -109,7 +123,11 @@ export default function MyWebsitePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="text-red-600 text-5xl mb-4">⚠️</div>
+          <div className="flex justify-center mb-4">
+            <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+              <AlertTriangle className="w-7 h-7 text-red-600" />
+            </div>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Website</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
@@ -127,7 +145,11 @@ export default function MyWebsitePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="text-gray-400 text-5xl mb-4">🚧</div>
+          <div className="flex justify-center mb-4">
+            <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+              <Construction className="w-7 h-7 text-gray-400" />
+            </div>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">No Website Yet</h2>
           <p className="text-gray-600 mb-6">
             Your website is being generated. This usually takes a few minutes.
@@ -170,7 +192,7 @@ export default function MyWebsitePage() {
         {/* Success Message */}
         {successMessage && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 flex items-center gap-3">
-            <span className="text-2xl">✅</span>
+            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
             <p>{successMessage}</p>
           </div>
         )}
@@ -178,7 +200,7 @@ export default function MyWebsitePage() {
         {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 flex items-center gap-3">
-            <span className="text-2xl">⚠️</span>
+            <AlertTriangle className="w-5 h-5 flex-shrink-0" />
             <p>{error}</p>
           </div>
         )}
@@ -203,7 +225,7 @@ export default function MyWebsitePage() {
                   {website.status === "READY" 
                     ? "Ready to Publish" 
                     : website.status === "PENDING_APPROVAL"
-                    ? "⏳ Waiting for Approval"
+                    ? "Waiting for Approval"
                     : website.status}
                 </span>
                 {website.deployedAt && (
@@ -327,7 +349,7 @@ export default function MyWebsitePage() {
           {website.status === "READY" && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100 mb-4">
               <div className="flex items-start gap-3">
-                <span className="text-2xl">👁️</span>
+                <Eye className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-blue-900">Your website is ready for preview!</p>
                   <p className="text-sm text-blue-700 mt-1">
@@ -343,7 +365,7 @@ export default function MyWebsitePage() {
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">🌐 Live Website URL</p>
+                  <p className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-1.5"><Globe className="w-4 h-4" /> Live Website URL</p>
                   <a
                     href={website.deploymentUrl}
                     target="_blank"
@@ -353,8 +375,8 @@ export default function MyWebsitePage() {
                     {website.deploymentUrl}
                   </a>
                 </div>
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                  ✓ Live
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Live
                 </span>
               </div>
             </div>

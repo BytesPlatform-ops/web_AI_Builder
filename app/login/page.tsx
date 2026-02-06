@@ -43,9 +43,9 @@ export default function LoginPage() {
         {/* Logo/Brand */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            AI Website Builder
+            ByteSuite
           </h1>
-          <p className="text-gray-600 mt-2">Sign in to access your website</p>
+          <p className="text-gray-600 mt-2">Sign in to manage your website</p>
         </div>
 
         {/* Login Form */}

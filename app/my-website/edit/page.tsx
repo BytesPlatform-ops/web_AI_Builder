@@ -144,7 +144,7 @@ export default function EditWebsitePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
         <div className="max-w-md w-full bg-gray-800 rounded-xl p-8 text-center">
-          <div className="text-gray-500 text-5xl mb-4">🚧</div>
+          <div className="text-gray-500 text-sm mb-4">No website found</div>
           <h2 className="text-2xl font-bold text-white mb-2">No Website Found</h2>
           <p className="text-gray-400 mb-6">
             Your website needs to be generated first.
@@ -161,9 +161,9 @@ export default function EditWebsitePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-gray-900 flex flex-col lg:flex-row">
       {/* Left Panel - Editor Controls */}
-      <div className="w-96 bg-gray-800 border-r border-gray-700 flex flex-col h-screen overflow-hidden">
+      <div className="w-full lg:w-96 bg-gray-800 lg:border-r border-gray-700 flex flex-col lg:h-screen overflow-hidden">
         {/* Header */}
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center justify-between">
@@ -192,7 +192,7 @@ export default function EditWebsitePage() {
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            🎨 Colors
+            Colors
           </button>
           <button
             onClick={() => setActiveTab("content")}
@@ -202,7 +202,7 @@ export default function EditWebsitePage() {
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            ✏️ Content
+            Content
           </button>
         </div>
 
@@ -463,7 +463,6 @@ export default function EditWebsitePage() {
               </>
             ) : (
               <>
-                <span>💾</span>
                 <span>Save & Deploy Changes</span>
               </>
             )}
@@ -474,8 +473,8 @@ export default function EditWebsitePage() {
         </div>
       </div>
 
-      {/* Right Panel - Live Preview */}
-      <div className="flex-1 flex flex-col">
+      {/* Right Panel - Live Preview (hidden on mobile) */}
+      <div className="hidden lg:flex flex-1 flex-col">
         {/* Preview Header */}
         <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
