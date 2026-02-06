@@ -1,23 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
-
-type WebsiteWithRelations = Prisma.GeneratedWebsiteGetPayload<{
-  include: {
-    formSubmission: {
-      select: {
-        email: true;
-        phone: true;
-      };
-    };
-    user: {
-      select: {
-        username: true;
-        email: true;
-      };
-    };
-  };
-}>;
 
 // Simple admin auth check
 const ADMIN_SECRET = process.env.ADMIN_SECRET || 'bytesadmin123';
@@ -36,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all websites with their status
-    const websites: WebsiteWithRelations[] = await prisma.generatedWebsite.findMany({
+    const websites = await prisma.generatedWebsite.findMany({
       include: {
         formSubmission: {
           select: {
@@ -55,6 +37,8 @@ export async function GET(request: NextRequest) {
         createdAt: 'desc'
       }
     });
+
+    type WebsiteWithRelations = (typeof websites)[number];
 
     // Group by status for easier dashboard view
     const pendingApproval = websites.filter(w => w.status === 'PENDING_APPROVAL');
