@@ -355,11 +355,11 @@ export default function EditWebsitePage() {
             <>
               {/* Hero Section */}
               <div>
-                <h3 className="text-sm font-semibold text-white mb-4">Hero Section</h3>
+                <h3 className="text-sm font-semibold text-white mb-4">Top Banner</h3>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Headline
+                      Title
                     </label>
                     <input
                       type="text"
@@ -371,7 +371,7 @@ export default function EditWebsitePage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Subheadline
+                      Subtitle
                     </label>
                     <textarea
                       value={content.subheadline}
@@ -384,7 +384,7 @@ export default function EditWebsitePage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Primary CTA
+                        Main Button
                       </label>
                       <input
                         type="text"
@@ -396,7 +396,7 @@ export default function EditWebsitePage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Secondary CTA
+                        Second Button
                       </label>
                       <input
                         type="text"
@@ -416,7 +416,7 @@ export default function EditWebsitePage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      About Headline
+                      About Heading
                     </label>
                     <input
                       type="text"
@@ -443,11 +443,11 @@ export default function EditWebsitePage() {
 
               {/* CTA Section */}
               <div>
-                <h3 className="text-sm font-semibold text-white mb-4">Call to Action Section</h3>
+                <h3 className="text-sm font-semibold text-white mb-4">Bottom Section</h3>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      CTA Headline
+                      Bottom Headline
                     </label>
                     <input
                       type="text"
@@ -459,7 +459,7 @@ export default function EditWebsitePage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      CTA Subheadline
+                      Bottom Text
                     </label>
                     <input
                       type="text"
@@ -495,11 +495,11 @@ export default function EditWebsitePage() {
             {saving ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                <span>Saving & Deploying...</span>
+                <span>Saving...</span>
               </>
             ) : (
               <>
-                <span>Save & Deploy Changes</span>
+                <span>Save</span>
               </>
             )}
           </button>

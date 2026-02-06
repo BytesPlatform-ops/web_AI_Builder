@@ -323,23 +323,7 @@ class UltimatePremiumTemplateGenerator {
             ${content.about.paragraphs.map(p => `<p>${p}</p>`).join('')}
           </div>
           
-          <div class="about-stats" data-animate="fade-up" data-delay="0.3">
-            <div class="stat">
-              <span class="stat-number" data-count="100">0</span>
-              <span class="stat-suffix">%</span>
-              <span class="stat-label">Satisfaction</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number" data-count="24">0</span>
-              <span class="stat-suffix">/7</span>
-              <span class="stat-label">Support</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number" data-count="500">0</span>
-              <span class="stat-suffix">+</span>
-              <span class="stat-label">Clients</span>
-            </div>
-          </div>
+
           
           <div class="about-features" data-animate="fade-up" data-delay="0.4">
             <div class="feature-item">
@@ -396,7 +380,7 @@ class UltimatePremiumTemplateGenerator {
           <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
           Testimonials
         </span>
-        <h2 class="section-title">Trusted by <span class="gradient-text">Hundreds</span></h2>
+        <h2 class="section-title">What Our <span class="gradient-text">Clients</span> Say</h2>
         <p class="section-desc">Real stories from real customers who love what we do.</p>
       </div>
       
@@ -1913,8 +1897,8 @@ section {
 
 .marquee-wrapper {
   overflow: hidden;
-  margin: 0 -1rem;
-  padding: 1rem;
+  margin: 0;
+  padding: 1rem 0;
 }
 
 .marquee-track {

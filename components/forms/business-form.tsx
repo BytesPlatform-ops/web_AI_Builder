@@ -85,7 +85,7 @@ function DropZone({
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <label className="block text-sm font-medium text-gray-300 mb-2">{label}</label>
       <div
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -93,10 +93,10 @@ function DropZone({
         onClick={() => inputRef.current?.click()}
         className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 ${
           dragOver
-            ? 'border-indigo-500 bg-indigo-50 scale-[1.01]'
+            ? 'border-indigo-400 bg-indigo-500/10 scale-[1.01]'
             : files.length > 0
-            ? 'border-green-300 bg-green-50/50'
-            : 'border-gray-300 bg-gray-50/50 hover:border-indigo-400 hover:bg-indigo-50/30'
+            ? 'border-emerald-500/30 bg-emerald-500/5'
+            : 'border-white/10 bg-white/[0.04] hover:border-indigo-400/50 hover:bg-white/[0.06]'
         }`}
       >
         <input
@@ -112,12 +112,12 @@ function DropZone({
         {files.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 px-4">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-colors ${
-              dragOver ? 'bg-indigo-100' : 'bg-gray-100'
+              dragOver ? 'bg-indigo-500/20' : 'bg-white/[0.06]'
             }`}>
-              <ImagePlus className={`w-6 h-6 ${dragOver ? 'text-indigo-600' : 'text-gray-400'}`} />
+              <ImagePlus className={`w-6 h-6 ${dragOver ? 'text-indigo-400' : 'text-gray-500'}`} />
             </div>
-            <p className="text-sm font-medium text-gray-700">
-              Drop {multiple ? 'images' : 'image'} here or <span className="text-indigo-600">browse</span>
+            <p className="text-sm font-medium text-gray-300">
+              Drop {multiple ? 'images' : 'image'} here or <span className="text-indigo-400">browse</span>
             </p>
             <p className="text-xs text-gray-500 mt-1">{hint}</p>
           </div>
@@ -127,11 +127,11 @@ function DropZone({
               <img
                 src={URL.createObjectURL(files[0])}
                 alt="Preview"
-                className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                className="w-16 h-16 object-cover rounded-lg border border-white/10"
               />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">{files[0].name}</p>
-                <p className="text-xs text-gray-500">{(files[0].size / 1024 / 1024).toFixed(1)} MB</p>
+                <p className="text-sm font-medium text-white truncate">{files[0].name}</p>
+                <p className="text-xs text-gray-400">{(files[0].size / 1024 / 1024).toFixed(1)} MB</p>
               </div>
               <button
                 type="button"
@@ -150,7 +150,7 @@ function DropZone({
                   <img
                     src={URL.createObjectURL(file)}
                     alt={`Preview ${i + 1}`}
-                    className="w-full h-full object-cover rounded-lg border border-gray-200"
+                    className="w-full h-full object-cover rounded-lg border border-white/10"
                   />
                   <button
                     type="button"
@@ -164,12 +164,12 @@ function DropZone({
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center hover:border-indigo-400 hover:bg-indigo-50 transition-colors"
+                className="aspect-square rounded-lg border-2 border-dashed border-white/15 flex items-center justify-center hover:border-indigo-400 hover:bg-indigo-500/10 transition-colors"
               >
                 <Plus className="w-5 h-5 text-gray-400" />
               </button>
             </div>
-            <p className="text-xs text-gray-500">{files.length} image{files.length !== 1 ? 's' : ''} selected</p>
+            <p className="text-xs text-gray-400">{files.length} image{files.length !== 1 ? 's' : ''} selected</p>
           </div>
         )}
       </div>
@@ -330,7 +330,7 @@ export function BusinessForm() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-3xl font-bold text-gray-900 mb-3"
+            className="text-3xl font-bold text-white mb-3"
           >
             Your website is being built!
           </motion.h2>
@@ -339,19 +339,19 @@ export function BusinessForm() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-lg text-gray-600 mb-8"
+            className="text-lg text-gray-400 mb-8"
           >
             We&apos;ll send your login credentials to<br />
-            <span className="font-semibold text-gray-900">{formData.email}</span>
+            <span className="font-semibold text-white">{formData.email}</span>
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-left"
+            className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 text-left"
           >
-            <h3 className="font-semibold text-gray-900 mb-4">What happens next</h3>
+            <h3 className="font-semibold text-white mb-4">What happens next</h3>
             <div className="space-y-4">
               {[
                 { num: '1', text: 'Your website is being generated now', sub: 'This takes about 2 minutes' },
@@ -359,11 +359,11 @@ export function BusinessForm() {
                 { num: '3', text: 'Login to preview and publish your website', sub: 'Make it live with one click' },
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-7 h-7 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-sm font-bold">
+                  <span className="flex-shrink-0 w-7 h-7 bg-indigo-500/20 text-indigo-400 rounded-full flex items-center justify-center text-sm font-bold">
                     {item.num}
                   </span>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{item.text}</p>
+                    <p className="text-sm font-medium text-gray-200">{item.text}</p>
                     <p className="text-xs text-gray-500">{item.sub}</p>
                   </div>
                 </div>
@@ -401,19 +401,19 @@ export function BusinessForm() {
                         ? 'bg-green-500 text-white shadow-md shadow-green-500/25'
                         : isActive
                         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25'
-                        : 'bg-gray-100 text-gray-400'
+                        : 'bg-white/[0.08] text-gray-500'
                     }`}
                   >
                     {isDone ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                   </div>
                   <span className={`text-xs mt-1.5 font-medium hidden sm:block ${
-                    isActive ? 'text-indigo-600' : isDone ? 'text-green-600' : 'text-gray-400'
+                    isActive ? 'text-indigo-400' : isDone ? 'text-green-400' : 'text-gray-500'
                   }`}>
                     {s.title}
                   </span>
                 </div>
                 {i < STEPS.length - 1 && (
-                  <div className="flex-1 mx-3 h-0.5 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="flex-1 mx-3 h-0.5 rounded-full bg-white/10 overflow-hidden">
                     <motion.div
                       className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full"
                       initial={false}
@@ -426,7 +426,7 @@ export function BusinessForm() {
             );
           })}
         </div>
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-gray-400">
           Step {step} of 3 — {STEPS[step - 1].subtitle}
         </p>
       </div>
@@ -440,8 +440,8 @@ export function BusinessForm() {
             exit={{ opacity: 0, height: 0 }}
             className="mb-6 overflow-hidden"
           >
-            <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
-              <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+            <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm">
+              <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
                 <X className="w-3 h-3" />
               </div>
               {error}
@@ -466,7 +466,7 @@ export function BusinessForm() {
               className="space-y-5"
             >
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">
                   Business Name <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -475,12 +475,12 @@ export function BusinessForm() {
                   value={formData.businessName}
                   onChange={handleInputChange}
                   placeholder="e.g., Sunrise Plumbing Co."
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">
                   Email <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -489,14 +489,14 @@ export function BusinessForm() {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="you@company.com"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
                 />
-                <p className="text-xs text-gray-400 mt-1.5">We&apos;ll send your login credentials here</p>
+                <p className="text-xs text-gray-500 mt-1.5">We&apos;ll send your login credentials here</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Tagline <span className="text-gray-400 font-normal">(optional)</span>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                  Tagline <span className="text-gray-500 font-normal">(optional)</span>
                 </label>
                 <input
                   type="text"
@@ -504,12 +504,12 @@ export function BusinessForm() {
                   value={formData.tagline}
                   onChange={handleInputChange}
                   placeholder="e.g., Quality plumbing solutions since 1995"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Industry</label>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Industry</label>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {INDUSTRIES.map((ind) => (
                     <button
@@ -518,8 +518,8 @@ export function BusinessForm() {
                       onClick={() => setFormData((p) => ({ ...p, industry: ind.toLowerCase() }))}
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                         formData.industry === ind.toLowerCase()
-                          ? 'bg-indigo-600 text-white shadow-sm'
-                          : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
+                          ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/25'
+                          : 'bg-white/[0.06] text-gray-400 hover:bg-white/[0.1] hover:text-gray-300 border border-white/10'
                       }`}
                     >
                       {ind}
@@ -543,7 +543,7 @@ export function BusinessForm() {
               className="space-y-5"
             >
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">
                   About Your Business <span className="text-red-400">*</span>
                 </label>
                 <textarea
@@ -552,12 +552,12 @@ export function BusinessForm() {
                   onChange={handleInputChange}
                   placeholder="Tell us your story — what makes your business special, your mission, experience, etc."
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400 resize-none"
+                  className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500 resize-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">
                   Services You Offer <span className="text-red-400">*</span>
                 </label>
                 <textarea
@@ -565,15 +565,15 @@ export function BusinessForm() {
                   onChange={(e) => setServices(e.target.value)}
                   placeholder="e.g., Emergency repairs, Water heater installation, Drain cleaning"
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400 resize-none"
+                  className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500 resize-none"
                 />
-                <p className="text-xs text-gray-400 mt-1.5">Separate services with commas</p>
+                <p className="text-xs text-gray-500 mt-1.5">Separate services with commas</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Phone <span className="text-gray-400 font-normal">(optional)</span>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                    Phone <span className="text-gray-500 font-normal">(optional)</span>
                   </label>
                   <input
                     type="tel"
@@ -581,12 +581,12 @@ export function BusinessForm() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+1 (555) 000-0000"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                    className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Address <span className="text-gray-400 font-normal">(optional)</span>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                    Address <span className="text-gray-500 font-normal">(optional)</span>
                   </label>
                   <input
                     type="text"
@@ -594,7 +594,7 @@ export function BusinessForm() {
                     value={formData.address}
                     onChange={handleInputChange}
                     placeholder="Business address"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all bg-white text-gray-900 placeholder-gray-400"
+                    className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
                   />
                 </div>
               </div>
@@ -615,7 +615,7 @@ export function BusinessForm() {
             >
               {/* Template Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Choose Your Website Style</label>
+                <label className="block text-sm font-medium text-gray-300 mb-3">Choose Your Website Style</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {TEMPLATE_OPTIONS.map((template) => (
                     <button
@@ -624,9 +624,9 @@ export function BusinessForm() {
                       onClick={() => setSelectedTemplate(template.id)}
                       className={`relative p-4 rounded-xl text-left transition-all duration-200 ${
                         selectedTemplate === template.id
-                          ? 'ring-2 ring-indigo-500 shadow-lg'
-                          : 'border border-gray-200 hover:border-indigo-300'
-                      } ${template.id === 'dark' ? 'bg-gray-900' : 'bg-white'}`}
+                          ? 'ring-2 ring-indigo-500 shadow-lg shadow-indigo-500/10'
+                          : 'border border-white/10 hover:border-indigo-400/40'
+                      } ${template.id === 'dark' ? 'bg-gray-900' : 'bg-white/[0.08]'}`}
                     >
                       {selectedTemplate === template.id && (
                         <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center shadow">
@@ -639,11 +639,11 @@ export function BusinessForm() {
                             <div key={i} className="w-4 h-4 rounded-full border border-white/20" style={{ backgroundColor: c }} />
                           ))}
                         </div>
-                        <h4 className={`font-semibold text-sm ${template.id === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        <h4 className={`font-semibold text-sm ${template.id === 'dark' ? 'text-white' : 'text-gray-200'}`}>
                           {template.name}
                         </h4>
                       </div>
-                      <p className={`text-xs ${template.id === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                      <p className={`text-xs ${template.id === 'dark' ? 'text-gray-400' : 'text-gray-400'}`}>
                         {template.description}
                       </p>
                     </button>
@@ -684,7 +684,7 @@ export function BusinessForm() {
 
               {/* Color Presets */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Brand Colors</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Brand Colors</label>
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                   {COLOR_PRESETS.map((preset) => (
                     <button
@@ -693,8 +693,8 @@ export function BusinessForm() {
                       onClick={() => setBrandColors({ primary: preset.primary, secondary: preset.secondary, accent: preset.accent })}
                       className={`p-2.5 rounded-lg transition-all text-center ${
                         brandColors.primary === preset.primary
-                          ? 'ring-2 ring-indigo-500 bg-indigo-50'
-                          : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
+                          ? 'ring-2 ring-indigo-500 bg-indigo-500/10'
+                          : 'bg-white/[0.06] hover:bg-white/[0.1] border border-white/10'
                       }`}
                     >
                       <div className="flex justify-center gap-1 mb-1.5">
@@ -702,11 +702,11 @@ export function BusinessForm() {
                         <div className="w-4 h-4 rounded-full" style={{ backgroundColor: preset.secondary }} />
                         <div className="w-4 h-4 rounded-full" style={{ backgroundColor: preset.accent }} />
                       </div>
-                      <span className="text-[10px] font-medium text-gray-600">{preset.name}</span>
+                      <span className="text-[10px] font-medium text-gray-400">{preset.name}</span>
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-gray-400 mt-2">Or we&apos;ll extract colors from your logo automatically</p>
+                <p className="text-xs text-gray-500 mt-2">Or we&apos;ll extract colors from your logo automatically</p>
 
                 {/* Custom color toggle */}
                 <button
@@ -742,12 +742,12 @@ export function BusinessForm() {
                             />
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-gray-700">{c.label}</span>
+                                <span className="text-sm font-medium text-gray-300">{c.label}</span>
                                 <input
                                   type="text"
                                   value={brandColors[c.key]}
                                   onChange={(e) => setBrandColors((prev) => ({ ...prev, [c.key]: e.target.value }))}
-                                  className="w-20 px-2 py-1 text-xs font-mono border border-gray-200 rounded-md bg-white text-gray-700"
+                                  className="w-20 px-2 py-1 text-xs font-mono border border-white/10 rounded-md bg-white/[0.06] text-gray-300"
                                 />
                               </div>
                               <p className="text-[10px] text-gray-400">{c.hint}</p>
@@ -761,11 +761,11 @@ export function BusinessForm() {
               </div>
 
               {/* Testimonials — Collapsible */}
-              <div className="border border-gray-200 rounded-xl overflow-hidden">
+              <div className="border border-white/10 rounded-xl overflow-hidden">
                 <button
                   type="button"
                   onClick={() => setShowTestimonials(!showTestimonials)}
-                  className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-4 text-left hover:bg-white/[0.04] transition-colors"
                 >
                   <div className="flex items-center gap-2">
                     <Star className="w-4 h-4 text-gray-400" />
@@ -777,7 +777,7 @@ export function BusinessForm() {
                         </span>
                       )}
                     </span>
-                    <span className="text-xs text-gray-400">optional</span>
+                    <span className="text-xs text-gray-500">optional</span>
                   </div>
                   {showTestimonials ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
                 </button>
@@ -793,9 +793,9 @@ export function BusinessForm() {
                     >
                       <div className="p-4 pt-0 space-y-3">
                         {testimonials.map((t, i) => (
-                          <div key={i} className="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
+                          <div key={i} className="flex items-start gap-3 bg-white/[0.04] rounded-lg p-3">
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm text-gray-700 italic">&ldquo;{t.quote}&rdquo;</p>
+                              <p className="text-sm text-gray-300 italic">&ldquo;{t.quote}&rdquo;</p>
                               <p className="text-xs text-gray-500 mt-1">— {t.authorName}{t.authorRole ? `, ${t.authorRole}` : ''}</p>
                             </div>
                             <button
@@ -815,14 +815,14 @@ export function BusinessForm() {
                               value={newTestimonial.authorName}
                               onChange={(e) => setNewTestimonial({ ...newTestimonial, authorName: e.target.value })}
                               placeholder="Name"
-                              className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                              className="px-3 py-2 border border-white/10 rounded-lg text-sm bg-white/[0.06] text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50"
                             />
                             <input
                               type="text"
                               value={newTestimonial.authorRole}
                               onChange={(e) => setNewTestimonial({ ...newTestimonial, authorRole: e.target.value })}
                               placeholder="Role (optional)"
-                              className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                              className="px-3 py-2 border border-white/10 rounded-lg text-sm bg-white/[0.06] text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50"
                             />
                           </div>
                           <textarea
@@ -830,13 +830,13 @@ export function BusinessForm() {
                             onChange={(e) => setNewTestimonial({ ...newTestimonial, quote: e.target.value })}
                             placeholder="What they said about your business..."
                             rows={2}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                            className="w-full px-3 py-2 border border-white/10 rounded-lg text-sm resize-none bg-white/[0.06] text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50"
                           />
                           <button
                             type="button"
                             onClick={handleAddTestimonial}
                             disabled={!newTestimonial.quote.trim() || !newTestimonial.authorName.trim()}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.08] hover:bg-white/[0.12] text-gray-300 text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <Plus className="w-3.5 h-3.5" />
                             Add
@@ -853,12 +853,12 @@ export function BusinessForm() {
       </div>
 
       {/* ── Navigation ───────────────────────────────────────────── */}
-      <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
+      <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/[0.06]">
         {step > 1 ? (
           <button
             type="button"
             onClick={goBack}
-            className="flex items-center gap-2 px-5 py-2.5 text-gray-600 hover:text-gray-900 font-medium rounded-xl hover:bg-gray-100 transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 text-gray-400 hover:text-white font-medium rounded-xl hover:bg-white/[0.06] transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
