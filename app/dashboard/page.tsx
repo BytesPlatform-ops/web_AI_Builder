@@ -1,13 +1,25 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 
+type SubmissionWithWebsite = {
+  id: string;
+  businessName: string;
+  email: string;
+  status: string;
+  createdAt: Date;
+  generatedWebsite: {
+    previewUrl: string | null;
+    deploymentUrl: string | null;
+  } | null;
+};
+
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   const submissions = await prisma.formSubmission.findMany({
     orderBy: { createdAt: 'desc' },
     include: { generatedWebsite: true },
-  });
+  }) as SubmissionWithWebsite[];
 
   return (
     <div className="min-h-screen pt-20">
