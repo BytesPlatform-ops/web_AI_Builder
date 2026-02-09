@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
@@ -38,9 +38,9 @@ const STEPS = [
 ];
 
 const INDUSTRIES = [
-  'Plumbing', 'Electrical', 'HVAC', 'Landscaping', 'Roofing',
-  'Restaurant', 'Salon/Spa', 'Consulting', 'E-Commerce',
-  'Fitness', 'Real Estate', 'Photography', 'Construction', 'Other',
+  'Restaurant', 'Real Estate', 'Salon/Spa', 'Construction',
+  'Plumbing', 'Fitness', 'E-Commerce', 'Healthcare',
+  'Consulting', 'Photography', 'Other',
 ];
 
 // ─── DropZone Component ──────────────────────────────────────────────
@@ -393,7 +393,7 @@ export function BusinessForm() {
             const isActive = step === s.id;
             const isDone = step > s.id;
             return (
-              <div key={s.id} className="flex items-center flex-1">
+              <React.Fragment key={s.id}>
                 <div className="flex flex-col items-center flex-shrink-0">
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
@@ -422,7 +422,7 @@ export function BusinessForm() {
                     />
                   </div>
                 )}
-              </div>
+              </React.Fragment>
             );
           })}
         </div>
@@ -510,22 +510,19 @@ export function BusinessForm() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1.5">Industry</label>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                <select
+                  value={formData.industry}
+                  onChange={(e) => setFormData((p) => ({ ...p, industry: e.target.value }))}
+                  className="w-full px-4 py-3 border border-white/10 rounded-xl text-sm bg-white/[0.06] text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 outline-none appearance-none cursor-pointer transition-all hover:bg-white/[0.08]"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}
+                >
+                  <option value="" disabled className="bg-[#1a1a2e] text-gray-400">Select your industry...</option>
                   {INDUSTRIES.map((ind) => (
-                    <button
-                      key={ind}
-                      type="button"
-                      onClick={() => setFormData((p) => ({ ...p, industry: ind.toLowerCase() }))}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                        formData.industry === ind.toLowerCase()
-                          ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/25'
-                          : 'bg-white/[0.06] text-gray-400 hover:bg-white/[0.1] hover:text-gray-300 border border-white/10'
-                      }`}
-                    >
+                    <option key={ind} value={ind.toLowerCase()} className="bg-[#1a1a2e] text-white">
                       {ind}
-                    </button>
+                    </option>
                   ))}
-                </div>
+                </select>
               </div>
             </motion.div>
           )}
@@ -815,14 +812,14 @@ export function BusinessForm() {
                               value={newTestimonial.authorName}
                               onChange={(e) => setNewTestimonial({ ...newTestimonial, authorName: e.target.value })}
                               placeholder="Name"
-                              className="px-3 py-2 border border-white/10 rounded-lg text-sm bg-white/[0.06] text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50"
+                              className="px-3 py-2 border border-white/10 rounded-lg text-sm bg-white/[0.06] text-white placeholder-gray-500 outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all"
                             />
                             <input
                               type="text"
                               value={newTestimonial.authorRole}
                               onChange={(e) => setNewTestimonial({ ...newTestimonial, authorRole: e.target.value })}
                               placeholder="Role (optional)"
-                              className="px-3 py-2 border border-white/10 rounded-lg text-sm bg-white/[0.06] text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50"
+                              className="px-3 py-2 border border-white/10 rounded-lg text-sm bg-white/[0.06] text-white placeholder-gray-500 outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all"
                             />
                           </div>
                           <textarea
@@ -830,7 +827,7 @@ export function BusinessForm() {
                             onChange={(e) => setNewTestimonial({ ...newTestimonial, quote: e.target.value })}
                             placeholder="What they said about your business..."
                             rows={2}
-                            className="w-full px-3 py-2 border border-white/10 rounded-lg text-sm resize-none bg-white/[0.06] text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50"
+                            className="w-full px-3 py-2 border border-white/10 rounded-lg text-sm resize-none bg-white/[0.06] text-white placeholder-gray-500 outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all"
                           />
                           <button
                             type="button"

@@ -273,7 +273,7 @@ class AuroraLightTemplateGenerator {
   </div>
 
   <!-- Hero Section -->
-  <section class="hero" id="hero">
+  <section class="hero${heroImageUrl ? '' : ' no-hero-image'}" id="hero">
     ${heroImageUrl ? `
     <div class="hero-image-container">
       <div class="hero-image-wrapper" data-parallax>
@@ -283,34 +283,30 @@ class AuroraLightTemplateGenerator {
     </div>
     ` : ''}
     
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-badge" data-animate="fade-up">
-          <span class="badge-glow"></span>
-          <span class="badge-dot"></span>
-          <span>Welcome to ${businessName}</span>
-        </div>
-        
-        <h1 class="hero-title" data-animate="split-text">
-          ${content.hero.headline}
-        </h1>
-        
-        <p class="hero-subtitle" data-animate="fade-up" data-delay="0.2">
-          ${content.hero.subheadline}
-        </p>
-        
-        <div class="hero-actions" data-animate="fade-up" data-delay="0.4">
-          <a href="#contact" class="btn btn-primary magnetic">
-            <span class="btn-bg"></span>
-            <span class="btn-text">${content.hero.ctaPrimary || 'Get Started'}</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#about" class="btn btn-outline magnetic">
-            <span class="btn-text">${content.hero.ctaSecondary || 'Learn More'}</span>
-          </a>
-        </div>
-
-
+    <div class="hero-content">
+      <div class="hero-badge" data-animate="fade-up">
+        <span class="badge-glow"></span>
+        <span class="badge-dot"></span>
+        <span>Welcome to ${businessName}</span>
+      </div>
+      
+      <h1 class="hero-title" data-animate="split-text">
+        <span class="title-line">${content.hero.headline}</span>
+      </h1>
+      
+      <p class="hero-subtitle" data-animate="fade-up" data-delay="0.2">
+        ${content.hero.subheadline}
+      </p>
+      
+      <div class="hero-actions" data-animate="fade-up" data-delay="0.4">
+        <a href="#contact" class="btn btn-primary magnetic">
+          <span class="btn-bg"></span>
+          <span class="btn-text">${content.hero.ctaPrimary || 'Get Started'}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#about" class="btn btn-outline magnetic">
+          <span class="btn-text">${content.hero.ctaSecondary || 'Learn More'}</span>
+        </a>
       </div>
     </div>
 
@@ -766,7 +762,7 @@ body:hover .cursor-dot { opacity: 1; }
 .hero-image-wrapper { width: 100%; height: 100%; position: relative; }
 .hero-image { width: 100%; height: 100%; object-fit: cover; }
 .hero-image-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.25) 40%, rgba(0, 0, 0, 0.45) 100%); }
-.hero-content { position: relative; z-index: 2; text-align: center; max-width: 900px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; align-items: center; }
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 800px; margin: 0 auto; padding: 0 20px; }
 
 .hero-badge { display: inline-flex; align-items: center; gap: 12px; padding: 8px 20px 8px 12px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 100px; font-size: 0.875rem; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 32px; backdrop-filter: blur(10px); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); position: relative; overflow: hidden; }
 .badge-glow { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.1), transparent); transform: translateX(-100%); animation: badgeGlow 3s ease-in-out infinite; }
@@ -774,13 +770,30 @@ body:hover .cursor-dot { opacity: 1; }
 .badge-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 10px #22c55e; }
 @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
 
-.hero-title { font-family: var(--font-display); font-size: clamp(2.75rem, 7vw, 5rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 28px; text-align: center; text-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 4px 20px rgba(0,0,0,0.3); width: 100%; }
-.hero-title .word { display: inline-block; opacity: 0; transform: translateY(40px) rotateX(-30deg); margin: 0 0.15em; }
-.gradient-text { background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent), var(--primary)); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 300% 300%; animation: gradientShift 4s ease infinite; font-style: italic; }
+.hero-title { font-family: var(--font-display); font-size: clamp(2.75rem, 7vw, 5rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 40%, var(--accent) 70%, var(--primary) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: heroGradientShift 6s ease infinite; margin-bottom: 28px; text-align: center; text-shadow: 0 8px 22px rgba(0,0,0,0.35); width: 100%; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35)); -webkit-text-stroke: 0.6px rgba(0,0,0,0.35); }
+.hero-title .title-line { display: block; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 40%, var(--accent) 70%, var(--primary) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: heroGradientShift 6s ease infinite; }
+.hero-title .word { display: inline-block; opacity: 0; transform: translateY(40px) rotateX(-30deg); margin: 0 0.15em; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 40%, var(--accent) 70%, var(--primary) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: heroGradientShift 6s ease infinite; -webkit-text-stroke: 0.6px rgba(0,0,0,0.35); }
+.gradient-text { background: linear-gradient(135deg, var(--accent), var(--primary), var(--secondary), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; background-size: 300% 300%; animation: gradientShift 4s ease infinite; font-style: italic; }
 @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes heroGradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-.hero-subtitle { font-size: clamp(1.125rem, 2vw, 1.375rem); color: rgba(255,255,255,0.9); max-width: 600px; margin: 0 auto 40px; line-height: 1.7; text-align: center; text-shadow: 0 1px 6px rgba(0,0,0,0.4), 0 2px 12px rgba(0,0,0,0.2); font-weight: 500; }
+.hero-subtitle { font-size: clamp(1.125rem, 2vw, 1.375rem); color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px; line-height: 1.7; text-align: center; font-weight: 500; }
 .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px; margin-bottom: 60px; width: 100%; }
+
+/* Hero WITH image - lighten subtitle for readability over dark overlay */
+.hero:not(.no-hero-image) .hero-subtitle { color: rgba(255,255,255,0.9); text-shadow: 0 1px 6px rgba(0,0,0,0.4), 0 2px 12px rgba(0,0,0,0.2); }
+.hero:not(.no-hero-image) .hero-title { text-shadow: 0 12px 34px rgba(0,0,0,0.7); filter: drop-shadow(0 8px 24px rgba(0,0,0,0.55)); -webkit-text-stroke: 0.7px rgba(0,0,0,0.5); }
+.hero:not(.no-hero-image) .hero-title .word { text-shadow: 0 12px 34px rgba(0,0,0,0.7); filter: drop-shadow(0 8px 24px rgba(0,0,0,0.55)); -webkit-text-stroke: 0.7px rgba(0,0,0,0.5); }
+
+/* ===== Hero without image - adjust background & supporting elements ===== */
+.hero.no-hero-image { background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.06) 0%, rgba(var(--accent-rgb), 0.04) 30%, rgba(var(--secondary-rgb), 0.06) 60%, rgba(var(--primary-rgb), 0.03) 100%); }
+.hero.no-hero-image .hero-title { text-shadow: 0 6px 16px rgba(0,0,0,0.15); filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15)); -webkit-text-stroke: 0.4px rgba(0,0,0,0.2); }
+.hero.no-hero-image .hero-title .word { text-shadow: 0 6px 16px rgba(0,0,0,0.15); filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15)); -webkit-text-stroke: 0.4px rgba(0,0,0,0.2); }
+.hero.no-hero-image .hero-badge { background: rgba(var(--primary-rgb), 0.08); border: 1px solid rgba(var(--primary-rgb), 0.15); color: var(--text-secondary); backdrop-filter: blur(10px); box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.08); }
+.hero.no-hero-image .hero-scroll { color: var(--text-tertiary); }
+.hero.no-hero-image .scroll-indicator { border-color: rgba(var(--primary-rgb), 0.2); }
+.hero.no-hero-image .btn-outline { background: rgba(var(--primary-rgb), 0.06); color: var(--text-primary); border: 2px solid rgba(var(--primary-rgb), 0.2); }
+.hero.no-hero-image .hero-stats { background: rgba(var(--primary-rgb), 0.04); border: 1px solid rgba(var(--primary-rgb), 0.1); }
 
 .hero-stats { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; padding: 24px 32px; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); }
 .stat-item { text-align: center; }

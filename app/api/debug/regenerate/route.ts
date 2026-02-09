@@ -60,7 +60,8 @@ export async function POST(request: NextRequest) {
     console.log(`🖼️ Additional images: ${additionalImages.length}`);
 
     // Generate new website files
-    console.log('⚡ Generating with ULTIMATE template v3...\n');
+    console.log('⚡ Generating with ULTIMATE template v3...');
+    console.log(`   Template Type: ${submission.templateType || 'dark'}\n`);
 
     const generatedWebsite = await premiumTemplateGenerator.generate({
       businessName: submission.businessName,
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
       logoUrl: submission.logoUrl || undefined,
       heroImageUrl: submission.heroImageUrl || undefined,
       additionalImages: additionalImages,
+      templateType: (submission.templateType as 'dark' | 'light') || 'dark',
       contactInfo: {
         email: submission.email,
         phone: submission.phone || undefined,

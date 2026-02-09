@@ -130,12 +130,14 @@ const processWebsiteGeneration = async (formSubmissionId: string) => {
 
     // Step 3: Generate template with content
     console.log(`🎨 Generating template for ${submission.businessName}...`);
+    console.log(`   Template Type: ${submission.templateType || 'dark'}`);
     const generatedWebsite = await premiumTemplateGenerator.generate({
       businessName: submission.businessName,
       content: enhancedContent,
       colors: extractedColors,
       logoUrl: submission.logoUrl || undefined,
       heroImageUrl: submission.heroImageUrl || undefined,
+      templateType: (submission.templateType as 'dark' | 'light') || 'dark',
       contactInfo: {
         email: submission.email,
         phone: submission.phone || undefined,
