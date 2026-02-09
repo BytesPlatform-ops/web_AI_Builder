@@ -1,8 +1,9 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { X, Loader2, Palette, Pencil } from "lucide-react"
 
 interface WebsiteData {
   id: string
@@ -36,6 +37,9 @@ export default function EditWebsitePage() {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState("")
   const [activeTab, setActiveTab] = useState<"colors" | "content">("colors")
+  
+  // Ref to the preview iframe
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   
   // Editable colors
   const [colors, setColors] = useState({
@@ -97,6 +101,33 @@ export default function EditWebsitePage() {
     }
   }
 
+  // Send live updates to the preview iframe via postMessage
+  const sendLiveUpdate = useCallback((updatedColors?: typeof colors, updatedContent?: typeof content) => {
+    const iframe = iframeRef.current
+    if (!iframe?.contentWindow) return
+    iframe.contentWindow.postMessage({
+      type: 'live-edit',
+      payload: {
+        colors: updatedColors || undefined,
+        content: updatedContent || undefined,
+      }
+    }, '*')
+  }, [])
+
+  // Color change handler — updates state + sends live preview
+  const updateColor = (key: keyof typeof colors, value: string) => {
+    const next = { ...colors, [key]: value }
+    setColors(next)
+    sendLiveUpdate(next)
+  }
+
+  // Content change handler — updates state + sends live preview
+  const updateContent = (key: keyof EditableContent, value: string) => {
+    const next = { ...content, [key]: value }
+    setContent(next)
+    sendLiveUpdate(undefined, next)
+  }
+
   const handleSave = async () => {
     if (!website) return
     
@@ -121,6 +152,10 @@ export default function EditWebsitePage() {
       }
       
       setSaved(true)
+      // Reload the preview iframe to pick up saved files
+      if (iframeRef.current) {
+        iframeRef.current.src = `/api/preview/${website.formSubmissionId}?t=${Date.now()}`
+      }
       setTimeout(() => setSaved(false), 3000)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save")
@@ -175,9 +210,7 @@ export default function EditWebsitePage() {
               onClick={() => router.push("/my-website")}
               className="text-gray-400 hover:text-white p-2"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -192,7 +225,8 @@ export default function EditWebsitePage() {
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            🎨 Colors
+            <Palette className="w-4 h-4 inline mr-1.5" />
+            Colors
           </button>
           <button
             onClick={() => setActiveTab("content")}
@@ -202,7 +236,8 @@ export default function EditWebsitePage() {
                 : "text-gray-400 hover:text-white"
             }`}
           >
-            ✏️ Content
+            <Pencil className="w-4 h-4 inline mr-1.5" />
+            Content
           </button>
         </div>
 
@@ -223,13 +258,13 @@ export default function EditWebsitePage() {
                       <input
                         type="color"
                         value={colors.primary}
-                        onChange={(e) => setColors({ ...colors, primary: e.target.value })}
+                        onChange={(e) => updateColor('primary', e.target.value)}
                         className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent"
                       />
                       <input
                         type="text"
                         value={colors.primary}
-                        onChange={(e) => setColors({ ...colors, primary: e.target.value })}
+                        onChange={(e) => updateColor('primary', e.target.value)}
                         className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm font-mono"
                       />
                     </div>
@@ -245,13 +280,13 @@ export default function EditWebsitePage() {
                       <input
                         type="color"
                         value={colors.secondary}
-                        onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
+                        onChange={(e) => updateColor('secondary', e.target.value)}
                         className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent"
                       />
                       <input
                         type="text"
                         value={colors.secondary}
-                        onChange={(e) => setColors({ ...colors, secondary: e.target.value })}
+                        onChange={(e) => updateColor('secondary', e.target.value)}
                         className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm font-mono"
                       />
                     </div>
@@ -267,13 +302,13 @@ export default function EditWebsitePage() {
                       <input
                         type="color"
                         value={colors.accent}
-                        onChange={(e) => setColors({ ...colors, accent: e.target.value })}
+                        onChange={(e) => updateColor('accent', e.target.value)}
                         className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent"
                       />
                       <input
                         type="text"
                         value={colors.accent}
-                        onChange={(e) => setColors({ ...colors, accent: e.target.value })}
+                        onChange={(e) => updateColor('accent', e.target.value)}
                         className="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm font-mono"
                       />
                     </div>
@@ -296,7 +331,11 @@ export default function EditWebsitePage() {
                   ].map((preset) => (
                     <button
                       key={preset.name}
-                      onClick={() => setColors({ primary: preset.primary, secondary: preset.secondary, accent: preset.accent })}
+                      onClick={() => {
+                        const next = { primary: preset.primary, secondary: preset.secondary, accent: preset.accent }
+                        setColors(next)
+                        sendLiveUpdate(next)
+                      }}
                       className="p-2 rounded-lg bg-gray-900/50 hover:bg-gray-700 transition-colors text-left"
                     >
                       <div className="flex gap-1 mb-1">
@@ -316,27 +355,27 @@ export default function EditWebsitePage() {
             <>
               {/* Hero Section */}
               <div>
-                <h3 className="text-sm font-semibold text-white mb-4">Hero Section</h3>
+                <h3 className="text-sm font-semibold text-white mb-4">Top Banner</h3>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Headline
+                      Title
                     </label>
                     <input
                       type="text"
                       value={content.headline}
-                      onChange={(e) => setContent({ ...content, headline: e.target.value })}
+                      onChange={(e) => updateContent('headline', e.target.value)}
                       placeholder="Your main headline..."
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Subheadline
+                      Subtitle
                     </label>
                     <textarea
                       value={content.subheadline}
-                      onChange={(e) => setContent({ ...content, subheadline: e.target.value })}
+                      onChange={(e) => updateContent('subheadline', e.target.value)}
                       placeholder="A brief description of your business..."
                       rows={3}
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 resize-none"
@@ -345,24 +384,24 @@ export default function EditWebsitePage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Primary CTA
+                        Main Button
                       </label>
                       <input
                         type="text"
                         value={content.ctaPrimary}
-                        onChange={(e) => setContent({ ...content, ctaPrimary: e.target.value })}
+                        onChange={(e) => updateContent('ctaPrimary', e.target.value)}
                         placeholder="Get Started"
                         className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Secondary CTA
+                        Second Button
                       </label>
                       <input
                         type="text"
                         value={content.ctaSecondary}
-                        onChange={(e) => setContent({ ...content, ctaSecondary: e.target.value })}
+                        onChange={(e) => updateContent('ctaSecondary', e.target.value)}
                         placeholder="Learn More"
                         className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                       />
@@ -377,12 +416,12 @@ export default function EditWebsitePage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      About Headline
+                      About Heading
                     </label>
                     <input
                       type="text"
                       value={content.aboutHeadline}
-                      onChange={(e) => setContent({ ...content, aboutHeadline: e.target.value })}
+                      onChange={(e) => updateContent('aboutHeadline', e.target.value)}
                       placeholder="Why choose us?"
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
@@ -393,7 +432,7 @@ export default function EditWebsitePage() {
                     </label>
                     <textarea
                       value={content.aboutText}
-                      onChange={(e) => setContent({ ...content, aboutText: e.target.value })}
+                      onChange={(e) => updateContent('aboutText', e.target.value)}
                       placeholder="Tell your story..."
                       rows={4}
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 resize-none"
@@ -404,28 +443,28 @@ export default function EditWebsitePage() {
 
               {/* CTA Section */}
               <div>
-                <h3 className="text-sm font-semibold text-white mb-4">Call to Action Section</h3>
+                <h3 className="text-sm font-semibold text-white mb-4">Bottom Section</h3>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      CTA Headline
+                      Bottom Headline
                     </label>
                     <input
                       type="text"
                       value={content.ctaHeadline}
-                      onChange={(e) => setContent({ ...content, ctaHeadline: e.target.value })}
+                      onChange={(e) => updateContent('ctaHeadline', e.target.value)}
                       placeholder="Ready to get started?"
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      CTA Subheadline
+                      Bottom Text
                     </label>
                     <input
                       type="text"
                       value={content.ctaSubheadline}
-                      onChange={(e) => setContent({ ...content, ctaSubheadline: e.target.value })}
+                      onChange={(e) => updateContent('ctaSubheadline', e.target.value)}
                       placeholder="Contact us today for a free consultation"
                       className="w-full bg-gray-900/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500"
                     />
@@ -455,16 +494,12 @@ export default function EditWebsitePage() {
           >
             {saving ? (
               <>
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                <span>Saving & Deploying...</span>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Saving...</span>
               </>
             ) : (
               <>
-                <span>💾</span>
-                <span>Save & Deploy Changes</span>
+                <span>Save</span>
               </>
             )}
           </button>
@@ -474,8 +509,20 @@ export default function EditWebsitePage() {
         </div>
       </div>
 
-      {/* Right Panel - Live Preview */}
-      <div className="flex-1 flex flex-col">
+      {/* Mobile: Preview link */}
+      <div className="lg:hidden p-4 border-t border-gray-700 bg-gray-800">
+        <a
+          href={website.deploymentUrl || `/api/preview/${website.formSubmissionId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full py-3 border border-indigo-400/30 text-indigo-400 rounded-lg hover:bg-indigo-500/10 transition-all font-medium text-sm"
+        >
+          Open Preview in New Tab
+        </a>
+      </div>
+
+      {/* Right Panel - Live Preview (hidden on mobile) */}
+      <div className="hidden lg:flex flex-1 flex-col">
         {/* Preview Header */}
         <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -501,10 +548,10 @@ export default function EditWebsitePage() {
         {/* Preview iframe */}
         <div className="flex-1 bg-gray-900">
           <iframe
-            src={website.deploymentUrl || `/api/preview/${website.formSubmissionId}`}
+            ref={iframeRef}
+            src={`/api/preview/${website.formSubmissionId}`}
             className="w-full h-full border-0"
             title="Website Preview"
-            key={`preview-${saved}`}
           />
         </div>
       </div>

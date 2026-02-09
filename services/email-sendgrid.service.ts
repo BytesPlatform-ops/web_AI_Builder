@@ -10,7 +10,10 @@ import sgMail from '@sendgrid/mail';
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || '';
 const FROM_EMAIL = process.env.FROM_EMAIL || 'no-reply@bytesplatform.com';
-const SALES_EMAIL = process.env.SALES_EMAIL || 'sales@yourcompany.com';
+const SALES_EMAILS = (process.env.SALES_EMAIL || 'sales@yourcompany.com')
+  .split(',')
+  .map((e) => e.trim())
+  .filter(Boolean);
 
 export interface SendToSalesParams {
   businessName: string;
@@ -64,21 +67,27 @@ class SendGridEmailService {
     }
   }
 
-  private async sendEmail(to: string, subject: string, html: string) {
+  private async sendEmail(to: string | string[], subject: string, html: string) {
     if (!this.ensureConfigured()) {
       return { success: false, error: 'API key not configured' };
     }
 
     try {
-      const [response] = await sgMail.send({
-        to,
-        from: FROM_EMAIL,
-        subject,
-        html,
-      });
+      // SendGrid supports sending to multiple recipients
+      const recipients = Array.isArray(to) ? to : [to];
+      const results = await Promise.all(
+        recipients.map((recipient) =>
+          sgMail.send({
+            to: recipient,
+            from: FROM_EMAIL,
+            subject,
+            html,
+          })
+        )
+      );
 
-      console.log('✅ Email sent successfully:', response.statusCode);
-      return { success: true, data: response };
+      console.log(`✅ Email sent successfully to ${recipients.join(', ')}`);
+      return { success: true, data: results[0]?.[0] };
     } catch (error) {
       console.error('❌ Failed to send email:', error);
       return { success: false, error: String(error) };
@@ -177,13 +186,13 @@ class SendGridEmailService {
     `;
 
     const result = await this.sendEmail(
-      SALES_EMAIL,
+      SALES_EMAILS,
       `🎉 New Website Generated - ${businessName}`,
       html
     );
 
     if (result.success) {
-      console.log(`✅ Sales notification sent to ${SALES_EMAIL}`);
+      console.log(`✅ Sales notification sent to ${SALES_EMAILS.join(', ')}`);
     }
 
     return result;
@@ -390,13 +399,13 @@ class SendGridEmailService {
     `;
 
     const result = await this.sendEmail(
-      SALES_EMAIL,
+      SALES_EMAILS,
       `🔔 Publish Request - ${businessName} wants to go live!`,
       html
     );
 
     if (result.success) {
-      console.log(`✅ Publish request notification sent to ${SALES_EMAIL}`);
+      console.log(`✅ Publish request notification sent to ${SALES_EMAILS.join(', ')}`);
     }
 
     return result;

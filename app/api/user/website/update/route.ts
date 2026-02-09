@@ -70,9 +70,9 @@ export async function POST(request: NextRequest) {
     console.log(`   Secondary: ${newColors.secondary}`);
     console.log(`   Accent: ${newColors.accent}`);
 
-    // Step 1: Regenerate AI content (use cached if available, or regenerate)
-    console.log('✨ Step 1: Generating AI content...');
-    const enhancedContent = await aiContentService.generateWebsiteContent({
+    // Step 1: Generate base AI content (for services, testimonials, etc that user can't edit)
+    console.log('✨ Step 1: Generating base AI content...');
+    const baseContent = await aiContentService.generateWebsiteContent({
       businessName: submission.businessName,
       tagline: submission.tagline || '',
       about: submission.about,
@@ -80,6 +80,35 @@ export async function POST(request: NextRequest) {
       industry: submission.industry || undefined,
       targetAudience: submission.targetAudience || undefined,
     });
+
+    // Step 1b: If user provided content edits, merge them into the base content
+    let enhancedContent = baseContent;
+    if (content && Object.keys(content).length > 0) {
+      console.log('📝 Step 1b: Merging user-provided content edits...');
+      // User sends flat structure, merge into nested structure
+      enhancedContent = {
+        ...baseContent,
+        hero: {
+          ...baseContent.hero,
+          headline: content.headline || baseContent.hero.headline,
+          subheadline: content.subheadline || baseContent.hero.subheadline,
+          ctaPrimary: content.ctaPrimary || baseContent.hero.ctaPrimary,
+          ctaSecondary: content.ctaSecondary || baseContent.hero.ctaSecondary,
+        },
+        about: {
+          ...baseContent.about,
+          headline: content.aboutHeadline || baseContent.about.headline,
+          paragraphs: content.aboutText 
+            ? [content.aboutText] 
+            : baseContent.about.paragraphs,
+        },
+        cta: {
+          ...baseContent.cta,
+          headline: content.ctaHeadline || baseContent.cta.headline,
+          subheadline: content.ctaSubheadline || baseContent.cta.subheadline,
+        },
+      };
+    }
 
     // Step 2: Regenerate template with new colors
     console.log('🎨 Step 2: Regenerating website template with new colors...');
@@ -98,6 +127,10 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    // Get the original template type (light or dark)
+    const templateType = (submission.templateType as 'dark' | 'light') || 'dark';
+    console.log(`   Template Type: ${templateType}`);
+    
     const generatedWebsite = await premiumTemplateGenerator.generate({
       businessName: submission.businessName,
       content: enhancedContent,
@@ -105,6 +138,7 @@ export async function POST(request: NextRequest) {
       logoUrl: submission.logoUrl || undefined,
       heroImageUrl: submission.heroImageUrl || undefined,
       additionalImages: additionalImages,
+      templateType: templateType,
       contactInfo: {
         email: submission.email,
         phone: submission.phone || undefined,
