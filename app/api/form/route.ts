@@ -3,10 +3,12 @@
  * POST /api/form/submit
  * 
  * Handles:
- * 1. Form data validation
- * 2. File uploads (logo, images)
- * 3. Save to database
- * 4. Trigger background AI generation via Next.js after()
+ * 1. Rate limiting (5 submissions per hour per IP)
+ * 2. Input sanitization (XSS prevention)
+ * 3. Form data validation
+ * 4. File uploads (logo, images)
+ * 5. Save to database
+ * 6. Trigger background AI generation via Next.js after()
  */
 
 import { NextRequest, NextResponse, after } from 'next/server';
@@ -15,24 +17,39 @@ import { imageProcessingService } from '@/services/image-processing.service';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import { checkRateLimit, getClientIP, RateLimiters, rateLimitResponse } from '@/lib/rate-limiter';
+import { sanitizeText, sanitizeEmail, sanitizePhone, sanitizeUrl, sanitizeColor, sanitizeRichText } from '@/lib/sanitize';
 
 // Allow up to 5 minutes for generation (used by after() callback)
 export const maxDuration = 300;
 
 export async function POST(request: NextRequest) {
   try {
+    // ========== RATE LIMITING ==========
+    const clientIP = getClientIP(request);
+    const rateLimitResult = checkRateLimit(clientIP, RateLimiters.formSubmission);
+    
+    if (!rateLimitResult.success) {
+      console.warn(`🚫 Rate limit exceeded for IP: ${clientIP}`);
+      return rateLimitResponse(rateLimitResult);
+    }
+    
+    console.log(`✅ Rate limit check passed for IP: ${clientIP} (${rateLimitResult.remaining} remaining)`);
+
     const formData = await request.formData();
 
-    // Extract form fields
-    const businessName = formData.get('businessName') as string;
-    const tagline = formData.get('tagline') as string | null;
-    const about = formData.get('about') as string;
-    const industry = formData.get('industry') as string | null;
-    const email = formData.get('email') as string;
-    const phone = formData.get('phone') as string | null;
-    const address = formData.get('address') as string | null;
+    // ========== EXTRACT & SANITIZE FORM FIELDS ==========
+    // All user inputs are sanitized to prevent XSS attacks
+    const businessName = sanitizeText(formData.get('businessName') as string);
+    const tagline = sanitizeText(formData.get('tagline') as string | null);
+    const about = sanitizeRichText(formData.get('about') as string); // Allow basic formatting
+    const industry = sanitizeText(formData.get('industry') as string | null);
+    const email = sanitizeEmail(formData.get('email') as string);
+    const phone = sanitizePhone(formData.get('phone') as string | null);
+    const address = sanitizeText(formData.get('address') as string | null);
 
     // Parse arrays - handle both JSON-serialized and multipart array formats
+    // Then sanitize each service entry
     let services: string[] = [];
     const servicesField = formData.get('services');
     if (servicesField) {
@@ -49,25 +66,51 @@ export async function POST(request: NextRequest) {
         }
       }
     }
+    // Sanitize all service entries
+    services = services.map(s => sanitizeText(s)).filter(s => s.length > 0);
 
-    const targetAudience = formData.get('targetAudience') as string | null;
+    const targetAudience = sanitizeText(formData.get('targetAudience') as string | null);
+    
+    // Parse and sanitize social links
     const socialLinksField = formData.get('socialLinks');
-    const socialLinks = socialLinksField && typeof socialLinksField === 'string' && socialLinksField.startsWith('{')
-      ? JSON.parse(socialLinksField)
-      : {};
+    let socialLinks: Record<string, string> = {};
+    if (socialLinksField && typeof socialLinksField === 'string' && socialLinksField.startsWith('{')) {
+      const parsed = JSON.parse(socialLinksField);
+      // Sanitize each social link URL
+      for (const [key, value] of Object.entries(parsed)) {
+        if (typeof value === 'string') {
+          const sanitizedUrl = sanitizeUrl(value);
+          if (sanitizedUrl) {
+            socialLinks[sanitizeText(key)] = sanitizedUrl;
+          }
+        }
+      }
+    }
 
-    // Parse testimonials
-    let testimonials = [];
+    // Parse and sanitize testimonials
+    // Map from form format {name, text, role} to template format {quote, author, role}
+    let testimonials: Array<{ quote: string; author: string; role: string }> = [];
     const testimonialsField = formData.get('testimonials');
     if (testimonialsField && typeof testimonialsField === 'string') {
       try {
-        testimonials = JSON.parse(testimonialsField);
+        const parsed = JSON.parse(testimonialsField);
+        if (Array.isArray(parsed)) {
+          testimonials = parsed
+            .filter(t => t && typeof t === 'object')
+            .map(t => ({
+              // Map: name → author, text → quote
+              quote: sanitizeText(t.text || t.quote),
+              author: sanitizeText(t.name || t.author),
+              role: sanitizeText(t.role) || 'Customer',
+            }))
+            .filter(t => t.author && t.quote);
+        }
       } catch (e) {
         console.warn('Failed to parse testimonials:', e);
       }
     }
 
-    // Parse brand colors
+    // Parse and sanitize brand colors
     let brandColors = {
       primary: '#3B82F6',
       secondary: '#1E40AF',
@@ -77,16 +120,26 @@ export async function POST(request: NextRequest) {
     if (brandColorsField && typeof brandColorsField === 'string') {
       try {
         const parsedColors = JSON.parse(brandColorsField);
-        if (parsedColors.primary && parsedColors.secondary && parsedColors.accent) {
-          brandColors = parsedColors;
+        // Sanitize each color - ensures valid hex format only
+        const sanitizedPrimary = sanitizeColor(parsedColors.primary);
+        const sanitizedSecondary = sanitizeColor(parsedColors.secondary);
+        const sanitizedAccent = sanitizeColor(parsedColors.accent);
+        
+        if (sanitizedPrimary && sanitizedSecondary && sanitizedAccent) {
+          brandColors = {
+            primary: sanitizedPrimary,
+            secondary: sanitizedSecondary,
+            accent: sanitizedAccent,
+          };
         }
       } catch (e) {
         console.warn('Failed to parse brand colors:', e);
       }
     }
 
-    // Parse template type (default to 'dark')
-    const templateType = (formData.get('templateType') as string) || 'dark';
+    // Parse and sanitize template type (only allow 'dark' or 'light')
+    const rawTemplateType = formData.get('templateType') as string;
+    const templateType = rawTemplateType === 'light' ? 'light' : 'dark';
 
     // Validate required fields
     if (!businessName || !about || !email || services.length === 0) {

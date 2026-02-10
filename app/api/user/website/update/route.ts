@@ -5,9 +5,20 @@ import { aiContentService } from '@/services/ai-content.service';
 import { premiumTemplateGenerator } from '@/services/template-generator.service';
 import fs from 'fs';
 import path from 'path';
+import { checkRateLimit, getClientIP, RateLimiters, rateLimitResponse } from '@/lib/rate-limiter';
+import { sanitizeText, sanitizeColor } from '@/lib/sanitize';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - prevent abuse
+    const clientIP = getClientIP(request);
+    const rateLimitResult = checkRateLimit(clientIP, RateLimiters.regenerate);
+    
+    if (!rateLimitResult.success) {
+      console.warn(`🚫 Rate limit exceeded for website update from IP: ${clientIP}`);
+      return rateLimitResponse(rateLimitResult);
+    }
+
     // Get session
     const session = await getServerSession();
     
@@ -18,6 +29,23 @@ export async function POST(request: NextRequest) {
     // Get request body
     const body = await request.json();
     const { websiteId, colors, content } = body;
+
+    // Sanitize colors if provided
+    const sanitizedColors = colors ? {
+      primary: sanitizeColor(colors.primary) || colors.primary,
+      secondary: sanitizeColor(colors.secondary) || colors.secondary,
+      accent: sanitizeColor(colors.accent) || colors.accent,
+    } : undefined;
+
+    // Sanitize content if provided
+    const sanitizedContent = content ? {
+      headline: content.headline ? sanitizeText(content.headline) : undefined,
+      subheadline: content.subheadline ? sanitizeText(content.subheadline) : undefined,
+      aboutText: content.aboutText ? sanitizeText(content.aboutText) : undefined,
+      ctaHeadline: content.ctaHeadline ? sanitizeText(content.ctaHeadline) : undefined,
+      ctaSubtext: content.ctaSubtext ? sanitizeText(content.ctaSubtext) : undefined,
+      ctaButtonText: content.ctaButtonText ? sanitizeText(content.ctaButtonText) : undefined,
+    } : undefined;
 
     if (!websiteId) {
       return NextResponse.json({ error: 'Website ID is required' }, { status: 400 });
