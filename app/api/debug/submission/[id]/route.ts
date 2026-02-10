@@ -1,29 +1,42 @@
 /**
  * Debug API - Get submission details including credentials
  * GET /api/debug/submission/[id]
+ * 
+ * SECURITY: This endpoint is DISABLED in production
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isDebugEnabled, validateSubmissionId } from '@/lib/validation';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // SECURITY: Block in production environment
+  if (!isDebugEnabled()) {
+    return NextResponse.json(
+      { error: 'This endpoint is not available in production' },
+      { status: 404 }
+    );
+  }
+
   try {
     const { id } = await params;
     
+    // SECURITY: Validate submission ID
+    const validatedId = validateSubmissionId(id);
+    if (!validatedId) {
+      return NextResponse.json({ error: 'Invalid ID format' }, { status: 400 });
+    }
+    
     const submission = await prisma.formSubmission.findUnique({
-      where: { id },
+      where: { id: validatedId },
       include: { generatedWebsite: true }
     });
     
     if (!submission) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
-    
-    // Extract credentials from socialLinks
-    const socialLinks = submission.socialLinks as Record<string, unknown> || {};
-    const credentials = (socialLinks._credentials || {}) as { username?: string; password?: string };
     
     // Get the user
     const user = await prisma.user.findFirst({
@@ -38,8 +51,8 @@ export async function GET(
         status: submission.status,
       },
       credentials: {
-        username: credentials.username || user?.username || 'unknown',
-        password: credentials.password || 'unknown (check server logs)',
+        username: user?.username || 'unknown',
+        // SECURITY: Never expose passwords, even in debug mode
         loginUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/login`
       },
       website: submission.generatedWebsite ? {

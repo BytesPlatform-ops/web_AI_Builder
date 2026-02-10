@@ -1,11 +1,22 @@
 import { NextResponse } from 'next/server';
 import { sendGridEmailService } from '@/services/email-sendgrid.service';
+import { isDebugEnabled } from '@/lib/validation';
 
 /**
  * Test endpoint to verify email is working
  * GET /api/test-email?type=sales|credentials
+ * 
+ * SECURITY: This endpoint is DISABLED in production
  */
 export async function GET(request: Request) {
+  // SECURITY: Block in production environment
+  if (!isDebugEnabled()) {
+    return NextResponse.json(
+      { error: 'This endpoint is not available in production' },
+      { status: 404 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type') || 'sales';
 

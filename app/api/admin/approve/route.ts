@@ -1,32 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { validateWebsiteId } from "@/lib/validation";
+import { checkRateLimit, getClientIP, RateLimiters, rateLimitResponse } from "@/lib/rate-limiter";
 
-// Simple admin auth check - in production, use proper admin authentication
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'bytesadmin123';
+// Admin secret MUST be set in environment - no fallback
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting for admin endpoints
+    const clientIP = getClientIP(request);
+    const rateLimitResult = checkRateLimit(clientIP, RateLimiters.api);
+    
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
+
+    // SECURITY: Admin secret must be configured
+    if (!ADMIN_SECRET) {
+      console.error('ADMIN_SECRET environment variable is not set');
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
     const { websiteId, adminSecret, salesPersonName } = body;
 
     // Verify admin access
-    if (adminSecret !== ADMIN_SECRET) {
+    if (!adminSecret || adminSecret !== ADMIN_SECRET) {
+      // Don't reveal whether secret was wrong or missing
       return NextResponse.json(
-        { error: "Unauthorized - Invalid admin credentials" },
+        { error: "Unauthorized" },
         { status: 401 }
       );
     }
 
-    if (!websiteId) {
+    // Validate website ID
+    const validatedWebsiteId = validateWebsiteId(websiteId);
+    if (!validatedWebsiteId) {
       return NextResponse.json(
-        { error: "Website ID is required" },
+        { error: "Invalid website ID format" },
         { status: 400 }
       );
     }
 
-    // Find the website
+    // Find the website - use validated ID
     const website = await prisma.generatedWebsite.findUnique({
-      where: { id: websiteId },
+      where: { id: validatedWebsiteId },
       include: {
         formSubmission: true,
         user: true,
@@ -54,9 +76,9 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Approve the website
+    // Approve the website - use validated ID
     const updatedWebsite = await prisma.generatedWebsite.update({
-      where: { id: websiteId },
+      where: { id: validatedWebsiteId },
       data: {
         publishApproved: true,
         approvedAt: new Date(),

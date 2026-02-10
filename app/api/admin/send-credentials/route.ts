@@ -1,27 +1,59 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { emailService } from "@/services/email.service";
+import { validateSubmissionId } from "@/lib/validation";
+import { checkRateLimit, getClientIP, RateLimiters, rateLimitResponse } from "@/lib/rate-limiter";
+
+// Admin secret MUST be set in environment - no fallback
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 /**
  * Send credentials email to user
  * POST /api/admin/send-credentials
- * Body: { submissionId: string }
+ * Body: { submissionId: string, adminSecret: string }
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { submissionId } = body;
+    // Rate limiting for admin endpoints
+    const clientIP = getClientIP(request);
+    const rateLimitResult = checkRateLimit(clientIP, RateLimiters.api);
+    
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
 
-    if (!submissionId) {
+    // SECURITY: Admin secret must be configured
+    if (!ADMIN_SECRET) {
+      console.error('ADMIN_SECRET environment variable is not set');
       return NextResponse.json(
-        { error: "submissionId is required" },
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const body = await request.json();
+    const { submissionId, adminSecret } = body;
+
+    // Verify admin access
+    if (!adminSecret || adminSecret !== ADMIN_SECRET) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Validate submission ID
+    const validatedId = validateSubmissionId(submissionId);
+    if (!validatedId) {
+      return NextResponse.json(
+        { error: "Invalid submission ID format" },
         { status: 400 }
       );
     }
 
     // Fetch submission with user and generated website
     const submission = await prisma.formSubmission.findUnique({
-      where: { id: submissionId },
+      where: { id: validatedId },
       include: {
         generatedWebsite: {
           include: {
@@ -81,11 +113,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("❌ Error sending credentials:", error);
+    // Don't expose internal error details
     return NextResponse.json(
-      {
-        error: "Failed to send credentials",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
+      { error: "Failed to send credentials" },
       { status: 500 }
     );
   }

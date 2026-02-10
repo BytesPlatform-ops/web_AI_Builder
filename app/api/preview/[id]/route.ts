@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateSubmissionId } from '@/lib/validation';
 import fs from 'fs';
 import path from 'path';
+
+// Allowed file extensions for preview
+const ALLOWED_FILES = ['index.html', 'styles.css', 'script.js'];
 
 /**
  * Preview API - Serves generated website files for preview
@@ -19,18 +23,37 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const file = searchParams.get('file') || 'index.html';
     
-    // Find the generated website
+    // SECURITY: Validate submission ID to prevent path traversal
+    const validatedId = validateSubmissionId(id);
+    if (!validatedId) {
+      return new NextResponse('Invalid ID format', { status: 400 });
+    }
+    
+    // SECURITY: Only allow specific files to prevent directory traversal
+    if (!ALLOWED_FILES.includes(file)) {
+      return new NextResponse('File not allowed', { status: 403 });
+    }
+    
+    // Find the generated website using validated ID
     const website = await prisma.generatedWebsite.findFirst({
-      where: { formSubmissionId: id }
+      where: { formSubmissionId: validatedId }
     });
     
     if (!website) {
       return new NextResponse('Website not found', { status: 404 });
     }
     
-    // Get the files path
-    const filesPath = website.filesPath || path.join(process.cwd(), 'generated-sites', id);
+    // Get the files path - use validated ID
+    const filesPath = website.filesPath || path.join(process.cwd(), 'generated-sites', validatedId);
     const filePath = path.join(filesPath, file);
+    
+    // SECURITY: Ensure the resolved path is within the expected directory
+    const resolvedPath = path.resolve(filePath);
+    const expectedBase = path.resolve(process.cwd(), 'generated-sites');
+    if (!resolvedPath.startsWith(expectedBase)) {
+      console.warn(`Path traversal attempt blocked: ${filePath}`);
+      return new NextResponse('Access denied', { status: 403 });
+    }
     
     // Check if file exists
     if (!fs.existsSync(filePath)) {

@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isDebugEnabled } from '@/lib/validation';
 import bcrypt from 'bcryptjs';
 
 /**
  * Fix user password endpoint
  * POST /api/debug/fix-password
  * Body: { email: "xxx", newPassword: "xxx" }
+ * 
+ * SECURITY: This endpoint is DISABLED in production
  */
 export async function POST(request: NextRequest) {
+  // SECURITY: Block in production environment
+  if (!isDebugEnabled()) {
+    return NextResponse.json(
+      { error: 'This endpoint is not available in production' },
+      { status: 404 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { email, newPassword } = body;
@@ -43,8 +54,8 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `Password updated for ${user.email}`,
       username: user.username,
-      email: user.email,
-      newPassword: newPassword
+      email: user.email
+      // SECURITY: Never return the password
     });
   } catch (error) {
     console.error('Fix password error:', error);

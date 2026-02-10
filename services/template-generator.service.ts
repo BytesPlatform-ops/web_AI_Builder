@@ -20,6 +20,7 @@
 
 import { GeneratedContent } from './ai-content.service';
 import { ExtractedColors } from './color-extraction.service';
+import { escapeHtml } from '@/lib/sanitize';
 
 export interface TemplateInput {
   businessName: string;
@@ -75,6 +76,14 @@ class UltimatePremiumTemplateGenerator {
 
   private generateHTML(input: TemplateInput): string {
     const { businessName, content, logoUrl, heroImageUrl, additionalImages, contactInfo } = input;
+    
+    // SECURITY: Escape all user-provided content for safe HTML rendering
+    const safeBusinessName = escapeHtml(businessName);
+    const safeHeadline = escapeHtml(content.hero.headline);
+    const safeSubheadline = escapeHtml(content.hero.subheadline);
+    const safeEmail = escapeHtml(contactInfo.email);
+    const safePhone = contactInfo.phone ? escapeHtml(contactInfo.phone) : '';
+    const safeAddress = contactInfo.address ? escapeHtml(contactInfo.address) : '';
 
     // Service icons - modern minimal
     const serviceIcons = [
@@ -134,29 +143,29 @@ class UltimatePremiumTemplateGenerator {
         </div>
         
         <div class="contact-methods-grid">
-          <a href="mailto:${contactInfo.email}" class="contact-method-card" data-tilt>
+          <a href="mailto:${safeEmail}" class="contact-method-card" data-tilt>
             <div class="method-icon-large">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </div>
             <h3 class="method-title">Email Us</h3>
-            <p class="method-value">${contactInfo.email}</p>
+            <p class="method-value">${safeEmail}</p>
           </a>
-          ${contactInfo.phone ? `
-          <a href="tel:${contactInfo.phone}" class="contact-method-card" data-tilt>
+          ${safePhone ? `
+          <a href="tel:${safePhone}" class="contact-method-card" data-tilt>
             <div class="method-icon-large">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </div>
             <h3 class="method-title">Call Us</h3>
-            <p class="method-value">${contactInfo.phone}</p>
+            <p class="method-value">${safePhone}</p>
           </a>
           ` : ''}
-          ${contactInfo.address ? `
+          ${safeAddress ? `
           <div class="contact-method-card" data-tilt>
             <div class="method-icon-large">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
             <h3 class="method-title">Visit Us</h3>
-            <p class="method-value">${contactInfo.address}</p>
+            <p class="method-value">${safeAddress}</p>
           </div>
           ` : ''}
         </div>
@@ -177,9 +186,9 @@ class UltimatePremiumTemplateGenerator {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="${content.hero.subheadline}">
+  <meta name="description" content="${safeSubheadline}">
   <meta name="theme-color" content="#0a0a0a">
-  <title>${businessName} | ${content.hero.headline}</title>
+  <title>${safeBusinessName} | ${safeHeadline}</title>
   
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -213,8 +222,8 @@ class UltimatePremiumTemplateGenerator {
     <div class="nav-inner">
       <a href="#" class="nav-logo">
         ${logoUrl 
-          ? `<img src="${logoUrl}" alt="${businessName}" class="logo-img">`
-          : `<span class="logo-text">${businessName}</span>`
+          ? `<img src="${logoUrl}" alt="${safeBusinessName}" class="logo-img">`
+          : `<span class="logo-text">${safeBusinessName}</span>`
         }
       </a>
       
@@ -243,24 +252,24 @@ class UltimatePremiumTemplateGenerator {
     <div class="hero-content">
       <div class="hero-badge" data-animate="fade-up">
         <span class="badge-pulse"></span>
-        <span>Welcome to ${businessName}</span>
+        <span>Welcome to ${safeBusinessName}</span>
       </div>
       
       <h1 class="hero-title" data-animate="fade-up" data-delay="0.1">
-        <span class="title-line">${content.hero.headline}</span>
+        <span class="title-line">${safeHeadline}</span>
       </h1>
       
       <p class="hero-desc" data-animate="fade-up" data-delay="0.2">
-        ${content.hero.subheadline}
+        ${safeSubheadline}
       </p>
       
       <div class="hero-buttons" data-animate="fade-up" data-delay="0.3">
         <a href="#contact" class="btn btn-primary">
-          <span>${content.hero.ctaPrimary}</span>
+          <span>${escapeHtml(content.hero.ctaPrimary)}</span>
           <div class="btn-glow"></div>
         </a>
         <a href="#services" class="btn btn-ghost">
-          <span>${content.hero.ctaSecondary}</span>
+          <span>${escapeHtml(content.hero.ctaSecondary)}</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
@@ -295,8 +304,8 @@ class UltimatePremiumTemplateGenerator {
             <div class="bento-icon">
               ${serviceIcons[i % serviceIcons.length]}
             </div>
-            <h3 class="bento-title">${service.title}</h3>
-            <p class="bento-desc">${service.description}</p>
+            <h3 class="bento-title">${escapeHtml(service.title)}</h3>
+            <p class="bento-desc">${escapeHtml(service.description)}</p>
             <a href="#contact" class="bento-link">
               Learn more
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -317,10 +326,10 @@ class UltimatePremiumTemplateGenerator {
             <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
             About Us
           </span>
-          <h2 class="section-title text-left" data-animate="fade-up" data-delay="0.1">${content.about.headline}</h2>
+          <h2 class="section-title text-left" data-animate="fade-up" data-delay="0.1">${escapeHtml(content.about.headline)}</h2>
           
           <div class="about-text" data-animate="fade-up" data-delay="0.2">
-            ${content.about.paragraphs.map(p => `<p>${p}</p>`).join('')}
+            ${content.about.paragraphs.map(p => `<p>${escapeHtml(p)}</p>`).join('')}
           </div>
           
 
@@ -351,14 +360,14 @@ class UltimatePremiumTemplateGenerator {
           <div class="about-card" data-tilt>
             <div class="about-card-glow"></div>
             ${logoUrl ? `
-            <img src="${logoUrl}" alt="${businessName}" class="about-logo" />
+            <img src="${logoUrl}" alt="${safeBusinessName}" class="about-logo" />
             ` : `
             <div class="about-placeholder">
-              <span>${businessName.charAt(0)}</span>
+              <span>${safeBusinessName.charAt(0)}</span>
             </div>
             `}
             <div class="about-card-content">
-              <h3>${businessName}</h3>
+              <h3>${safeBusinessName}</h3>
               <p>Excellence in every detail</p>
             </div>
           </div>
@@ -407,19 +416,19 @@ class UltimatePremiumTemplateGenerator {
                 </div>
                 
                 <!-- Quote Text -->
-                <blockquote class="quote-text">"${testimonial.quote}"</blockquote>
+                <blockquote class="quote-text">"${escapeHtml(testimonial.quote)}"</blockquote>
                 
                 <!-- Author -->
                 <div class="author-section">
                   <div class="author-image">
                     <div class="avatar-gradient">
-                      <span>${((testimonial.authorName || testimonial.author) || 'A').charAt(0).toUpperCase()}</span>
+                      <span>${escapeHtml(((testimonial.authorName || testimonial.author) || 'A').charAt(0).toUpperCase())}</span>
                     </div>
                     <div class="avatar-ring"></div>
                   </div>
                   <div class="author-details">
-                    <span class="author-name">${(testimonial.authorName || testimonial.author) || 'Happy Customer'}</span>
-                    <span class="author-role">${(testimonial.authorRole || testimonial.role) || 'Verified Client'}</span>
+                    <span class="author-name">${escapeHtml((testimonial.authorName || testimonial.author) || 'Happy Customer')}</span>
+                    <span class="author-role">${escapeHtml((testimonial.authorRole || testimonial.role) || 'Verified Client')}</span>
                   </div>
                   <div class="verified-badge">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -498,10 +507,10 @@ class UltimatePremiumTemplateGenerator {
       <div class="footer-grid">
         <div class="footer-brand">
           ${logoUrl 
-            ? `<img src="${logoUrl}" alt="${businessName}" class="footer-logo">`
-            : `<span class="footer-logo-text">${businessName}</span>`
+            ? `<img src="${logoUrl}" alt="${safeBusinessName}" class="footer-logo">`
+            : `<span class="footer-logo-text">${safeBusinessName}</span>`
           }
-          <p class="footer-desc">${content.hero.subheadline.substring(0, 120)}${content.hero.subheadline.length > 120 ? '...' : ''}</p>
+          <p class="footer-desc">${safeSubheadline.substring(0, 120)}${safeSubheadline.length > 120 ? '...' : ''}</p>
           
           ${contactInfo.social ? `
           <div class="footer-social">
@@ -524,14 +533,14 @@ class UltimatePremiumTemplateGenerator {
         
         <div class="footer-links">
           <h4>Contact Info</h4>
-          <a href="mailto:${contactInfo.email}">${contactInfo.email}</a>
-          ${contactInfo.phone ? `<a href="tel:${contactInfo.phone}">${contactInfo.phone}</a>` : ''}
-          ${contactInfo.address ? `<span>${contactInfo.address}</span>` : ''}
+          <a href="mailto:${safeEmail}">${safeEmail}</a>
+          ${safePhone ? `<a href="tel:${safePhone}">${safePhone}</a>` : ''}
+          ${safeAddress ? `<span>${safeAddress}</span>` : ''}
         </div>
       </div>
       
       <div class="footer-bottom">
-        <p>&copy; ${new Date().getFullYear()} ${businessName}. All rights reserved.</p>
+        <p>&copy; ${new Date().getFullYear()} ${safeBusinessName}. All rights reserved.</p>
         <p>Crafted with ❤️</p>
       </div>
     </div>

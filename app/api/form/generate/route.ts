@@ -15,6 +15,7 @@ import { aiContentService } from '@/services/ai-content.service';
 import { premiumTemplateGenerator } from '@/services/template-generator.service';
 import { colorExtractionService } from '@/services/color-extraction.service';
 import { resendEmailService } from '@/services/email-resend.service';
+import { validateSubmissionId } from '@/lib/validation';
 import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
@@ -24,16 +25,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { formSubmissionId } = body;
 
-    if (!formSubmissionId) {
+    // SECURITY: Validate submission ID
+    const validatedId = validateSubmissionId(formSubmissionId);
+    if (!validatedId) {
       return NextResponse.json(
-        { success: false, error: 'Form submission ID is required' },
+        { success: false, error: 'Invalid submission ID format' },
         { status: 400 }
       );
     }
 
-    // Get the form submission
+    // Get the form submission using validated ID
     const submission = await prisma.formSubmission.findUnique({
-      where: { id: formSubmissionId }
+      where: { id: validatedId }
     });
 
     if (!submission) {
@@ -46,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Check if already generated
     if (submission.status === 'GENERATED') {
       const existingWebsite = await prisma.generatedWebsite.findFirst({
-        where: { formSubmissionId }
+        where: { formSubmissionId: validatedId }
       });
       
       if (existingWebsite) {
@@ -58,9 +61,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Update status to GENERATING
+    // Update status to GENERATING - use validated ID
     await prisma.formSubmission.update({
-      where: { id: formSubmissionId },
+      where: { id: validatedId },
       data: { status: 'GENERATING' }
     });
 
@@ -111,7 +114,7 @@ export async function POST(request: NextRequest) {
 
     // Step 4: Save files locally
     console.log(`💾 Step 4: Saving website files...`);
-    const filesDir = path.join(process.cwd(), 'generated-sites', formSubmissionId);
+    const filesDir = path.join(process.cwd(), 'generated-sites', validatedId);
     await fs.promises.mkdir(filesDir, { recursive: true });
 
     const files = {
@@ -152,7 +155,7 @@ export async function POST(request: NextRequest) {
         username: username,
       },
       create: {
-        id: `user-${formSubmissionId.substring(0, 8)}`,
+        id: `user-${validatedId.substring(0, 8)}`,
         username: username,
         email: submission.email,
         passwordHash: passwordHash,
@@ -162,12 +165,12 @@ export async function POST(request: NextRequest) {
 
     // Step 6: Save generated website record
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const previewUrl = `${baseUrl}/api/preview/${formSubmissionId}`;
+    const previewUrl = `${baseUrl}/api/preview/${validatedId}`;
     const loginUrl = `${baseUrl}/login`;
 
     const generatedSite = await prisma.generatedWebsite.create({
       data: {
-        formSubmissionId: formSubmissionId,
+        formSubmissionId: validatedId,
         userId: user.id,
         businessName: submission.businessName,
         templateId: 'universal-premium',
@@ -185,7 +188,7 @@ export async function POST(request: NextRequest) {
 
     // Step 7: Update form submission status
     await prisma.formSubmission.update({
-      where: { id: formSubmissionId },
+      where: { id: validatedId },
       data: { status: 'GENERATED' }
     });
 
@@ -198,7 +201,7 @@ export async function POST(request: NextRequest) {
         customerPhone: submission.phone || undefined,
         previewUrl: previewUrl,
         loginUrl: loginUrl,
-        submissionId: formSubmissionId,
+        submissionId: validatedId,
         username: username,
         password: generatedPassword,
       });

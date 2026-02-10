@@ -34,11 +34,17 @@ async function verifyCredentials() {
     console.log(`  Email: ${user.email}`);
     console.log(`  Password Hash: ${user.passwordHash.substring(0, 20)}...\n`);
 
-    // Test password verification
-    const testPassword = 'lvck5j2W4c1L';
+    // Test password verification - get password from environment variable
+    const testPassword = process.env.TEST_PASSWORD;
+    if (!testPassword) {
+      console.log('⚠️  No TEST_PASSWORD environment variable set.');
+      console.log('   Run with: TEST_PASSWORD=yourpassword node verify-credentials.mjs\n');
+      await prisma.$disconnect();
+      return;
+    }
     const isValid = await bcrypt.compare(testPassword, user.passwordHash);
     
-    console.log(`🔑 Testing password '${testPassword}':`);
+    console.log(`🔑 Testing password verification:`);
     console.log(`  Valid: ${isValid ? '✅ YES' : '❌ NO'}\n`);
 
     if (!isValid) {
@@ -47,8 +53,7 @@ async function verifyCredentials() {
     } else {
       console.log('✅ Password verification successful!');
       console.log('   Login should work. Try:');
-      console.log(`   Username: ${user.username}`);
-      console.log(`   Password: ${testPassword}\n`);
+      console.log(`   Username: ${user.username}\n`);
     }
 
   } catch (error) {

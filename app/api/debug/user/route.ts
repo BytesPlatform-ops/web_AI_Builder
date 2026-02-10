@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isDebugEnabled } from '@/lib/validation';
 import bcrypt from 'bcryptjs';
 
 /**
  * Debug endpoint to check user credentials
  * GET /api/debug/user?email=xxx
+ * 
+ * SECURITY: This endpoint is DISABLED in production
  */
 export async function GET(request: NextRequest) {
+  // SECURITY: Block in production environment
+  if (!isDebugEnabled()) {
+    return NextResponse.json(
+      { error: 'This endpoint is not available in production' },
+      { status: 404 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const email = searchParams.get('email');
   const testPassword = searchParams.get('password');
@@ -45,7 +56,7 @@ export async function GET(request: NextRequest) {
       email: user.email,
       username: user.username,
       hasPassword: !!user.passwordHash,
-      passwordHashPrefix: user.passwordHash?.substring(0, 20) + '...',
+      // SECURITY: Don't expose password hash prefix
     },
     passwordTestResult: passwordMatch !== null ? (passwordMatch ? 'MATCH ✅' : 'NO MATCH ❌') : 'Not tested'
   });

@@ -1,27 +1,43 @@
 /**
  * Force Regenerate Website API - For testing only
  * POST /api/debug/regenerate
+ * 
+ * SECURITY: This endpoint is disabled in production
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { aiContentService, GeneratedContent } from '@/services/ai-content.service';
 import { premiumTemplateGenerator } from '@/services/template-generator.service';
+import { validateSubmissionId, isDebugEnabled } from '@/lib/validation';
 import fs from 'fs';
 import path from 'path';
 
 export async function POST(request: NextRequest) {
+  // SECURITY: Block in production environment
+  if (!isDebugEnabled()) {
+    return NextResponse.json(
+      { error: 'This endpoint is not available in production' },
+      { status: 404 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { submissionId } = body;
 
-    if (!submissionId) {
-      return NextResponse.json({ error: 'submissionId is required' }, { status: 400 });
+    // SECURITY: Validate submission ID to prevent path traversal
+    const validatedId = validateSubmissionId(submissionId);
+    if (!validatedId) {
+      return NextResponse.json(
+        { error: 'Invalid submission ID format' },
+        { status: 400 }
+      );
     }
 
-    // Get submission with website
+    // Get submission with website - use validated ID
     const submission = await prisma.formSubmission.findUnique({
-      where: { id: submissionId },
+      where: { id: validatedId },
       include: { generatedWebsite: true }
     });
 
@@ -83,8 +99,8 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Save files
-    const siteDir = path.join(process.cwd(), 'generated-sites', submissionId);
+    // Save files - use validated ID
+    const siteDir = path.join(process.cwd(), 'generated-sites', validatedId);
 
     // Ensure directory exists
     await fs.promises.mkdir(siteDir, { recursive: true });
@@ -104,16 +120,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Website regenerated with ULTIMATE template v3',
-      previewUrl: `http://localhost:3000/api/preview/${submissionId}`,
+      previewUrl: `http://localhost:3000/api/preview/${validatedId}`,
       filesPath: siteDir,
       fileStats
     });
 
   } catch (error) {
     console.error('Error regenerating website:', error);
+    // Don't expose internal error details
     return NextResponse.json({
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: 'Failed to regenerate website'
     }, { status: 500 });
   }
 }

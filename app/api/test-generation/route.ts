@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isDebugEnabled, validateSubmissionId } from '@/lib/validation';
 import bcrypt from 'bcryptjs';
 
 /**
  * Test Generation API
  * 
  * This endpoint manually triggers website generation for testing
+ * 
+ * SECURITY: This endpoint is DISABLED in production
  * 
  * Usage:
  * POST /api/test-generation
@@ -15,6 +18,14 @@ import bcrypt from 'bcryptjs';
  * This will process the most recent PENDING submission
  */
 export async function POST(req: NextRequest) {
+  // SECURITY: Block in production environment
+  if (!isDebugEnabled()) {
+    return NextResponse.json(
+      { error: 'This endpoint is not available in production' },
+      { status: 404 }
+    );
+  }
+
   try {
     const searchParams = req.nextUrl.searchParams;
     const useLatest = searchParams.get('latest') === 'true';
@@ -42,15 +53,17 @@ export async function POST(req: NextRequest) {
       submissionId = body.formSubmissionId;
     }
 
-    if (!submissionId) {
+    // SECURITY: Validate submission ID
+    const validatedId = validateSubmissionId(submissionId);
+    if (!validatedId) {
       return NextResponse.json(
-        { error: 'Missing formSubmissionId' },
+        { error: 'Invalid submission ID format' },
         { status: 400 }
       );
     }
 
     const submission = await prisma.formSubmission.findUnique({
-      where: { id: submissionId }
+      where: { id: validatedId }
     });
 
     if (!submission) {
@@ -64,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     // Update status
     await prisma.formSubmission.update({
-      where: { id: submissionId },
+      where: { id: validatedId },
       data: { status: 'GENERATING' }
     });
 
@@ -125,7 +138,7 @@ export async function POST(req: NextRequest) {
     files.set('script.js', generatedWebsite['script.js'] || '');
     
     const deploymentResult = await netlifyDeploymentService.deploySite(
-      submissionId,
+      validatedId,
       files
     );
 
@@ -140,7 +153,7 @@ export async function POST(req: NextRequest) {
         passwordHash: passwordHash, // Always update password
       },
       create: {
-        id: `user-${submissionId.substring(0, 8)}`,
+        id: `user-${validatedId.substring(0, 8)}`,
         username: submission.email.split('@')[0] + '-' + Date.now(),
         email: submission.email,
         passwordHash: passwordHash,
@@ -149,7 +162,7 @@ export async function POST(req: NextRequest) {
     
     const generatedSite = await prisma.generatedWebsite.create({
       data: {
-        formSubmissionId: submissionId,
+        formSubmissionId: validatedId,
         userId: user.id,
         businessName: submission.businessName,
         templateId: 'universal-premium',
@@ -166,7 +179,7 @@ export async function POST(req: NextRequest) {
 
     // Step 6: Update form submission
     await prisma.formSubmission.update({
-      where: { id: submissionId },
+      where: { id: validatedId },
       data: {
         status: 'GENERATED',
       }
@@ -178,7 +191,7 @@ export async function POST(req: NextRequest) {
       success: true,
       message: `Website generated successfully for ${submission.businessName}`,
       data: {
-        submissionId,
+        submissionId: validatedId,
         websiteId: generatedSite.id,
         liveUrl: deploymentResult.url,
         previewUrl: deploymentResult.url,

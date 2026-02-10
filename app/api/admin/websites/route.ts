@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIP, RateLimiters, rateLimitResponse } from "@/lib/rate-limiter";
 
 type WebsiteWithRelations = {
   id: string;
@@ -23,18 +24,35 @@ type WebsiteWithRelations = {
   };
 };
 
-// Simple admin auth check
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'bytesadmin123';
+// Admin secret MUST be set in environment - no fallback
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting for admin endpoints
+    const clientIP = getClientIP(request);
+    const rateLimitResult = checkRateLimit(clientIP, RateLimiters.api);
+    
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
+
+    // SECURITY: Admin secret must be configured
+    if (!ADMIN_SECRET) {
+      console.error('ADMIN_SECRET environment variable is not set');
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const adminSecret = searchParams.get('secret');
 
     // Verify admin access
-    if (adminSecret !== ADMIN_SECRET) {
+    if (!adminSecret || adminSecret !== ADMIN_SECRET) {
       return NextResponse.json(
-        { error: "Unauthorized - Invalid admin credentials" },
+        { error: "Unauthorized" },
         { status: 401 }
       );
     }
