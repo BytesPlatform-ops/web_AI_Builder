@@ -18,8 +18,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Website Builder",
-  description: "Generate professional websites with AI",
+  title: "ByteSuite - Professional Website Builder",
+  description: "Build stunning, professional websites for your business in minutes",
+  openGraph: {
+    title: "ByteSuite - Professional Website Builder",
+    description: "Build stunning, professional websites for your business in minutes",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

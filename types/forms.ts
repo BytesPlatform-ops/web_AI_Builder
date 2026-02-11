@@ -47,7 +47,8 @@ export interface FormSubmissionData {
   templateType?: TemplateType;
 
   // Contact Info
-  email: string;
+  email: string;           // Business email - for login credentials
+  displayEmail?: string;   // Display email - shown on website (optional, uses email if not provided)
   phone?: string;
   address?: string;
 

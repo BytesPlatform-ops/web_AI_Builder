@@ -194,6 +194,7 @@ export function BusinessForm() {
     industry: '',
     services: [],
     email: '',
+    displayEmail: '',
     phone: '',
     address: '',
   });
@@ -274,6 +275,7 @@ export function BusinessForm() {
       submitFormData.append('industry', formData.industry || '');
       submitFormData.append('services', JSON.stringify(servicesList));
       submitFormData.append('email', formData.email);
+      submitFormData.append('displayEmail', formData.displayEmail || '');
       submitFormData.append('phone', formData.phone || '');
       submitFormData.append('address', formData.address || '');
       submitFormData.append('templateType', selectedTemplate);
@@ -481,7 +483,7 @@ export function BusinessForm() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Email <span className="text-red-400">*</span>
+                  Business Email <span className="text-gray-500 font-normal">(credentials will be sent here)</span> <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="email"
@@ -491,7 +493,21 @@ export function BusinessForm() {
                   placeholder="you@company.com"
                   className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
                 />
-                <p className="text-xs text-gray-500 mt-1.5">We&apos;ll send your login credentials here</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                  Website Display Email <span className="text-gray-500 font-normal">(shown on your website - optional)</span>
+                </label>
+                <input
+                  type="email"
+                  name="displayEmail"
+                  value={formData.displayEmail || ''}
+                  onChange={handleInputChange}
+                  placeholder="contact@company.com"
+                  className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
+                />
+                <p className="text-xs text-gray-500 mt-1.5">Leave blank to use business email on website</p>
               </div>
 
               <div>
@@ -570,7 +586,7 @@ export function BusinessForm() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                    Phone <span className="text-gray-500 font-normal">(optional)</span>
+                    Business Phone <span className="text-gray-500 font-normal">(optional)</span>
                   </label>
                   <input
                     type="tel"
@@ -583,7 +599,7 @@ export function BusinessForm() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                    Address <span className="text-gray-500 font-normal">(optional)</span>
+                    Business Address <span className="text-gray-500 font-normal">(optional)</span>
                   </label>
                   <input
                     type="text"

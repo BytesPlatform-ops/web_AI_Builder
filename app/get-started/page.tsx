@@ -122,16 +122,6 @@ export default function GetStartedPage() {
             </div>
 
             {/* Bottom reassurance */}
-            <div className="mt-6 flex items-center justify-center gap-4 text-xs text-gray-500">
-              <span className="flex items-center gap-1">
-                <Shield className="w-3.5 h-3.5 text-green-500/70" />
-                SSL secured
-              </span>
-              <span className="text-gray-700">|</span>
-              <span>No credit card required</span>
-              <span className="text-gray-700">|</span>
-              <span>Cancel anytime</span>
-            </div>
           </div>
         </div>
       </div>

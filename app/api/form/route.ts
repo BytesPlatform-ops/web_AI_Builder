@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
     const about = sanitizeRichText(formData.get('about') as string); // Allow basic formatting
     const industry = sanitizeText(formData.get('industry') as string | null);
     const email = sanitizeEmail(formData.get('email') as string);
+    const displayEmail = sanitizeEmail(formData.get('displayEmail') as string | null);
     const phone = sanitizePhone(formData.get('phone') as string | null);
     const address = sanitizeText(formData.get('address') as string | null);
 
@@ -217,6 +218,7 @@ export async function POST(request: NextRequest) {
         industry: industry || undefined,
         services,
         email,
+        displayEmail: displayEmail || undefined,
         phone: phone || undefined,
         address: address || undefined,
         targetAudience: targetAudience || undefined,
@@ -379,6 +381,9 @@ export async function POST(request: NextRequest) {
         console.log(`[GENERATE] Step 4: Generating ${templateType} template...`);
         let generatedWebsite;
         try {
+          // Use displayEmail for the website contact, fallback to business email if not provided
+          const websiteDisplayEmail = displayEmail || email;
+          
           generatedWebsite = await premiumTemplateGenerator.generate({
             businessName,
             content: {
@@ -390,7 +395,7 @@ export async function POST(request: NextRequest) {
             heroImageUrl: heroImageUrl || undefined,
             additionalImages: additionalImages || [],
             contactInfo: {
-              email,
+              email: websiteDisplayEmail,
               phone: phone || undefined,
               address: address || undefined,
               social: socialLinks,

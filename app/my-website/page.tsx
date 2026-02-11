@@ -19,6 +19,7 @@ import {
   Link2,
   Copy,
   X,
+  CreditCard,
 } from "lucide-react"
 
 interface GeneratedWebsite {
@@ -288,10 +289,21 @@ export default function MyWebsitePage() {
 
             {/* Publish Button - Show different states */}
             {website.status === "PENDING_APPROVAL" && (
-              <div className="flex-1 sm:flex-none bg-orange-100 border-2 border-orange-300 text-orange-800 px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2">
-                <Clock className="w-5 h-5" />
-                <span>Awaiting Sales Approval</span>
-              </div>
+              <>
+                <div className="flex-1 sm:flex-none bg-orange-100 border-2 border-orange-300 text-orange-800 px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  <span>Awaiting Sales Approval</span>
+                </div>
+                <a
+                  href="https://square.link/u/J6GjcH3d?src=sheet"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-none bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25"
+                >
+                  <CreditCard className="w-5 h-5" />
+                  <span>Pay Now</span>
+                </a>
+              </>
             )}
 
             {website.status !== "PUBLISHED" && website.status !== "PENDING_APPROVAL" && (

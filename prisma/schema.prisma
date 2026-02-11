@@ -20,7 +20,8 @@ model FormSubmission {
   targetAudience  String?
   
   // Contact information
-  email           String
+  email           String    // Business email for credentials
+  displayEmail    String?   // Display email shown on website (optional)
   phone           String?
   address         String?
   socialLinks     Json?    // {facebook: "", instagram: "", etc}

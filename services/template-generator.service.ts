@@ -894,23 +894,34 @@ body:hover .spotlight {
 @media (max-width: 768px) {
   .nav-toggle {
     display: flex;
+    position: relative;
+    z-index: 1002;
   }
   
   .nav-links {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
     background: var(--bg-primary);
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 2rem;
     opacity: 0;
     visibility: hidden;
+    pointer-events: none;
     transition: all 0.4s var(--ease-out-expo);
+    z-index: 1001;
   }
   
   .nav-links.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
   }
   
   .nav-link {
@@ -919,6 +930,12 @@ body:hover .spotlight {
   
   .nav-cta {
     display: none;
+  }
+  
+  body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
   }
 }
 
@@ -2776,10 +2793,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Mobile toggle
   if (navToggle && navLinks) {
+    let scrollPosition = 0;
+    
     navToggle.addEventListener('click', () => {
       navToggle.classList.toggle('active');
       navLinks.classList.toggle('active');
-      document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+      
+      if (navLinks.classList.contains('active')) {
+        // Save scroll position and lock body
+        scrollPosition = window.pageYOffset;
+        document.body.classList.add('menu-open');
+        document.body.style.top = -scrollPosition + 'px';
+      } else {
+        // Restore scroll position
+        document.body.classList.remove('menu-open');
+        document.body.style.top = '';
+        window.scrollTo(0, scrollPosition);
+      }
     });
 
     // Close on link click
@@ -2787,7 +2817,9 @@ document.addEventListener('DOMContentLoaded', () => {
       link.addEventListener('click', () => {
         navToggle.classList.remove('active');
         navLinks.classList.remove('active');
-        document.body.style.overflow = '';
+        document.body.classList.remove('menu-open');
+        document.body.style.top = '';
+        window.scrollTo(0, scrollPosition);
       });
     });
   }
