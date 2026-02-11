@@ -1,16 +1,30 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Sparkles, ArrowRight, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
+// Declare fbq for TypeScript
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
+}
+
 function SuccessContent() {
   const searchParams = useSearchParams();
   const submissionId = searchParams.get('id');
   const [copied, setCopied] = useState(false);
+
+  // Track Lead event when user reaches success page
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Lead');
+    }
+  }, []);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
