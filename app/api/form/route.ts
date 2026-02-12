@@ -89,22 +89,29 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse and sanitize testimonials
-    // Map from form format {name, text, role} to template format {quote, author, role}
+    // Map from form format {authorName, authorRole, quote} to template format {quote, author, role}
     let testimonials: Array<{ quote: string; author: string; role: string }> = [];
     const testimonialsField = formData.get('testimonials');
+    console.log(`[DEBUG] Raw testimonials field:`, testimonialsField);
     if (testimonialsField && typeof testimonialsField === 'string') {
       try {
         const parsed = JSON.parse(testimonialsField);
+        console.log(`[DEBUG] Parsed testimonials:`, JSON.stringify(parsed, null, 2));
         if (Array.isArray(parsed)) {
           testimonials = parsed
             .filter(t => t && typeof t === 'object')
-            .map(t => ({
-              // Map: name → author, text → quote
-              quote: sanitizeText(t.text || t.quote),
-              author: sanitizeText(t.name || t.author),
-              role: sanitizeText(t.role) || 'Customer',
-            }))
+            .map(t => {
+              const mapped = {
+                // Map: authorName/name/author → author, quote/text → quote, authorRole/role → role
+                quote: sanitizeText(t.quote || t.text),
+                author: sanitizeText(t.authorName || t.name || t.author),
+                role: sanitizeText(t.authorRole || t.role) || 'Customer',
+              };
+              console.log(`[DEBUG] Mapped testimonial:`, mapped);
+              return mapped;
+            })
             .filter(t => t.author && t.quote);
+          console.log(`[DEBUG] Final testimonials after filter:`, JSON.stringify(testimonials, null, 2));
         }
       } catch (e) {
         console.warn('Failed to parse testimonials:', e);
@@ -379,17 +386,21 @@ export async function POST(request: NextRequest) {
 
         // Step 4: Generate website template
         console.log(`[GENERATE] Step 4: Generating ${templateType} template...`);
+        console.log(`[GENERATE] Testimonials to pass:`, JSON.stringify(testimonials, null, 2));
         let generatedWebsite;
         try {
           // Use displayEmail for the website contact, fallback to business email if not provided
           const websiteDisplayEmail = displayEmail || email;
           
+          const contentWithTestimonials = {
+            ...enhancedContent,
+            testimonials: testimonials.length > 0 ? testimonials : [],
+          };
+          console.log(`[GENERATE] Final testimonials in content:`, JSON.stringify(contentWithTestimonials.testimonials, null, 2));
+          
           generatedWebsite = await premiumTemplateGenerator.generate({
             businessName,
-            content: {
-              ...enhancedContent,
-              testimonials: testimonials || [],
-            },
+            content: contentWithTestimonials,
             colors: extractedColors,
             logoUrl: logoUrl || undefined,
             heroImageUrl: heroImageUrl || undefined,
