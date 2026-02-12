@@ -641,12 +641,18 @@ export function BusinessForm() {
                           : 'border border-white/10 hover:border-indigo-400/40'
                       } ${template.id === 'dark' ? 'bg-gray-900' : 'bg-white/[0.08]'}`}
                     >
+                      {/* Recommended badge for dark theme */}
+                      {template.id === 'dark' && (
+                        <div className="absolute -top-2 left-3 px-2 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full text-[10px] font-semibold text-white shadow-sm">
+                          ✨ Recommended
+                        </div>
+                      )}
                       {selectedTemplate === template.id && (
                         <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-indigo-500 rounded-full flex items-center justify-center shadow">
                           <CheckCircle2 className="w-3 h-3 text-white" />
                         </div>
                       )}
-                      <div className="flex items-center gap-2.5 mb-2">
+                      <div className="flex items-center gap-2.5 mb-2 mt-1">
                         <div className="flex gap-1">
                           {template.colors.map((c, i) => (
                             <div key={i} className="w-4 h-4 rounded-full border border-white/20" style={{ backgroundColor: c }} />
@@ -665,23 +671,29 @@ export function BusinessForm() {
               </div>
 
               {/* File Uploads */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <DropZone
-                  id="logo"
-                  label="Logo"
-                  hint="PNG, JPG, SVG — max 5MB"
-                  accept="image/*"
-                  files={logoFiles}
-                  onFiles={setLogoFiles}
-                />
-                <DropZone
-                  id="heroImage"
-                  label="Hero Image"
-                  hint="PNG, JPG, WebP — max 10MB"
-                  accept="image/*"
-                  files={heroFiles}
-                  onFiles={setHeroFiles}
-                />
+              <div>
+                <p className="text-xs text-indigo-400 mb-3 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Recommended: Upload logo & hero image for a professional website</span>
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <DropZone
+                    id="logo"
+                    label="Logo ✨"
+                    hint="PNG, JPG, SVG — max 5MB"
+                    accept="image/*"
+                    files={logoFiles}
+                    onFiles={setLogoFiles}
+                  />
+                  <DropZone
+                    id="heroImage"
+                    label="Hero Image ✨"
+                    hint="PNG, JPG, WebP — max 10MB"
+                    accept="image/*"
+                    files={heroFiles}
+                    onFiles={setHeroFiles}
+                  />
+                </div>
               </div>
 
               <DropZone

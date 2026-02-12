@@ -479,8 +479,8 @@ class AuroraLightTemplateGenerator {
   <!-- Contact Section -->
   <section class="section contact" id="contact">
     <div class="container">
-      <div class="contact-grid">
-        <div class="contact-info" data-animate="fade-right">
+      <div class="contact-content" data-animate="fade-up">
+        <div class="contact-info">
           <span class="section-eyebrow">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             Get in Touch
@@ -491,36 +491,30 @@ class AuroraLightTemplateGenerator {
           </h2>
           <p class="contact-desc">Ready to start your project? Reach out and let's discuss how we can help bring your vision to life.</p>
           
-          <div class="contact-methods">
-            <a href="mailto:${contactInfo.email}" class="contact-method magnetic" data-tilt>
-              <div class="method-icon">
+          <div class="contact-methods-grid">
+            <a href="mailto:${contactInfo.email}" class="contact-method-card magnetic" data-tilt>
+              <div class="method-icon-large">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               </div>
-              <div class="method-content">
-                <span class="method-label">Email Us</span>
-                <span class="method-value">${contactInfo.email}</span>
-              </div>
+              <h3 class="method-title">Email Us</h3>
+              <p class="method-value">${contactInfo.email}</p>
             </a>
             ${contactInfo.phone ? `
-            <a href="tel:${contactInfo.phone}" class="contact-method magnetic" data-tilt>
-              <div class="method-icon">
+            <a href="tel:${contactInfo.phone}" class="contact-method-card magnetic" data-tilt>
+              <div class="method-icon-large">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </div>
-              <div class="method-content">
-                <span class="method-label">Call Us</span>
-                <span class="method-value">${contactInfo.phone}</span>
-              </div>
+              <h3 class="method-title">Call Us</h3>
+              <p class="method-value">${contactInfo.phone}</p>
             </a>
             ` : ''}
             ${contactInfo.address ? `
-            <div class="contact-method" data-tilt>
-              <div class="method-icon">
+            <div class="contact-method-card" data-tilt>
+              <div class="method-icon-large">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div class="method-content">
-                <span class="method-label">Visit Us</span>
-                <span class="method-value">${contactInfo.address}</span>
-              </div>
+              <h3 class="method-title">Visit Us</h3>
+              <p class="method-value">${contactInfo.address}</p>
             </div>
             ` : ''}
           </div>
@@ -536,42 +530,6 @@ class AuroraLightTemplateGenerator {
             </div>
           </div>
           ` : ''}
-        </div>
-        
-        <div class="contact-form-wrapper" data-animate="fade-left">
-          <form class="contact-form" id="contactForm">
-            <div class="form-header">
-              <h3>Send us a message</h3>
-              <p>We'll get back to you within 24 hours</p>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <input type="text" id="name" name="name" required placeholder=" ">
-                <label for="name">Your Name</label>
-                <div class="input-highlight"></div>
-              </div>
-              <div class="form-group">
-                <input type="email" id="email" name="email" required placeholder=" ">
-                <label for="email">Your Email</label>
-                <div class="input-highlight"></div>
-              </div>
-            </div>
-            <div class="form-group">
-              <input type="text" id="subject" name="subject" required placeholder=" ">
-              <label for="subject">Subject</label>
-              <div class="input-highlight"></div>
-            </div>
-            <div class="form-group">
-              <textarea id="message" name="message" rows="5" required placeholder=" "></textarea>
-              <label for="message">Your Message</label>
-              <div class="input-highlight"></div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block magnetic">
-              <span class="btn-bg"></span>
-              <span class="btn-text">Send Message</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </button>
-          </form>
         </div>
       </div>
     </div>
@@ -1021,7 +979,18 @@ body:hover .cursor-dot { opacity: 1; }
 
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
 @media (max-width: 1024px) { .contact-grid { grid-template-columns: 1fr; gap: 60px; } }
-.contact-desc { color: var(--text-secondary); margin-bottom: 32px; }
+.contact-content { text-align: center; max-width: 900px; margin: 0 auto; }
+.contact-info { display: flex; flex-direction: column; align-items: center; }
+.contact-desc { color: var(--text-secondary); margin-bottom: 40px; max-width: 600px; }
+.contact-methods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; width: 100%; margin-bottom: 40px; }
+.contact-method-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; padding: 32px 24px; background: white; border-radius: 24px; border: 1px solid rgba(0, 0, 0, 0.04); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06); transition: all 0.4s var(--ease-out-expo); }
+.contact-method-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(var(--primary-rgb), 0.15); border-color: rgba(var(--primary-rgb), 0.1); }
+.method-icon-large { width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--accent-rgb), 0.05)); border-radius: 20px; transition: all 0.4s var(--ease-out-expo); }
+.method-icon-large svg { width: 32px; height: 32px; color: var(--primary); }
+.contact-method-card:hover .method-icon-large { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+.contact-method-card:hover .method-icon-large svg { color: white; }
+.method-title { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; color: var(--text-primary); }
+.method-value { font-size: 0.9375rem; color: var(--text-secondary); word-break: break-word; }
 .contact-methods { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
 .contact-method { display: flex; align-items: center; gap: 20px; padding: 20px; background: var(--bg-secondary); border-radius: 20px; border: 1px solid transparent; transition: all 0.4s var(--ease-out-expo); position: relative; overflow: hidden; }
 .contact-method::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.03)); opacity: 0; transition: opacity 0.4s ease; }
@@ -1032,30 +1001,14 @@ body:hover .cursor-dot { opacity: 1; }
 .contact-method:hover .method-icon { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
 .contact-method:hover .method-icon svg { color: white; }
 .method-label { display: block; font-size: 0.8125rem; color: var(--text-tertiary); margin-bottom: 4px; }
-.method-value { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
-.contact-social { padding-top: 24px; border-top: 1px solid rgba(0, 0, 0, 0.06); }
+.contact-social { padding-top: 24px; border-top: 1px solid rgba(0, 0, 0, 0.06); width: 100%; max-width: 400px; }
 .social-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-tertiary); margin-bottom: 16px; }
-.social-links { display: flex; gap: 12px; }
+.social-links { display: flex; justify-content: center; gap: 12px; }
 .social-link { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border-radius: 12px; color: var(--text-secondary); transition: all 0.3s var(--ease-out-expo); position: relative; overflow: hidden; }
 .social-link svg { width: 20px; height: 20px; position: relative; z-index: 1; }
 .social-link::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0; transition: opacity 0.3s ease; }
 .social-link:hover::before { opacity: 1; }
 .social-link:hover { color: white; transform: translateY(-5px) scale(1.1); box-shadow: 0 10px 25px rgba(var(--primary-rgb), 0.3); }
-
-.contact-form-wrapper { background: white; border-radius: 28px; padding: 36px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 0, 0, 0.04); }
-.form-header { margin-bottom: 28px; }
-.form-header h3 { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
-.form-header p { font-size: 0.9rem; color: var(--text-secondary); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
-.form-group { position: relative; margin-bottom: 20px; }
-.form-group input, .form-group textarea { width: 100%; padding: 16px 18px; font-size: 0.95rem; font-family: inherit; background: var(--bg-secondary); border: 1.5px solid transparent; border-radius: 14px; color: var(--text-primary); transition: all 0.3s var(--ease-out-expo); }
-.form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.08); }
-.form-group label { position: absolute; top: 50%; left: 20px; transform: translateY(-50%); font-size: 1rem; color: var(--text-tertiary); pointer-events: none; transition: all 0.3s var(--ease-out-expo); }
-.form-group textarea ~ label { top: 20px; transform: none; }
-.form-group input:focus ~ label, .form-group input:not(:placeholder-shown) ~ label, .form-group textarea:focus ~ label, .form-group textarea:not(:placeholder-shown) ~ label { top: -10px; left: 16px; font-size: 0.75rem; font-weight: 600; color: var(--primary); background: white; padding: 2px 8px; border-radius: 4px; }
-.input-highlight { position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: all 0.4s var(--ease-out-expo); transform: translateX(-50%); border-radius: 2px; }
-.form-group input:focus ~ .input-highlight, .form-group textarea:focus ~ .input-highlight { width: calc(100% - 4px); }
 
 .footer { background: var(--bg-secondary); position: relative; }
 .footer-top { padding: 80px 0 60px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); }
@@ -1179,10 +1132,6 @@ if(backToTop){window.addEventListener('scroll',()=>{backToTop.classList.toggle('
 
 /* Smooth Scroll */
 document.querySelectorAll('a[href^="#"]').forEach(anchor=>{anchor.addEventListener('click',function(e){e.preventDefault();const target=document.querySelector(this.getAttribute('href'));if(target){target.scrollIntoView({behavior:'smooth'})}})});
-
-/* Contact Form */
-const contactForm=document.getElementById('contactForm');
-if(contactForm){contactForm.addEventListener('submit',e=>{e.preventDefault();alert('Thank you for your message! We will get back to you soon.');contactForm.reset()})}
 
 /* Magnetic Buttons */
 if(!isMobile){

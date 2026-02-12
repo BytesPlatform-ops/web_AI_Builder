@@ -10,6 +10,7 @@ import sgMail from '@sendgrid/mail';
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || '';
 const FROM_EMAIL = process.env.FROM_EMAIL || 'no-reply@bytesplatform.com';
+const FROM_NAME = process.env.FROM_NAME || 'Bytes Platform';
 const SALES_EMAILS = (process.env.SALES_EMAIL || 'sales@yourcompany.com')
   .split(',')
   .map((e) => e.trim())
@@ -79,7 +80,10 @@ class SendGridEmailService {
         recipients.map((recipient) =>
           sgMail.send({
             to: recipient,
-            from: FROM_EMAIL,
+            from: {
+              email: FROM_EMAIL,
+              name: FROM_NAME,
+            },
             subject,
             html,
           })
