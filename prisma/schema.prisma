@@ -74,8 +74,13 @@ model GeneratedWebsite {
   secondaryColor  String?
   accentColor     String?
   
-  // Generated files location
-  filesPath       String?  // Path in storage
+  // Generated website content stored in database (persistent storage)
+  htmlContent     String?  @db.Text   // Full index.html content
+  cssContent      String?  @db.Text   // Full styles.css content
+  jsContent       String?  @db.Text   // Full script.js content
+  
+  // Legacy: Generated files location (filesystem - deprecated)
+  filesPath       String?  // Path in storage (kept for backward compatibility)
   previewUrl      String?  // Preview URL before publish
   
   // Deployment info

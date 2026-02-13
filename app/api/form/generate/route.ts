@@ -112,21 +112,29 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Step 4: Save files locally
+    // Step 4: Save files locally AND to database
     console.log(`💾 Step 4: Saving website files...`);
     const filesDir = path.join(process.cwd(), 'generated-sites', validatedId);
-    await fs.promises.mkdir(filesDir, { recursive: true });
-
-    const files = {
-      'index.html': generatedWebsite['index.html'],
-      'styles.css': generatedWebsite['styles.css'] || '',
-      'script.js': generatedWebsite['script.js'] || '',
-    };
-
-    for (const [filename, content] of Object.entries(files)) {
-      await fs.promises.writeFile(path.join(filesDir, filename), content, 'utf-8');
+    
+    const htmlContent = generatedWebsite['index.html'];
+    const cssContent = generatedWebsite['styles.css'] || '';
+    const jsContent = generatedWebsite['script.js'] || '';
+    
+    // Save to filesystem (as backup)
+    try {
+      await fs.promises.mkdir(filesDir, { recursive: true });
+      const files = {
+        'index.html': htmlContent,
+        'styles.css': cssContent,
+        'script.js': jsContent,
+      };
+      for (const [filename, content] of Object.entries(files)) {
+        await fs.promises.writeFile(path.join(filesDir, filename), content, 'utf-8');
+      }
+      console.log(`💾 Files saved to: ${filesDir}`);
+    } catch (fsError) {
+      console.warn('Filesystem save failed (non-critical):', fsError);
     }
-    console.log(`💾 Files saved to: ${filesDir}`);
 
     // Step 5: Create user credentials
     console.log(`🔑 Step 5: Creating user credentials...`);
@@ -163,7 +171,7 @@ export async function POST(request: NextRequest) {
     });
     console.log(`🔑 User created/updated: ${user.email} (username: ${username})`);
 
-    // Step 6: Save generated website record
+    // Step 6: Save generated website record with content in database
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     const previewUrl = `${baseUrl}/api/preview/${validatedId}`;
     const loginUrl = `${baseUrl}/login`;
@@ -177,6 +185,11 @@ export async function POST(request: NextRequest) {
         primaryColor: extractedColors.primary,
         secondaryColor: extractedColors.secondary,
         accentColor: extractedColors.accent,
+        // Store website content in database (persistent storage)
+        htmlContent: htmlContent,
+        cssContent: cssContent,
+        jsContent: jsContent,
+        // Legacy filesystem path
         filesPath: filesDir,
         previewUrl: previewUrl,
         deploymentUrl: null,      // NOT deployed yet

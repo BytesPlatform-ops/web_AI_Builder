@@ -101,28 +101,44 @@ export async function POST(request: NextRequest) {
 
     // Save files - use validated ID
     const siteDir = path.join(process.cwd(), 'generated-sites', validatedId);
+    const htmlContent = generatedWebsite['index.html'];
+    const cssContent = generatedWebsite['styles.css'] || '';
+    const jsContent = generatedWebsite['script.js'] || '';
 
-    // Ensure directory exists
-    await fs.promises.mkdir(siteDir, { recursive: true });
-
-    // Write files
-    const fileStats: { [key: string]: number } = {};
-    for (const [filename, content] of Object.entries(generatedWebsite)) {
-      const filePath = path.join(siteDir, filename);
-      await fs.promises.writeFile(filePath, content, 'utf8');
-      fileStats[filename] = content.length;
-      console.log(`   ✅ ${filename} (${content.length.toLocaleString()} bytes)`);
+    // Save to filesystem (as backup)
+    try {
+      await fs.promises.mkdir(siteDir, { recursive: true });
+      const fileStats: { [key: string]: number } = {};
+      for (const [filename, content] of Object.entries(generatedWebsite)) {
+        const filePath = path.join(siteDir, filename);
+        await fs.promises.writeFile(filePath, content, 'utf8');
+        fileStats[filename] = content.length;
+        console.log(`   ✅ ${filename} (${content.length.toLocaleString()} bytes)`);
+      }
+    } catch (fsError) {
+      console.warn('Filesystem save failed (non-critical):', fsError);
     }
+
+    // Update database with new content (persistent storage)
+    await prisma.generatedWebsite.updateMany({
+      where: { formSubmissionId: validatedId },
+      data: {
+        htmlContent: htmlContent,
+        cssContent: cssContent,
+        jsContent: jsContent,
+        updatedAt: new Date(),
+      }
+    });
 
     console.log(`\n✨ Website regenerated successfully!`);
     console.log(`📁 Files saved to: ${siteDir}`);
+    console.log(`💾 Content stored in database (persistent)`);
 
     return NextResponse.json({
       success: true,
-      message: 'Website regenerated with ULTIMATE template v3',
+      message: 'Website regenerated with ULTIMATE template v3 (stored in DB)',
       previewUrl: `http://localhost:3000/api/preview/${validatedId}`,
       filesPath: siteDir,
-      fileStats
     });
 
   } catch (error) {

@@ -175,33 +175,45 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Step 3: Save updated files
+    // Step 3: Save updated files to filesystem AND database
     console.log('💾 Step 3: Saving updated website files...');
     const filesDir = website.filesPath || path.join(process.cwd(), 'generated-sites', submission.id);
-    await fs.promises.mkdir(filesDir, { recursive: true });
-
-    const files = {
-      'index.html': generatedWebsite['index.html'],
-      'styles.css': generatedWebsite['styles.css'] || '',
-      'script.js': generatedWebsite['script.js'] || '',
-    };
-
-    for (const [filename, fileContent] of Object.entries(files)) {
-      await fs.promises.writeFile(path.join(filesDir, filename), fileContent, 'utf-8');
+    
+    const htmlContent = generatedWebsite['index.html'];
+    const cssContent = generatedWebsite['styles.css'] || '';
+    const jsContent = generatedWebsite['script.js'] || '';
+    
+    // Save to filesystem (backup)
+    try {
+      await fs.promises.mkdir(filesDir, { recursive: true });
+      const files = {
+        'index.html': htmlContent,
+        'styles.css': cssContent,
+        'script.js': jsContent,
+      };
+      for (const [filename, fileContent] of Object.entries(files)) {
+        await fs.promises.writeFile(path.join(filesDir, filename), fileContent, 'utf-8');
+      }
+      console.log('💾 Files updated at:', filesDir);
+    } catch (fsError) {
+      console.warn('Filesystem save failed (non-critical):', fsError);
     }
-    console.log('💾 Files updated at:', filesDir);
 
-    // Step 4: Update database
+    // Step 4: Update database with new content and colors (PERSISTENT STORAGE)
     const updatedWebsite = await prisma.generatedWebsite.update({
       where: { id: websiteId },
       data: {
         primaryColor: newColors.primary,
         secondaryColor: newColors.secondary,
         accentColor: newColors.accent,
+        // Update website content in database
+        htmlContent: htmlContent,
+        cssContent: cssContent,
+        jsContent: jsContent,
       }
     });
 
-    console.log(`✅ Website ${websiteId} regenerated successfully!`);
+    console.log(`✅ Website ${websiteId} regenerated and stored in DB!`);
 
     return NextResponse.json({
       success: true,

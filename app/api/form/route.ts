@@ -419,16 +419,21 @@ export async function POST(request: NextRequest) {
           throw templateError;
         }
 
-        // Step 5: Save files locally
+        // Step 5: Save files locally (as backup) AND store in database (persistent)
         console.log(`[GENERATE] Step 5: Saving website files...`);
+        const htmlContent = generatedWebsite['index.html'];
+        const cssContent = generatedWebsite['styles.css'] || '';
+        const jsContent = generatedWebsite['script.js'] || '';
+        
+        // Also save to filesystem as local backup (will be lost on restart but useful for dev)
         try {
           const filesDir = path.join(process.cwd(), 'generated-sites', formSubmission.id);
           await fs.promises.mkdir(filesDir, { recursive: true });
 
           const files = {
-            'index.html': generatedWebsite['index.html'],
-            'styles.css': generatedWebsite['styles.css'] || '',
-            'script.js': generatedWebsite['script.js'] || '',
+            'index.html': htmlContent,
+            'styles.css': cssContent,
+            'script.js': jsContent,
           };
 
           for (const [filename, content] of Object.entries(files)) {
@@ -436,8 +441,8 @@ export async function POST(request: NextRequest) {
           }
           console.log(`[GENERATE] Step 5 complete - files saved to: ${filesDir}`);
         } catch (fsError) {
-          console.error(`[GENERATE] Step 5 FAILED - filesystem error:`, fsError);
-          // Don't throw - files can be regenerated, continue with user/email
+          console.error(`[GENERATE] Step 5 WARNING - filesystem error (non-critical):`, fsError);
+          // Don't throw - database storage is the primary, filesystem is just backup
         }
 
         // Step 6: Create user account
@@ -460,8 +465,8 @@ export async function POST(request: NextRequest) {
           throw userError;
         }
 
-        // Step 7: Create generated website record
-        console.log(`[GENERATE] Step 7: Creating website record...`);
+        // Step 7: Create generated website record with content stored in database
+        console.log(`[GENERATE] Step 7: Creating website record with content in DB...`);
         try {
           const previewUrl = `${baseUrl}/api/preview/${formSubmission.id}`;
           const loginUrl = `${baseUrl}/login`;
@@ -476,6 +481,11 @@ export async function POST(request: NextRequest) {
               primaryColor: extractedColors.primary,
               secondaryColor: extractedColors.secondary,
               accentColor: extractedColors.accent,
+              // Store website content in database (persistent storage)
+              htmlContent: htmlContent,
+              cssContent: cssContent,
+              jsContent: jsContent,
+              // Legacy filesystem path (kept for backward compatibility)
               filesPath: filesDir,
               previewUrl,
               deploymentUrl: null,
@@ -484,7 +494,7 @@ export async function POST(request: NextRequest) {
               status: 'READY',
             }
           });
-          console.log(`[GENERATE] Step 7 complete - website record created`);
+          console.log(`[GENERATE] Step 7 complete - website record created with content in DB`);
         } catch (webError) {
           console.error(`[GENERATE] Step 7 FAILED - website record error:`, webError);
           throw webError;

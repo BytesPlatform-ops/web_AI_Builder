@@ -9,7 +9,8 @@ const ALLOWED_FILES = ['index.html', 'styles.css', 'script.js'];
 
 /**
  * Preview API - Serves generated website files for preview
- * Before deployment, users can preview their website through this endpoint
+ * PERSISTENT STORAGE: Files are stored in database, not filesystem
+ * This ensures websites remain accessible even after server restarts
  * 
  * GET /api/preview/[id] - Serves index.html
  * GET /api/preview/[id]?file=styles.css - Serves specific file
@@ -43,25 +44,40 @@ export async function GET(
       return new NextResponse('Website not found', { status: 404 });
     }
     
-    // Get the files path - use validated ID
-    const filesPath = website.filesPath || path.join(process.cwd(), 'generated-sites', validatedId);
-    const filePath = path.join(filesPath, file);
+    // Try to get content from database first (persistent storage)
+    let content: string | null = null;
     
-    // SECURITY: Ensure the resolved path is within the expected directory
-    const resolvedPath = path.resolve(filePath);
-    const expectedBase = path.resolve(process.cwd(), 'generated-sites');
-    if (!resolvedPath.startsWith(expectedBase)) {
-      console.warn(`Path traversal attempt blocked: ${filePath}`);
-      return new NextResponse('Access denied', { status: 403 });
+    if (file === 'index.html' && website.htmlContent) {
+      content = website.htmlContent;
+    } else if (file === 'styles.css' && website.cssContent) {
+      content = website.cssContent;
+    } else if (file === 'script.js' && website.jsContent) {
+      content = website.jsContent;
     }
     
-    // Check if file exists
-    if (!fs.existsSync(filePath)) {
-      return new NextResponse(`File ${file} not found`, { status: 404 });
+    // Fallback to filesystem if not in database (for backward compatibility)
+    if (!content) {
+      const filesPath = website.filesPath || path.join(process.cwd(), 'generated-sites', validatedId);
+      const filePath = path.join(filesPath, file);
+      
+      // SECURITY: Ensure the resolved path is within the expected directory
+      const resolvedPath = path.resolve(filePath);
+      const expectedBase = path.resolve(process.cwd(), 'generated-sites');
+      if (!resolvedPath.startsWith(expectedBase)) {
+        console.warn(`Path traversal attempt blocked: ${filePath}`);
+        return new NextResponse('Access denied', { status: 403 });
+      }
+      
+      // Check if file exists on filesystem
+      if (fs.existsSync(filePath)) {
+        content = fs.readFileSync(filePath, 'utf-8');
+      }
     }
     
-    // Read the file
-    const content = fs.readFileSync(filePath, 'utf-8');
+    // If still no content, return 404
+    if (!content) {
+      return new NextResponse(`File ${file} not found. Website may need to be regenerated.`, { status: 404 });
+    }
     
     // Determine content type
     let contentType = 'text/html';
