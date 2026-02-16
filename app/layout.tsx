@@ -7,6 +7,9 @@ import { AuthProvider } from "@/components/auth-provider";
 // Meta Pixel ID from marketing team
 const META_PIXEL_ID = "1864813177484696";
 
+// Google Analytics Measurement ID
+const GA_MEASUREMENT_ID = "G-EZCS4B2HWR";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -59,6 +62,20 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
+        
+        {/* Google Analytics 4 - for website analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

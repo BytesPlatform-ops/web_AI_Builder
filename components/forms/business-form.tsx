@@ -185,6 +185,21 @@ export function BusinessForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [direction, setDirection] = useState(1);
+  const [formStarted, setFormStarted] = useState(false);
+
+  // Track form_start event when user first interacts
+  const trackFormStart = () => {
+    if (!formStarted) {
+      setFormStarted(true);
+      if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
+        (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'form_start', {
+          event_category: 'engagement',
+          event_label: 'business_form'
+        });
+        console.log('📊 GA: form_start event fired');
+      }
+    }
+  };
 
   // Form state
   const [formData, setFormData] = useState<FormSubmissionData>({
@@ -218,6 +233,7 @@ export function BusinessForm() {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
+    trackFormStart(); // Track when user starts filling the form
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -268,6 +284,15 @@ export function BusinessForm() {
     setLoading(true);
 
     try {
+      // Track form_submit event when user clicks submit button
+      if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
+        (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'form_submit', {
+          event_category: 'engagement',
+          event_label: 'business_form_submit_clicked'
+        });
+        console.log('📊 GA: form_submit event fired');
+      }
+
       const servicesList = services.split(',').map((s) => s.trim()).filter(Boolean);
       const submitFormData = new FormData();
       submitFormData.append('businessName', formData.businessName);
@@ -307,6 +332,16 @@ export function BusinessForm() {
       if (typeof window !== 'undefined' && (window as Window & { fbq?: (action: string, event: string) => void }).fbq) {
         (window as Window & { fbq?: (action: string, event: string) => void }).fbq?.('track', 'Lead');
         console.log('🎯 Meta Pixel: Lead event fired');
+      }
+
+      // Fire Google Analytics generate_lead event
+      if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
+        (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'generate_lead', {
+          event_category: 'conversion',
+          event_label: 'form_submission_success',
+          value: 1
+        });
+        console.log('📊 GA: generate_lead event fired');
       }
 
       setSubmitted(true);

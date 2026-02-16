@@ -79,6 +79,16 @@ export default function MyWebsitePage() {
   const handlePublish = async () => {
     if (!website) return
     
+    // Track publish button click in Google Analytics
+    if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'publish_click', {
+        event_category: 'engagement',
+        event_label: website.publishApproved ? 'publish_to_live' : 'request_to_publish',
+        website_id: website.id
+      });
+      console.log('📊 GA: publish_click event fired');
+    }
+    
     setPublishing(true)
     setError("")
     setSuccessMessage("")
