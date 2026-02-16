@@ -234,6 +234,7 @@ export function BusinessForm() {
       if (!formData.about.trim()) return 'Please tell us about your business';
       const servicesList = services.split(',').map((s) => s.trim()).filter(Boolean);
       if (servicesList.length === 0) return 'Please add at least one service';
+      if (!formData.phone.trim()) return 'Phone number is required';
     }
     return null;
   };
@@ -586,7 +587,7 @@ export function BusinessForm() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                    Business Phone <span className="text-gray-500 font-normal">(optional)</span>
+                    Business Phone <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="tel"
@@ -594,6 +595,7 @@ export function BusinessForm() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+1 (555) 000-0000"
+                    required
                     className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
                   />
                 </div>
