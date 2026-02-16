@@ -234,7 +234,7 @@ export function BusinessForm() {
       if (!formData.about.trim()) return 'Please tell us about your business';
       const servicesList = services.split(',').map((s) => s.trim()).filter(Boolean);
       if (servicesList.length === 0) return 'Please add at least one service';
-      if (!formData.phone.trim()) return 'Phone number is required';
+      if (!formData.phone?.trim()) return 'Phone number is required';
     }
     return null;
   };
