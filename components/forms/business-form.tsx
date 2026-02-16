@@ -303,6 +303,12 @@ export function BusinessForm() {
       if (!response.ok) throw new Error(data?.error || `Submission failed (${response.status})`);
       if (!data) throw new Error('Unexpected response. Please try again.');
 
+      // Fire Meta Pixel Lead event on successful form submission
+      if (typeof window !== 'undefined' && (window as Window & { fbq?: (action: string, event: string) => void }).fbq) {
+        (window as Window & { fbq?: (action: string, event: string) => void }).fbq?.('track', 'Lead');
+        console.log('🎯 Meta Pixel: Lead event fired');
+      }
+
       setSubmitted(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
