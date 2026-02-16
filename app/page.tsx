@@ -5,6 +5,33 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Check, Star, Clock } from 'lucide-react';
 
+// Declare window types for tracking
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+// Track PageView only on landing page
+function usePageViewTracking() {
+  useEffect(() => {
+    // Meta Pixel PageView
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'PageView');
+      console.log('🎯 Meta Pixel: PageView fired (landing page)');
+    }
+    // Google Analytics PageView
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_title: 'Landing Page',
+        page_location: window.location.href,
+      });
+      console.log('📊 GA: page_view fired (landing page)');
+    }
+  }, []);
+}
+
 // ─── Typewriter Hook ───────────────────────────────────────────
 function useTypewriter(words: string[], speed = 100, deleteSpeed = 50, pause = 2000) {
   const [text, setText] = useState('');
@@ -131,6 +158,9 @@ function GradientCard({ children, className = '', delay = 0, equalHeight = false
 
 // ─── Main Page ─────────────────────────────────────────────────
 export default function HomePage() {
+  // Track PageView only on landing page
+  usePageViewTracking();
+  
   const typedText = useTypewriter([
     'Restaurant',
     'Startup',
