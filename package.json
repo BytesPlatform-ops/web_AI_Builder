@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@emailjs/nodejs": "^5.0.2",
+    "@google-analytics/data": "^5.2.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
@@ -23,6 +24,7 @@
     "clsx": "^2.1.1",
     "dompurify": "^3.3.1",
     "framer-motion": "^12.30.0",
+    "googleapis": "^171.4.0",
     "ioredis": "^5.9.2",
     "jsdom": "^28.0.0",
     "lucide-react": "^0.563.0",

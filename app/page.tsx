@@ -13,9 +13,18 @@ declare global {
   }
 }
 
-// Track PageView only on landing page
+// Track PageView only on landing page - fires once per session
 function usePageViewTracking() {
   useEffect(() => {
+    // Check if PageView already fired in this session
+    const pageViewKey = 'bytesuite_landing_pageview_fired';
+    const alreadyFired = sessionStorage.getItem(pageViewKey);
+    
+    if (alreadyFired) {
+      console.log('⏭️ PageView already fired this session, skipping...');
+      return;
+    }
+    
     // Meta Pixel PageView
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'PageView');
@@ -29,6 +38,9 @@ function usePageViewTracking() {
       });
       console.log('📊 GA: page_view fired (landing page)');
     }
+    
+    // Mark as fired for this session
+    sessionStorage.setItem(pageViewKey, 'true');
   }, []);
 }
 
