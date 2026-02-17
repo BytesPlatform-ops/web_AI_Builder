@@ -13,21 +13,13 @@ declare global {
   }
 }
 
-// Track PageView only on landing page
+// Track PageView only on landing page (Meta Pixel only - GA4 handles page_view automatically)
 function usePageViewTracking() {
   useEffect(() => {
-    // Meta Pixel PageView
+    // Meta Pixel PageView - fires only on landing page
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'PageView');
       console.log('🎯 Meta Pixel: PageView fired (landing page)');
-    }
-    // Google Analytics PageView
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'page_view', {
-        page_title: 'Landing Page',
-        page_location: window.location.href,
-      });
-      console.log('📊 GA: page_view fired (landing page)');
     }
   }, []);
 }
