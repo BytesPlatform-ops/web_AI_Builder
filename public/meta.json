@@ -1,0 +1,16 @@
+{
+  "name": "ByteSuite - Professional Website Builder",
+  "short_name": "ByteSuite",
+  "description": "Build stunning, professional websites for your business in minutes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
