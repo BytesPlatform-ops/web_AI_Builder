@@ -33,6 +33,8 @@ interface GeneratedWebsite {
   deploymentUrl: string | null
   status: string
   publishApproved: boolean
+  paymentStatus: string  // UNPAID, PENDING, PAID, FAILED, REFUNDED
+  paidAt: Date | null
   deployedAt: Date | null
   createdAt: Date
 }
@@ -43,6 +45,7 @@ export default function MyWebsitePage() {
   const [website, setWebsite] = useState<GeneratedWebsite | null>(null)
   const [loading, setLoading] = useState(true)
   const [publishing, setPublishing] = useState(false)
+  const [processingPayment, setProcessingPayment] = useState(false)
   const [error, setError] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
   const [showDomainModal, setShowDomainModal] = useState(false)
@@ -58,6 +61,95 @@ export default function MyWebsitePage() {
       fetchWebsite()
     }
   }, [status])
+
+  // Check for payment callback from Stripe
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const paymentStatus = urlParams.get("payment")
+    const sessionId = urlParams.get("session_id")
+    
+    if (paymentStatus === "success" && sessionId && website) {
+      // Verify payment and auto-publish
+      verifyPaymentAndPublish(sessionId)
+      // Clean up URL
+      window.history.replaceState({}, "", "/my-website")
+    } else if (paymentStatus === "cancelled") {
+      setError("Payment was cancelled. You can try again when ready.")
+      window.history.replaceState({}, "", "/my-website")
+    }
+  }, [website])
+
+  const verifyPaymentAndPublish = async (sessionId: string) => {
+    if (!website) return
+    
+    setPublishing(true)
+    setError("")
+    setSuccessMessage("")
+    
+    try {
+      const response = await fetch("/api/stripe/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, websiteId: website.id })
+      })
+      
+      const data = await response.json()
+      
+      if (data.published) {
+        setSuccessMessage("🎉 Payment successful! Your website is now live!")
+      } else if (data.paid) {
+        setSuccessMessage("✅ Payment verified! Publishing your website...")
+        // Try to publish again
+        await handlePublish()
+      }
+      
+      // Refresh website data
+      await fetchWebsite()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to verify payment")
+    } finally {
+      setPublishing(false)
+    }
+  }
+
+  const handlePayment = async () => {
+    if (!website) return
+    
+    // Track payment click in Google Analytics
+    if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
+      (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'payment_click', {
+        event_category: 'engagement',
+        event_label: 'stripe_checkout',
+        website_id: website.id
+      });
+      console.log('📊 GA: payment_click event fired');
+    }
+    
+    setProcessingPayment(true)
+    setError("")
+    
+    try {
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ websiteId: website.id })
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to start checkout")
+      }
+      
+      // Redirect to Stripe checkout
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to start payment")
+      setProcessingPayment(false)
+    }
+  }
 
   const fetchWebsite = async () => {
     try {
@@ -102,14 +194,19 @@ export default function MyWebsitePage() {
       
       const data = await response.json()
       
+      // Check if payment is required
+      if (data.requiresPayment || data.status === 'PAYMENT_REQUIRED') {
+        // Redirect to payment
+        await handlePayment()
+        return
+      }
+      
       if (!response.ok) {
         throw new Error(data.error || "Failed to publish website")
       }
       
-      // Check if it was a pending approval response
-      if (data.status === 'PENDING_APPROVAL' || data.requiresApproval) {
-        setSuccessMessage("📞 " + data.message)
-      } else if (data.status === 'PUBLISHED') {
+      // Check if it was published
+      if (data.status === 'PUBLISHED') {
         setSuccessMessage("🎉 Website published successfully! Your site is now live.")
       } else {
         setSuccessMessage(data.message || "Request processed successfully!")
@@ -218,24 +315,31 @@ export default function MyWebsitePage() {
           <div className="flex items-start justify-between mb-6">
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-2">{website.businessName}</h2>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${
                     website.status === "PUBLISHED"
                       ? "bg-green-100 text-green-800"
-                      : website.status === "PENDING_APPROVAL"
-                      ? "bg-orange-100 text-orange-800"
+                      : website.paymentStatus === "PAID"
+                      ? "bg-emerald-100 text-emerald-800"
                       : website.status === "READY"
                       ? "bg-blue-100 text-blue-800"
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {website.status === "READY" 
+                  {website.status === "PUBLISHED" 
+                    ? "✓ Published"
+                    : website.paymentStatus === "PAID"
+                    ? "✓ Paid - Ready to Publish"
+                    : website.status === "READY" 
                     ? "Ready to Publish" 
-                    : website.status === "PENDING_APPROVAL"
-                    ? "⏳ Waiting for Approval"
                     : website.status}
                 </span>
+                {website.paymentStatus !== "PAID" && website.status !== "PUBLISHED" && (
+                  <span className="px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                    💳 Payment Required
+                  </span>
+                )}
                 {website.deployedAt && (
                   <span className="text-sm text-gray-500">
                     Published {new Date(website.deployedAt).toLocaleDateString()}
@@ -297,26 +401,30 @@ export default function MyWebsitePage() {
               Edit Website
             </button>
 
-            {/* Publish Button - Show different states */}
-            {website.status === "PENDING_APPROVAL" && (
-              <>
-                <div className="flex-1 sm:flex-none bg-orange-100 border-2 border-orange-300 text-orange-800 px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  <span>Awaiting Sales Approval</span>
-                </div>
-                <a
-                  href="https://square.link/u/J6GjcH3d?src=sheet"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 sm:flex-none bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25"
-                >
-                  <CreditCard className="w-5 h-5" />
-                  <span>Pay Now</span>
-                </a>
-              </>
+            {/* Publish/Pay Button - Show different states based on payment status */}
+            {/* Case 1: Not paid yet - show Pay & Publish button */}
+            {website.status !== "PUBLISHED" && (!website.paymentStatus || website.paymentStatus === "UNPAID" || website.paymentStatus === "PENDING" || website.paymentStatus === "FAILED") && (
+              <button
+                onClick={handlePayment}
+                disabled={processingPayment || publishing}
+                className="flex-1 sm:flex-none bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all font-medium flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {processingPayment ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Redirecting to Payment...</span>
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-5 h-5" />
+                    <span>Pay & Publish ($49)</span>
+                  </>
+                )}
+              </button>
             )}
 
-            {website.status !== "PUBLISHED" && website.status !== "PENDING_APPROVAL" && (
+            {/* Case 2: Paid but not published yet - show Publish button */}
+            {website.status !== "PUBLISHED" && website.paymentStatus === "PAID" && (
               <button
                 onClick={handlePublish}
                 disabled={publishing}
@@ -325,12 +433,12 @@ export default function MyWebsitePage() {
                 {publishing ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing...</span>
+                    <span>Publishing...</span>
                   </>
                 ) : (
                   <>
                     <CloudUpload className="w-5 h-5" />
-                    <span>{website.publishApproved ? "Publish to Live" : "Request to Publish"}</span>
+                    <span>Publish to Live</span>
                   </>
                 )}
               </button>
@@ -362,14 +470,29 @@ export default function MyWebsitePage() {
           </div>
 
           {/* Status Info */}
-          {website.status === "READY" && (
+          {website.status === "READY" && website.paymentStatus !== "PAID" && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100 mb-4">
               <div className="flex items-start gap-3">
                 <span className="text-2xl">👁️</span>
                 <div>
                   <p className="font-medium text-blue-900">Your website is ready for preview!</p>
                   <p className="text-sm text-blue-700 mt-1">
-                    Preview your website and make any edits. When you&apos;re happy with it, click &quot;Publish to Live&quot; to make it available to the world. Our sales team will be notified once you publish.
+                    Preview your website and make any edits. When you&apos;re happy with it, click &quot;Pay &amp; Publish&quot; to make it available to the world.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Payment Completed - Ready to Publish */}
+          {website.status !== "PUBLISHED" && website.paymentStatus === "PAID" && (
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100 mb-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">✅</span>
+                <div>
+                  <p className="font-medium text-green-900">Payment Completed!</p>
+                  <p className="text-sm text-green-700 mt-1">
+                    Your payment has been received. Click &quot;Publish to Live&quot; to make your website available to the world.
                   </p>
                 </div>
               </div>

@@ -4,8 +4,11 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { netlifyDeploymentService } from "@/services/deployment-netlify.service";
 import { sendGridEmailService } from "@/services/email-sendgrid.service";
+import Stripe from "stripe";
 import fs from 'fs';
 import path from 'path';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,11 +23,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { websiteId } = body;
+    const { sessionId, websiteId } = body;
 
-    if (!websiteId) {
+    if (!sessionId || !websiteId) {
       return NextResponse.json(
-        { error: "Website ID is required" },
+        { error: "Session ID and Website ID are required" },
         { status: 400 }
       );
     }
@@ -59,48 +62,90 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if already published
-    if (website.status === 'PUBLISHED') {
+    // If already published, no need to verify again
+    if (website.status === "PUBLISHED") {
       return NextResponse.json({
         success: true,
-        message: "Website is already published",
+        paid: true,
+        published: true,
         deploymentUrl: website.deploymentUrl,
-        status: 'PUBLISHED'
       });
     }
 
-    // ========================================
-    // NEW FLOW: Check if payment is completed
-    // ========================================
-    
-    if (website.paymentStatus !== 'PAID') {
-      // User has NOT paid yet - tell them to pay via Stripe
-      console.log(`💳 User ${user.email} tried to publish ${website.businessName} - PAYMENT REQUIRED`);
+    // If already marked as paid but not published, try to deploy
+    if (website.paymentStatus === "PAID") {
+      // Deploy to Netlify
+      return await deployWebsite(website);
+    }
+
+    // Verify with Stripe
+    try {
+      const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
       
-      // Update status to show they're trying to publish
-      await prisma.generatedWebsite.update({
-        where: { id: websiteId },
-        data: {
-          publishRequestedAt: new Date(),
+      if (checkoutSession.payment_status === "paid") {
+        // Update payment status
+        await prisma.generatedWebsite.update({
+          where: { id: websiteId },
+          data: {
+            paymentStatus: "PAID",
+            stripePaymentId: checkoutSession.payment_intent as string,
+            paidAt: new Date(),
+            publishApproved: true,
+            approvedAt: new Date(),
+            approvedBy: "Stripe Payment",
+          }
+        });
+
+        // Fetch updated website
+        const updatedWebsite = await prisma.generatedWebsite.findFirst({
+          where: { id: websiteId },
+          include: { formSubmission: true }
+        });
+
+        if (updatedWebsite) {
+          // Deploy to Netlify
+          return await deployWebsite(updatedWebsite);
         }
-      });
-      
-      // Return response telling user they need to pay first
+      }
+
       return NextResponse.json({
-        success: false,
-        status: 'PAYMENT_REQUIRED',
-        message: "Please complete payment to publish your website.",
-        requiresPayment: true,
-        paymentStatus: website.paymentStatus,
+        success: true,
+        paid: checkoutSession.payment_status === "paid",
+        published: false,
+        paymentStatus: checkoutSession.payment_status,
       });
+
+    } catch (stripeError) {
+      console.error("Error verifying Stripe session:", stripeError);
+      return NextResponse.json(
+        { error: "Failed to verify payment" },
+        { status: 500 }
+      );
     }
 
-    // ========================================
-    // User HAS PAID - Proceed with deployment
-    // ========================================
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return NextResponse.json(
+      { error: "Failed to verify payment" },
+      { status: 500 }
+    );
+  }
+}
 
-    // NOW deploy to Netlify - this is when actual deployment happens!
-    console.log(`🚀 Publishing website ${website.businessName} to Netlify...`);
+interface WebsiteWithSubmission {
+  id: string;
+  businessName: string;
+  filesPath: string | null;
+  formSubmissionId: string;
+  formSubmission: {
+    email: string;
+    businessName: string;
+  };
+}
+
+async function deployWebsite(website: WebsiteWithSubmission) {
+  try {
+    console.log(`🚀 Deploying ${website.businessName} to Netlify...`);
     
     // Read the generated files from local storage
     const filesPath = website.filesPath || path.join(process.cwd(), 'generated-sites', website.formSubmissionId);
@@ -133,23 +178,20 @@ export async function POST(request: NextRequest) {
     
     console.log(`✅ Deployed to Netlify: ${deployResult.url}`);
 
-    const now = new Date();
-
-    // Update website status to PUBLISHED with actual deployment URL
-    const updatedWebsite = await prisma.generatedWebsite.update({
-      where: { id: websiteId },
+    // Update website status to PUBLISHED
+    await prisma.generatedWebsite.update({
+      where: { id: website.id },
       data: {
         status: 'PUBLISHED',
-        deploymentUrl: deployResult.url,    // Actual Netlify URL
+        deploymentUrl: deployResult.url,
         deploymentProvider: 'netlify',
-        deployedAt: now,
+        deployedAt: new Date(),
       }
     });
 
-    console.log(`🚀 Website ${website.businessName} published!`);
-    console.log(`🔗 Live URL: ${deployResult.url}`);
+    console.log(`🎉 Website ${website.businessName} published successfully!`);
 
-    // Send notification email to the user that their site is published
+    // Send notification email
     try {
       await sendGridEmailService.sendPublishedNotification({
         businessName: website.businessName,
@@ -160,21 +202,19 @@ export async function POST(request: NextRequest) {
       console.log('✅ Published notification email sent to user');
     } catch (emailError) {
       console.error('⚠️ Failed to send published notification email:', emailError);
-      // Don't fail the whole process if email fails
     }
 
     return NextResponse.json({
       success: true,
-      status: 'PUBLISHED',
-      message: "Website published successfully to Netlify!",
-      deploymentUrl: updatedWebsite.deploymentUrl,
-      publishedAt: now.toISOString()
+      paid: true,
+      published: true,
+      deploymentUrl: deployResult.url,
     });
 
-  } catch (error) {
-    console.error("Error publishing website:", error);
+  } catch (deployError) {
+    console.error("Deploy error:", deployError);
     return NextResponse.json(
-      { error: "Failed to publish website" },
+      { error: "Failed to deploy website" },
       { status: 500 }
     );
   }

@@ -97,6 +97,13 @@ model GeneratedWebsite {
   approvedAt      DateTime?     // When sales approved
   approvedBy      String?       // Sales person who approved
   
+  // Payment via Stripe
+  paymentStatus   PaymentStatus @default(UNPAID)
+  stripeSessionId String?       // Stripe Checkout Session ID
+  stripePaymentId String?       // Stripe Payment Intent ID
+  paymentAmount   Int?          // Amount in cents (e.g., 9900 = $99)
+  paidAt          DateTime?     // When payment was completed
+  
   // Sales person assignment
   assignedToId    String?
   assignedTo      SalesPerson? @relation(fields: [assignedToId], references: [id])
@@ -213,4 +220,12 @@ enum EmailStatus {
   DELIVERED
   OPENED
   FAILED
+}
+
+enum PaymentStatus {
+  UNPAID            // User hasn't paid yet
+  PENDING           // Payment initiated but not confirmed
+  PAID              // Payment completed successfully
+  FAILED            // Payment failed
+  REFUNDED          // Payment was refunded
 }
