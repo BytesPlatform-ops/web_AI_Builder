@@ -417,7 +417,7 @@ export default function MyWebsitePage() {
                 ) : (
                   <>
                     <CreditCard className="w-5 h-5" />
-                    <span>Pay & Publish ($49)</span>
+                    <span>Pay & Publish</span>
                   </>
                 )}
               </button>
