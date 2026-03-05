@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../auth/[...nextauth]/route';
 import { prisma } from '@/lib/prisma';
 import { validateSubmissionId } from '@/lib/validation';
 import fs from 'fs';
@@ -11,6 +13,9 @@ const ALLOWED_FILES = ['index.html', 'styles.css', 'script.js'];
  * Preview API - Serves generated website files for preview
  * PERSISTENT STORAGE: Files are stored in database, not filesystem
  * This ensures websites remain accessible even after server restarts
+ * 
+ * SECURITY: Only the owner (logged-in user) can view their preview
+ * This prevents unauthorized sharing of preview links
  * 
  * GET /api/preview/[id] - Serves index.html
  * GET /api/preview/[id]?file=styles.css - Serves specific file
@@ -42,6 +47,184 @@ export async function GET(
     
     if (!website) {
       return new NextResponse('Website not found', { status: 404 });
+    }
+    
+    // SECURITY: Check if user is logged in and owns this website
+    // Only owner can preview their unpublished website
+    if (website.status !== 'PUBLISHED') {
+      const session = await getServerSession(authOptions);
+      
+      if (!session || !session.user) {
+        // Return a styled access denied page
+        const accessDeniedHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Denied - ByteSuite</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #1a1a2e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      padding: 20px;
+    }
+    .container {
+      text-align: center;
+      max-width: 450px;
+    }
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 40px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #f87171, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    }
+    .footer {
+      margin-top: 32px;
+      color: #64748b;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🔒</div>
+    <h1>Access Denied</h1>
+    <p>This preview is protected. Please log in to your account to view your website preview.</p>
+    <a href="/login" class="btn">Log In to Continue</a>
+    <p class="footer">© ByteSuite - Professional Website Builder</p>
+  </div>
+</body>
+</html>`;
+        return new NextResponse(accessDeniedHtml, {
+          status: 401,
+          headers: { 'Content-Type': 'text/html' }
+        });
+      }
+      
+      // Check if logged-in user owns this website
+      const userId = (session.user as { id?: string }).id;
+      if (website.userId !== userId) {
+        // Return a styled "not your website" page
+        const notYoursHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Denied - ByteSuite</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #1a1a2e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      padding: 20px;
+    }
+    .container {
+      text-align: center;
+      max-width: 450px;
+    }
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 40px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    }
+    .footer {
+      margin-top: 32px;
+      color: #64748b;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">⚠️</div>
+    <h1>Not Your Website</h1>
+    <p>This preview belongs to another user. You can only view previews of websites you own.</p>
+    <a href="/my-website" class="btn">Go to My Website</a>
+    <p class="footer">© ByteSuite - Professional Website Builder</p>
+  </div>
+</body>
+</html>`;
+        return new NextResponse(notYoursHtml, {
+          status: 403,
+          headers: { 'Content-Type': 'text/html' }
+        });
+      }
     }
     
     // Try to get content from database first (persistent storage)

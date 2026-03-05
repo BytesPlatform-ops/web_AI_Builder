@@ -14,6 +14,7 @@ type WebsiteWithRelations = {
   approvedBy: string | null;
   deploymentUrl: string | null;
   deployedAt: Date | null;
+  paymentStatus: string;
   formSubmission: {
     email: string;
     phone: string | null;
@@ -82,7 +83,8 @@ export async function GET(request: NextRequest) {
     const pendingApproval = websites.filter(w => w.status === 'PENDING_APPROVAL');
     const approved = websites.filter(w => w.publishApproved && w.status !== 'PUBLISHED');
     const published = websites.filter(w => w.status === 'PUBLISHED');
-    const ready = websites.filter(w => w.status === 'READY' && !w.publishApproved);
+    // Ready = all unpublished websites (for manual publish option)
+    const ready = websites.filter(w => w.status !== 'PUBLISHED');
 
     return NextResponse.json({
       success: true,
@@ -126,6 +128,8 @@ export async function GET(request: NextRequest) {
           customerPhone: w.formSubmission.phone,
           previewUrl: w.previewUrl,
           createdAt: w.createdAt,
+          paymentStatus: w.paymentStatus,
+          status: w.status,
         })),
       }
     });

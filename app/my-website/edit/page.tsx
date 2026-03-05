@@ -196,9 +196,9 @@ export default function EditWebsitePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-gray-900 flex flex-col lg:flex-row">
       {/* Left Panel - Editor Controls */}
-      <div className="w-96 bg-gray-800 border-r border-gray-700 flex flex-col h-screen overflow-hidden">
+      <div className="w-full lg:w-96 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 flex flex-col lg:h-screen overflow-hidden">
         {/* Header */}
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center justify-between">
@@ -206,12 +206,23 @@ export default function EditWebsitePage() {
               <h1 className="text-lg font-bold text-white">Website Editor</h1>
               <p className="text-xs text-gray-400 mt-1">{website.businessName}</p>
             </div>
-            <button
-              onClick={() => router.push("/my-website")}
-              className="text-gray-400 hover:text-white p-2"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Mobile: Open Preview button */}
+              <a
+                href={`/api/preview/${website.formSubmissionId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="lg:hidden text-xs text-indigo-400 border border-indigo-400/30 px-3 py-1.5 rounded-lg hover:bg-indigo-500/10"
+              >
+                Open Preview in New Tab
+              </a>
+              <button
+                onClick={() => router.push("/my-website")}
+                className="text-gray-400 hover:text-white p-2"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -507,18 +518,6 @@ export default function EditWebsitePage() {
             Changes will be live within seconds
           </p>
         </div>
-      </div>
-
-      {/* Mobile: Preview link */}
-      <div className="lg:hidden p-4 border-t border-gray-700 bg-gray-800">
-        <a
-          href={website.deploymentUrl || `/api/preview/${website.formSubmissionId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full py-3 border border-indigo-400/30 text-indigo-400 rounded-lg hover:bg-indigo-500/10 transition-all font-medium text-sm"
-        >
-          Open Preview in New Tab
-        </a>
       </div>
 
       {/* Right Panel - Live Preview (hidden on mobile) */}

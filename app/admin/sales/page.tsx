@@ -15,6 +15,8 @@ interface Website {
   deploymentUrl?: string
   deployedAt?: string
   createdAt?: string
+  paymentStatus?: string
+  status?: string
 }
 
 interface WebsitesData {
@@ -41,6 +43,7 @@ export default function SalesDashboard() {
   const [error, setError] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
   const [approvingId, setApprovingId] = useState<string | null>(null)
+  const [publishingId, setPublishingId] = useState<string | null>(null)
 
   const fetchWebsites = async () => {
     setLoading(true)
@@ -95,6 +98,39 @@ export default function SalesDashboard() {
       setError(err instanceof Error ? err.message : "Failed to approve")
     } finally {
       setApprovingId(null)
+    }
+  }
+
+  const handleManualPublish = async (websiteId: string, businessName: string) => {
+    setPublishingId(websiteId)
+    setError("")
+    setSuccessMessage("")
+    
+    try {
+      const response = await fetch("/api/admin/manual-publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          websiteId,
+          adminSecret: secret,
+          salesPersonName: "Sales Team"
+        })
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to publish website")
+      }
+      
+      setSuccessMessage(`🎉 ${businessName} has been published! URL: ${data.website?.deploymentUrl || 'Check published section'}`)
+      
+      // Refresh the list
+      await fetchWebsites()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to publish")
+    } finally {
+      setPublishingId(null)
     }
   }
 
@@ -277,6 +313,71 @@ export default function SalesDashboard() {
                     <div className="text-right text-sm text-gray-500">
                       <p>Approved: {website.approvedAt ? new Date(website.approvedAt).toLocaleDateString() : 'N/A'}</p>
                       <p>By: {website.approvedBy}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Ready to Publish Section - Manual Publish Option */}
+        <div className="bg-white rounded-xl shadow-lg mb-8">
+          <div className="bg-purple-500 text-white px-6 py-4 rounded-t-xl">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              🚀 Ready to Publish ({websites?.ready.length || 0})
+            </h2>
+            <p className="text-purple-100 text-sm">All generated websites - Click to manually publish without payment</p>
+          </div>
+          <div className="p-6">
+            {websites?.ready.length === 0 ? (
+              <p className="text-gray-500 text-center py-4">No websites ready for publishing</p>
+            ) : (
+              <div className="space-y-3">
+                {websites?.ready.map((website) => (
+                  <div key={website.id} className="border-2 border-purple-200 rounded-lg p-4 bg-purple-50">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-gray-900">{website.businessName}</h3>
+                        <div className="mt-2 space-y-1 text-sm">
+                          <p><span className="text-gray-500">Email:</span> <span className="text-gray-700">{website.customerEmail}</span></p>
+                          {website.customerPhone && (
+                            <p><span className="text-gray-500">Phone:</span> <span className="text-gray-700">{website.customerPhone}</span></p>
+                          )}
+                          <p><span className="text-gray-500">Status:</span> <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs">{website.paymentStatus || 'UNPAID'}</span></p>
+                          <p><span className="text-gray-500">Created:</span> {website.createdAt ? new Date(website.createdAt).toLocaleDateString() : 'N/A'}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col gap-2">
+                        {website.previewUrl && (
+                          <a
+                            href={website.previewUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg text-center hover:bg-purple-200 transition-colors text-sm"
+                          >
+                            👁 Preview
+                          </a>
+                        )}
+                        <button
+                          onClick={() => handleManualPublish(website.id, website.businessName)}
+                          disabled={publishingId === website.id}
+                          className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 transition-all shadow-lg"
+                        >
+                          {publishingId === website.id ? (
+                            <span className="flex items-center gap-2">
+                              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                              </svg>
+                              Publishing...
+                            </span>
+                          ) : (
+                            "🚀 Publish Now (Free)"
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

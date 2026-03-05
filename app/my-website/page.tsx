@@ -20,6 +20,9 @@ import {
   Copy,
   X,
   CreditCard,
+  Shield,
+  Zap,
+  Smartphone,
 } from "lucide-react"
 
 interface GeneratedWebsite {
@@ -50,6 +53,7 @@ export default function MyWebsitePage() {
   const [successMessage, setSuccessMessage] = useState("")
   const [showDomainModal, setShowDomainModal] = useState(false)
   const [customDomain, setCustomDomain] = useState("")
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -379,19 +383,6 @@ export default function MyWebsitePage() {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 mb-6">
-            {/* Preview Button - Always visible */}
-            {website.previewUrl && (
-              <a
-                href={website.previewUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 sm:flex-none border border-indigo-300 text-indigo-700 bg-indigo-50 px-6 py-3 rounded-xl hover:bg-indigo-100 transition-all font-medium flex items-center justify-center gap-2"
-              >
-                <Eye className="w-5 h-5" />
-                Preview Website
-              </a>
-            )}
-
             {/* Edit Button */}
             <button
               onClick={() => router.push("/my-website/edit")}
@@ -468,65 +459,137 @@ export default function MyWebsitePage() {
               </button>
             )}
           </div>
-
-          {/* Status Info */}
-          {website.status === "READY" && website.paymentStatus !== "PAID" && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100 mb-4">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">👁️</span>
-                <div>
-                  <p className="font-medium text-blue-900">Your website is ready for preview!</p>
-                  <p className="text-sm text-blue-700 mt-1">
-                    Preview your website and make any edits. When you&apos;re happy with it, click &quot;Pay &amp; Publish&quot; to make it available to the world.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Payment Completed - Ready to Publish */}
-          {website.status !== "PUBLISHED" && website.paymentStatus === "PAID" && (
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100 mb-4">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">✅</span>
-                <div>
-                  <p className="font-medium text-green-900">Payment Completed!</p>
-                  <p className="text-sm text-green-700 mt-1">
-                    Your payment has been received. Click &quot;Publish to Live&quot; to make your website available to the world.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Live URL - Only if published */}
-          {website.status === "PUBLISHED" && website.deploymentUrl && (
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100">
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">🌐 Live Website URL</p>
-                  <a
-                    href={website.deploymentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-green-600 hover:text-green-700 font-medium break-all"
-                  >
-                    {website.deploymentUrl}
-                  </a>
-                </div>
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                  ✓ Live
-                </span>
-              </div>
-            </div>
-          )}
         </div>
+
+        {/* PUBLISH CTA - Simple Benefits Reminder */}
+        {website.status !== "PUBLISHED" && website.paymentStatus !== "PAID" && (
+          <div 
+            className="rounded-2xl p-6 md:p-8 mb-6 relative overflow-hidden"
+            style={{ 
+              background: 'linear-gradient(135deg, #0c1929 0%, #1e3a5f 100%)',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+            }}
+          >
+            {/* Subtle glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)' }} />
+            
+            <div className="relative">
+              {/* Header */}
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1">Ready to Go Live?</h3>
+                  <p className="text-gray-400 text-sm">Publish your website and unlock all features</p>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-gray-500 line-through text-lg">$49</span>
+                  <span className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">$19.99</span>
+                </div>
+              </div>
+
+              {/* Benefits Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                {[
+                  { icon: Globe, text: 'Free Hosting' },
+                  { icon: Shield, text: 'SSL Certificate' },
+                  { icon: Zap, text: 'Fast & Optimized' },
+                  { icon: Eye, text: 'No Watermark' },
+                  { icon: CheckCircle2, text: '99.9% Uptime' },
+                  { icon: Clock, text: 'Lifetime Access' },
+                ].map((item) => (
+                  <div key={item.text} className="flex items-center gap-2 text-sm text-gray-300">
+                    <item.icon className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                    {item.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA Button */}
+              <button
+                onClick={handlePayment}
+                disabled={processingPayment || publishing}
+                className="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold text-lg hover:from-blue-600 hover:to-cyan-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg shadow-blue-500/25"
+              >
+                {processingPayment ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-5 h-5" />
+                    Pay $19.99 & Publish Now
+                  </>
+                )}
+              </button>
+
+              {/* Trust line */}
+              <p className="text-center text-gray-500 text-xs mt-4 flex items-center justify-center gap-4">
+                <span className="flex items-center gap-1">
+                  <Shield className="w-3 h-3" />
+                  Secure Payment
+                </span>
+                <span>•</span>
+                <span>One-time payment</span>
+                <span>•</span>
+                <span>No hidden fees</span>
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Payment Completed - Ready to Publish */}
+        {website.status !== "PUBLISHED" && website.paymentStatus === "PAID" && (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100 mb-4">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">✅</span>
+              <div>
+                <p className="font-medium text-green-900">Payment Completed!</p>
+                <p className="text-sm text-green-700 mt-1">
+                  Your payment has been received. Click &quot;Publish to Live&quot; to make your website available to the world.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Live URL - Only if published */}
+        {website.status === "PUBLISHED" && website.deploymentUrl && (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-100 mb-6">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-1">🌐 Live Website URL</p>
+                <a
+                  href={website.deploymentUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 hover:text-green-700 font-medium break-all"
+                >
+                  {website.deploymentUrl}
+                </a>
+              </div>
+              <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                ✓ Live
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Website Preview */}
         {website.previewUrl && (
-          <div className="bg-white rounded-lg shadow-md p-6 hidden md:block">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Website Preview</h3>
-            <div className="border border-gray-200 rounded-lg overflow-hidden" style={{ height: "600px" }}>
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hidden md:block">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+              <h3 className="text-lg font-bold text-gray-900">Website Preview</h3>
+              <button
+                onClick={() => setIsFullscreen(true)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white border border-gray-200 rounded-lg hover:border-gray-300 hover:shadow-sm transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+                Fullscreen
+              </button>
+            </div>
+            <div style={{ height: "600px" }}>
               <iframe
                 src={website.previewUrl}
                 className="w-full h-full"
@@ -537,19 +600,52 @@ export default function MyWebsitePage() {
           </div>
         )}
 
-        {/* Mobile: show preview link instead of iframe */}
+        {/* Mobile: show fullscreen preview button */}
         {website.previewUrl && (
-          <div className="md:hidden bg-white rounded-lg shadow-md p-6">
+          <div className="md:hidden bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-3">Website Preview</h3>
-            <a
-              href={website.previewUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 border border-indigo-300 text-indigo-700 bg-indigo-50 rounded-xl hover:bg-indigo-100 transition-all font-medium"
+            <button
+              onClick={() => setIsFullscreen(true)}
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-xl font-medium shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02]"
             >
-              <ExternalLink className="w-4 h-4" />
-              Open Preview in New Tab
-            </a>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              Open Fullscreen Preview
+            </button>
+          </div>
+        )}
+
+        {/* Fullscreen Preview Modal */}
+        {isFullscreen && website.previewUrl && (
+          <div className="fixed inset-0 bg-black z-50 flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-gray-900 border-b border-gray-800">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <span className="text-gray-400 text-sm font-medium">{website.businessName} - Preview</span>
+              </div>
+              <button
+                onClick={() => setIsFullscreen(false)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-all"
+              >
+                <X className="w-4 h-4" />
+                Close Preview
+              </button>
+            </div>
+            {/* Iframe */}
+            <div className="flex-1">
+              <iframe
+                src={website.previewUrl}
+                className="w-full h-full"
+                title="Website Preview Fullscreen"
+                sandbox="allow-scripts allow-same-origin"
+              />
+            </div>
           </div>
         )}
       </main>

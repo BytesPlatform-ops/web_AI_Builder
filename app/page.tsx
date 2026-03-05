@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { ArrowRight, Check, Star, Clock } from 'lucide-react';
+import { ArrowRight, Check, Star, Clock, Globe, Shield, Zap, Smartphone, Sparkles } from 'lucide-react';
 
 // Declare window types for tracking
 declare global {
@@ -494,6 +494,232 @@ export default function HomePage() {
               </GradientCard>
             ))}
           </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* ═══ PRICING SECTION - 3 Card Layout ═══ */}
+      <section className="py-20 px-4 sm:px-10 relative overflow-hidden" id="pricing" style={{ backgroundColor: '#0a0a0f' }}>
+        {/* Background glow */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 60%)' }} />
+        </div>
+
+        <div className="max-w-5xl mx-auto relative">
+          {/* Section Header */}
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Choose Your Plan</h2>
+            <p className="text-gray-400 text-lg">Select the perfect option for your needs</p>
+          </motion.div>
+
+          {/* 3 Column Pricing Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* STARTER Card */}
+            <motion.div 
+              className="relative rounded-2xl p-7 transition-all hover:scale-[1.02] flex flex-col"
+              style={{ 
+                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                border: '1px solid rgba(71, 85, 105, 0.5)',
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0 }}
+            >
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Starter</h3>
+                  <p className="text-sm text-gray-400">Perfect to test the waters</p>
+                </div>
+                <div className="w-11 h-11 rounded-full bg-slate-700/50 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-gray-400" />
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <span className="text-5xl font-bold text-white">Free</span>
+                <span className="ml-2 text-sm text-gray-400 bg-slate-700/50 px-2.5 py-1 rounded-full">forever</span>
+              </div>
+
+              <ul className="space-y-3.5 mb-8 min-h-[220px]">
+                {[
+                  'Preview website only',
+                  'Test all features',
+                  'No publishing',
+                  'Watermark visible',
+                  'Community support',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm text-gray-300">
+                    <Check className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-auto">
+                <Link
+                  href="/get-started"
+                  className="block w-full py-3.5 px-4 rounded-xl border border-slate-600 text-gray-300 font-medium hover:bg-slate-700/50 transition-colors text-center"
+                >
+                  Start Free
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* PRO Card - Highlighted */}
+            <motion.div 
+              className="relative"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+            >
+              {/* Most Popular Badge */}
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                <span className="px-5 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-bold uppercase tracking-wide rounded-full shadow-lg shadow-blue-500/30">
+                  Most Popular
+                </span>
+              </div>
+
+              <div 
+                className="rounded-2xl p-7 h-full transition-all hover:scale-[1.02] flex flex-col"
+                style={{ 
+                  background: 'linear-gradient(135deg, #0c1929 0%, #1e3a5f 100%)',
+                  border: '2px solid rgba(59, 130, 246, 0.5)',
+                  boxShadow: '0 0 40px rgba(59, 130, 246, 0.15)',
+                }}
+              >
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h3 className="text-xl font-semibold text-white">Pro</h3>
+                    <p className="text-sm text-gray-400">For serious entrepreneurs</p>
+                  </div>
+                  <div className="w-11 h-11 rounded-full bg-blue-500/20 flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-blue-400" />
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl text-gray-500 line-through">$49</span>
+                    <span className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">$19.99</span>
+                  </div>
+                  <span className="text-sm text-gray-400">one-time payment</span>
+                </div>
+
+                <ul className="space-y-3.5 mb-8 min-h-[220px]">
+                  {[
+                    'Publish your website',
+                    'Free hosting forever',
+                    'SSL certificate',
+                    'Mobile responsive',
+                    'Remove watermark',
+                    'SEO optimized',
+                    'Priority support',
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-3 text-sm text-gray-200">
+                      <Check className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-auto">
+                  <Link
+                    href="/get-started"
+                    className="block w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all text-center shadow-lg shadow-blue-500/25"
+                  >
+                    Go Pro
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* ENTERPRISE Card */}
+            <motion.div 
+              className="relative rounded-2xl p-7 transition-all hover:scale-[1.02] flex flex-col"
+              style={{ 
+                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                border: '1px solid rgba(71, 85, 105, 0.5)',
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">Enterprise</h3>
+                  <p className="text-sm text-gray-400">For scaling businesses</p>
+                </div>
+                <div className="w-11 h-11 rounded-full bg-orange-500/20 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <span className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">Custom</span>
+                <p className="text-sm text-gray-400 mt-1">Talk to us for a quote</p>
+              </div>
+
+              <ul className="space-y-3.5 mb-8 min-h-[220px]">
+                {[
+                  'Custom design',
+                  'Multiple pages',
+                  'Advanced features',
+                  'Dedicated support',
+                  'Custom domain setup',
+                  'White-label solution',
+                  'Priority onboarding',
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm text-gray-300">
+                    <Check className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-auto">
+                <a
+                  href="mailto:contact@example.com?subject=Custom Website Inquiry"
+                  className="block w-full py-3.5 px-4 rounded-xl border border-orange-500/50 text-orange-400 font-medium hover:bg-orange-500/10 transition-colors text-center"
+                >
+                  Contact Sales
+                </a>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Trust Badges */}
+          <motion.div 
+            className="flex items-center justify-center gap-8 mt-10 text-sm text-gray-500"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <span className="flex items-center gap-2">
+              <Shield className="w-4 h-4" />
+              Secure Payment
+            </span>
+            <span className="flex items-center gap-2">
+              <Zap className="w-4 h-4" />
+              Instant Access
+            </span>
+            <span className="flex items-center gap-2">
+              <Check className="w-4 h-4" />
+              No Hidden Fees
+            </span>
+          </motion.div>
         </div>
       </section>
 

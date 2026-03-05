@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
         userId: user.id,
         businessName: website.businessName,
       },
-      success_url: `${appUrl}/my-website?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${appUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}&website_id=${website.id}`,
       cancel_url: `${appUrl}/my-website?payment=cancelled`,
     });
 
