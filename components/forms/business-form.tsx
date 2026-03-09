@@ -18,6 +18,8 @@ import {
   ChevronUp,
   Star,
   Loader2,
+  Phone,
+  Shield,
 } from 'lucide-react';
 import { FormSubmissionData, Testimonial, BrandColors, TemplateType, TEMPLATE_OPTIONS } from '@/types/forms';
 
@@ -41,6 +43,59 @@ const INDUSTRIES = [
   'Restaurant', 'Real Estate', 'Salon/Spa', 'Construction',
   'Plumbing', 'Fitness', 'E-Commerce', 'Healthcare',
   'Consulting', 'Photography', 'Other',
+];
+
+// Country codes with flags
+const COUNTRY_CODES = [
+  { code: '+92', country: 'Pakistan', flag: '🇵🇰' },
+  { code: '+1', country: 'USA/Canada', flag: '🇺🇸' },
+  { code: '+44', country: 'UK', flag: '🇬🇧' },
+  { code: '+91', country: 'India', flag: '🇮🇳' },
+  { code: '+971', country: 'UAE', flag: '🇦🇪' },
+  { code: '+966', country: 'Saudi Arabia', flag: '🇸🇦' },
+  { code: '+61', country: 'Australia', flag: '🇦🇺' },
+  { code: '+49', country: 'Germany', flag: '🇩🇪' },
+  { code: '+33', country: 'France', flag: '🇫🇷' },
+  { code: '+86', country: 'China', flag: '🇨🇳' },
+  { code: '+81', country: 'Japan', flag: '🇯🇵' },
+  { code: '+82', country: 'South Korea', flag: '🇰🇷' },
+  { code: '+55', country: 'Brazil', flag: '🇧🇷' },
+  { code: '+52', country: 'Mexico', flag: '🇲🇽' },
+  { code: '+39', country: 'Italy', flag: '🇮🇹' },
+  { code: '+34', country: 'Spain', flag: '🇪🇸' },
+  { code: '+31', country: 'Netherlands', flag: '🇳🇱' },
+  { code: '+46', country: 'Sweden', flag: '🇸🇪' },
+  { code: '+47', country: 'Norway', flag: '🇳🇴' },
+  { code: '+45', country: 'Denmark', flag: '🇩🇰' },
+  { code: '+48', country: 'Poland', flag: '🇵🇱' },
+  { code: '+90', country: 'Turkey', flag: '🇹🇷' },
+  { code: '+62', country: 'Indonesia', flag: '🇮🇩' },
+  { code: '+60', country: 'Malaysia', flag: '🇲🇾' },
+  { code: '+65', country: 'Singapore', flag: '🇸🇬' },
+  { code: '+63', country: 'Philippines', flag: '🇵🇭' },
+  { code: '+66', country: 'Thailand', flag: '🇹🇭' },
+  { code: '+84', country: 'Vietnam', flag: '🇻🇳' },
+  { code: '+27', country: 'South Africa', flag: '🇿🇦' },
+  { code: '+234', country: 'Nigeria', flag: '🇳🇬' },
+  { code: '+254', country: 'Kenya', flag: '🇰🇪' },
+  { code: '+20', country: 'Egypt', flag: '🇪🇬' },
+  { code: '+212', country: 'Morocco', flag: '🇲🇦' },
+  { code: '+7', country: 'Russia', flag: '🇷🇺' },
+  { code: '+380', country: 'Ukraine', flag: '🇺🇦' },
+  { code: '+972', country: 'Israel', flag: '🇮🇱' },
+  { code: '+974', country: 'Qatar', flag: '🇶🇦' },
+  { code: '+973', country: 'Bahrain', flag: '🇧🇭' },
+  { code: '+968', country: 'Oman', flag: '🇴🇲' },
+  { code: '+965', country: 'Kuwait', flag: '🇰🇼' },
+  { code: '+94', country: 'Sri Lanka', flag: '🇱🇰' },
+  { code: '+880', country: 'Bangladesh', flag: '🇧🇩' },
+  { code: '+977', country: 'Nepal', flag: '🇳🇵' },
+  { code: '+64', country: 'New Zealand', flag: '🇳🇿' },
+  { code: '+353', country: 'Ireland', flag: '🇮🇪' },
+  { code: '+41', country: 'Switzerland', flag: '🇨🇭' },
+  { code: '+43', country: 'Austria', flag: '🇦🇹' },
+  { code: '+32', country: 'Belgium', flag: '🇧🇪' },
+  { code: '+351', country: 'Portugal', flag: '🇵🇹' },
 ];
 
 // ─── DropZone Component ──────────────────────────────────────────────
@@ -230,12 +285,152 @@ export function BusinessForm() {
   const [heroFiles, setHeroFiles] = useState<File[]>([]);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
 
+  // OTP Verification state
+  const [countryCode, setCountryCode] = useState('+92');
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [resendTimer, setResendTimer] = useState(0);
+  const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     trackFormStart(); // Track when user starts filling the form
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Reset phone verification if phone number changes
+    if (name === 'phone') {
+      setPhoneVerified(false);
+      setOtpSent(false);
+    }
+  };
+
+  // ─── OTP Functions ────────────────────────────────────────────────
+  const sendOtp = async () => {
+    if (!formData.phone?.trim()) {
+      setOtpError('Please enter your phone number first');
+      return;
+    }
+    
+    setOtpSending(true);
+    setOtpError(null);
+    
+    try {
+      const response = await fetch('/api/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: formData.phone,
+          countryCode: countryCode,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setOtpSent(true);
+        setShowOtpModal(true);
+        // Start resend timer (60 seconds)
+        setResendTimer(60);
+        const timer = setInterval(() => {
+          setResendTimer((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+        // Focus first OTP input
+        setTimeout(() => otpInputRefs.current[0]?.focus(), 100);
+      } else {
+        setOtpError(data.error || 'Failed to send verification code');
+      }
+    } catch {
+      setOtpError('Failed to send verification code. Please try again.');
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    const code = otpCode.join('');
+    if (code.length !== 6) {
+      setOtpError('Please enter the complete 6-digit code');
+      return;
+    }
+    
+    setOtpVerifying(true);
+    setOtpError(null);
+    
+    try {
+      const response = await fetch('/api/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: formData.phone,
+          countryCode: countryCode,
+          code: code,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success && data.verified) {
+        setPhoneVerified(true);
+        setShowOtpModal(false);
+        setOtpCode(['', '', '', '', '', '']);
+        // Proceed to next step
+        setDirection(1);
+        setStep(3);
+      } else {
+        setOtpError(data.error || 'Invalid verification code');
+        // Shake effect - clear and refocus
+        setOtpCode(['', '', '', '', '', '']);
+        setTimeout(() => otpInputRefs.current[0]?.focus(), 100);
+      }
+    } catch {
+      setOtpError('Verification failed. Please try again.');
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
+
+  const handleOtpChange = (index: number, value: string) => {
+    // Only allow digits
+    const digit = value.replace(/\D/g, '').slice(-1);
+    const newOtp = [...otpCode];
+    newOtp[index] = digit;
+    setOtpCode(newOtp);
+    
+    // Auto-focus next input
+    if (digit && index < 5) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !otpCode[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    }
+    if (e.key === 'Enter' && otpCode.join('').length === 6) {
+      verifyOtp();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (pastedData.length === 6) {
+      const newOtp = pastedData.split('');
+      setOtpCode(newOtp);
+      otpInputRefs.current[5]?.focus();
+    }
   };
 
   // ─── Validation ───────────────────────────────────────────────────
@@ -259,6 +454,20 @@ export function BusinessForm() {
     const err = validateStep(step);
     if (err) { setError(err); return; }
     setError(null);
+    
+    // On step 2, trigger OTP verification instead of going directly to step 3
+    if (step === 2) {
+      if (phoneVerified) {
+        // Already verified, proceed to next step
+        setDirection(1);
+        setStep(3);
+      } else {
+        // Send OTP and show modal
+        sendOtp();
+      }
+      return;
+    }
+    
     setDirection(1);
     setStep((s) => Math.min(s + 1, 3));
   };
@@ -302,7 +511,10 @@ export function BusinessForm() {
       submitFormData.append('services', JSON.stringify(servicesList));
       submitFormData.append('email', formData.email);
       submitFormData.append('displayEmail', formData.displayEmail || '');
-      submitFormData.append('phone', formData.phone || '');
+      // Include country code with phone number
+      submitFormData.append('phone', `${countryCode} ${formData.phone}` || '');
+      submitFormData.append('countryCode', countryCode);
+      submitFormData.append('phoneVerified', phoneVerified ? 'true' : 'false');
       submitFormData.append('address', formData.address || '');
       submitFormData.append('templateType', selectedTemplate);
       submitFormData.append('brandColors', JSON.stringify(brandColors));
@@ -630,15 +842,49 @@ export function BusinessForm() {
                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
                     Business Phone <span className="text-red-400">*</span>
                   </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="+1 (555) 000-0000"
-                    required
-                    className="w-full px-4 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500"
-                  />
+                  <div className="flex gap-2">
+                    {/* Country Code Selector */}
+                    <select
+                      value={countryCode}
+                      onChange={(e) => {
+                        setCountryCode(e.target.value);
+                        setPhoneVerified(false);
+                        setOtpSent(false);
+                      }}
+                      className="w-[110px] px-2 py-3 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white text-sm appearance-none cursor-pointer"
+                      style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center', backgroundSize: '16px' }}
+                    >
+                      {COUNTRY_CODES.map((c) => (
+                        <option key={c.code} value={c.code} className="bg-gray-900">
+                          {c.flag} {c.code}
+                        </option>
+                      ))}
+                    </select>
+                    {/* Phone Number Input */}
+                    <div className="flex-1 relative">
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="300 1234567"
+                        required
+                        className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all bg-white/[0.06] text-white placeholder-gray-500 ${
+                          phoneVerified ? 'border-emerald-500/50 pr-10' : 'border-white/10'
+                        }`}
+                      />
+                      {phoneVerified && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {phoneVerified && (
+                    <p className="text-xs text-emerald-400 mt-1.5 flex items-center gap-1">
+                      <Shield className="w-3 h-3" /> Phone number verified
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
@@ -939,10 +1185,25 @@ export function BusinessForm() {
           <button
             type="button"
             onClick={goNext}
-            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-500/25 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[0.98]"
+            disabled={otpSending}
+            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-500/25 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[0.98] disabled:opacity-60"
           >
-            Continue
-            <ArrowRight className="w-4 h-4" />
+            {otpSending ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Sending OTP...
+              </>
+            ) : step === 2 && !phoneVerified ? (
+              <>
+                <Phone className="w-4 h-4" />
+                Verify Phone
+              </>
+            ) : (
+              <>
+                Continue
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         ) : (
           <button
@@ -965,6 +1226,133 @@ export function BusinessForm() {
           </button>
         )}
       </div>
+
+      {/* ── OTP Verification Modal ───────────────────────────────── */}
+      <AnimatePresence>
+        {showOtpModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            onClick={() => setShowOtpModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-md bg-gradient-to-b from-gray-900 to-gray-950 rounded-2xl border border-white/10 shadow-2xl p-6"
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setShowOtpModal(false)}
+                className="absolute top-4 right-4 p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Header */}
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                  <Phone className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Verify Your Phone</h3>
+                <p className="text-sm text-gray-400">
+                  We sent a 6-digit code to<br />
+                  <span className="text-white font-medium">{countryCode} {formData.phone}</span>
+                </p>
+              </div>
+
+              {/* OTP Input */}
+              <div className="flex justify-center gap-2 mb-4" onPaste={handleOtpPaste}>
+                {otpCode.map((digit, index) => (
+                  <input
+                    key={index}
+                    ref={(el) => { otpInputRefs.current[index] = el; }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                    className={`w-12 h-14 text-center text-2xl font-bold rounded-xl border-2 transition-all bg-white/[0.06] text-white outline-none ${
+                      digit 
+                        ? 'border-indigo-500 bg-indigo-500/10' 
+                        : 'border-white/10 focus:border-indigo-500'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Error message */}
+              {otpError && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center text-red-400 text-sm mb-4"
+                >
+                  {otpError}
+                </motion.p>
+              )}
+
+              {/* Verify Button */}
+              <button
+                onClick={verifyOtp}
+                disabled={otpVerifying || otpCode.join('').length !== 6}
+                className="w-full py-3.5 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {otpVerifying ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  <>
+                    <Shield className="w-5 h-5" />
+                    Verify Code
+                  </>
+                )}
+              </button>
+
+              {/* Resend */}
+              <div className="mt-4 text-center">
+                {resendTimer > 0 ? (
+                  <p className="text-sm text-gray-500">
+                    Resend code in <span className="text-indigo-400 font-medium">{resendTimer}s</span>
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setOtpCode(['', '', '', '', '', '']);
+                      setOtpError(null);
+                      sendOtp();
+                    }}
+                    disabled={otpSending}
+                    className="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors disabled:opacity-50"
+                  >
+                    {otpSending ? 'Sending...' : "Didn't receive code? Resend"}
+                  </button>
+                )}
+              </div>
+
+              {/* Change number */}
+              <button
+                onClick={() => {
+                  setShowOtpModal(false);
+                  setOtpCode(['', '', '', '', '', '']);
+                  setOtpError(null);
+                  setOtpSent(false);
+                }}
+                className="mt-3 w-full py-2 text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Change phone number
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
