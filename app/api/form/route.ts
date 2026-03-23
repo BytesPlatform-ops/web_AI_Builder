@@ -507,6 +507,33 @@ export async function POST(request: NextRequest) {
         });
         console.log(`[GENERATE] Step 8 complete - status set to GENERATED`);
 
+        // Step 8.5: Auto-update CSV file with new lead
+        console.log(`[GENERATE] Step 8.5: Auto-updating CSV...`);
+        try {
+          const { appendLeadToCSV } = await import('@/lib/csv-auto-export');
+          appendLeadToCSV({
+            id: formSubmission.id,
+            businessName,
+            email,
+            phone: phone || null,
+            industry: industry || null,
+            address: address || null,
+            services,
+            about,
+            tagline: tagline || null,
+            templateType,
+            status: 'GENERATED',
+            websiteStatus: 'READY',
+            paymentStatus: 'UNPAID',
+            deploymentUrl: null,
+            paidAt: null,
+            createdAt: formSubmission.createdAt,
+          });
+          console.log(`[GENERATE] Step 8.5 complete - CSV updated`);
+        } catch (csvError) {
+          console.error(`[GENERATE] Step 8.5 WARNING - CSV update failed (non-critical):`, csvError);
+        }
+
         // Step 9: Send emails
         const previewUrl = `${baseUrl}/api/preview/${formSubmission.id}`;
         const loginUrl = `${baseUrl}/login`;

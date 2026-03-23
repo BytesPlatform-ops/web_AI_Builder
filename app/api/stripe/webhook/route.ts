@@ -80,6 +80,31 @@ export async function POST(request: NextRequest) {
 
       console.log(`💰 Payment recorded for ${website.businessName}`);
 
+      // Auto-update CSV with payment info
+      try {
+        const { updateLeadInCSV } = await import('@/lib/csv-auto-export');
+        updateLeadInCSV({
+          id: website.formSubmission.id,
+          businessName: website.formSubmission.businessName,
+          email: website.formSubmission.email,
+          phone: website.formSubmission.phone,
+          industry: website.formSubmission.industry,
+          address: website.formSubmission.address,
+          services: website.formSubmission.services || [],
+          about: website.formSubmission.about,
+          tagline: website.formSubmission.tagline,
+          templateType: website.formSubmission.templateType,
+          status: website.formSubmission.status,
+          websiteStatus: 'PUBLISHED',
+          paymentStatus: 'PAID',
+          deploymentUrl: website.deploymentUrl,
+          paidAt: new Date(),
+          createdAt: website.formSubmission.createdAt,
+        });
+      } catch (csvError) {
+        console.error('[CSV] Failed to update CSV after payment:', csvError);
+      }
+
       // Auto-deploy to Netlify after payment
       try {
         console.log(`🚀 Auto-deploying ${website.businessName} to Netlify after payment...`);
