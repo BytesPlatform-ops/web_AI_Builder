@@ -3,12 +3,13 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
+import LayoutClient from "./layout-client";
 
 // Meta Pixel ID from marketing team
 const META_PIXEL_ID = "1864813177484696";
 
 // Google Analytics Measurement ID
-const GA_MEASUREMENT_ID = "G-EZCS4B2HWR";
+const GA_MEASUREMENT_ID = "G-LVL6QPRVRK";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -70,7 +71,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <LayoutClient>{children}</LayoutClient>
+        </AuthProvider>
       </body>
     </html>
   );

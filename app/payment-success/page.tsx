@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { trackConversion } from '@/lib/analytics';
 import { 
   CheckCircle2, 
   Loader2, 
@@ -43,6 +44,18 @@ function PaymentSuccessContent() {
   const [copiedCname, setCopiedCname] = useState(false);
   const [copiedA, setCopiedA] = useState(false);
   const [businessName, setBusinessName] = useState<string>('');
+
+  // Track payment conversion on success
+  useEffect(() => {
+    if (status === 'success' && deploymentUrl) {
+      trackConversion('payment_success', 1, {
+        event_category: 'conversion',
+        website_id: websiteId,
+        deployment_url: deploymentUrl,
+      });
+      console.log('📊 GA: payment_success conversion tracked');
+    }
+  }, [status, deploymentUrl, websiteId]);
 
   // Confetti effect on success
   const triggerConfetti = () => {

@@ -4,6 +4,7 @@ import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { setUserId } from "@/lib/analytics"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -27,6 +28,12 @@ export default function LoginPage() {
       if (result?.error) {
         setError("Invalid email/username or password")
       } else {
+        // Track successful login to GA
+        if (email) {
+          setUserId(email, {
+            login_method: 'credentials',
+          });
+        }
         router.push("/my-website")
         router.refresh()
       }
