@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { setUserId, trackFormEvent, trackConversion } from '@/lib/analytics';
 import {
   ArrowRight,
   ArrowLeft,
@@ -191,13 +192,7 @@ export function BusinessForm() {
   const trackFormStart = () => {
     if (!formStarted) {
       setFormStarted(true);
-      if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
-        (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'form_start', {
-          event_category: 'engagement',
-          event_label: 'business_form'
-        });
-        console.log('📊 GA: form_start event fired');
-      }
+      trackFormEvent('business_form', 'start');
     }
   };
 
@@ -285,13 +280,9 @@ export function BusinessForm() {
 
     try {
       // Track form_submit event when user clicks submit button
-      if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
-        (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'form_submit', {
-          event_category: 'engagement',
-          event_label: 'business_form_submit_clicked'
-        });
-        console.log('📊 GA: form_submit event fired');
-      }
+      trackFormEvent('business_form', 'submit', {
+        industry: formData.industry
+      });
 
       const servicesList = services.split(',').map((s) => s.trim()).filter(Boolean);
       const submitFormData = new FormData();
@@ -334,15 +325,16 @@ export function BusinessForm() {
         console.log('🎯 Meta Pixel: Lead event fired');
       }
 
-      // Fire Google Analytics generate_lead event
-      if (typeof window !== 'undefined' && (window as Window & { gtag?: (...args: unknown[]) => void }).gtag) {
-        (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'generate_lead', {
-          event_category: 'conversion',
-          event_label: 'form_submission_success',
-          value: 1
+      // Set user ID in Google Analytics for authenticated tracking
+      if (data.userId) {
+        setUserId(data.userId, {
+          plan_type: formData.industry || 'unknown',
+          business_name: formData.businessName,
         });
-        console.log('📊 GA: generate_lead event fired');
       }
+
+      // Fire Google Analytics generate_lead event
+      trackConversion('form_submission_success', 1);
 
       setSubmitted(true);
     } catch (err) {

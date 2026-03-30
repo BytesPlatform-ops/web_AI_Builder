@@ -1,8 +1,9 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { trackConversion } from '@/lib/analytics';
 import { CheckCircle2, Sparkles, ArrowRight, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -18,6 +19,15 @@ function SuccessContent() {
   const searchParams = useSearchParams();
   const submissionId = searchParams.get('id');
   const [copied, setCopied] = useState(false);
+
+  // Track form submission success conversion
+  useEffect(() => {
+    trackConversion('form_submission_success', 1, {
+      event_category: 'conversion',
+      submission_id: submissionId,
+    });
+    console.log('📊 GA: form submission success tracked');
+  }, [submissionId]);
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },

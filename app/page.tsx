@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { GALink } from '@/components/GA-Button';
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Check, Star, Clock, Globe, Shield, Zap, Smartphone, Sparkles } from 'lucide-react';
 
@@ -182,17 +183,18 @@ export default function HomePage() {
           </Link>
           
           <div className="flex items-center gap-3 md:gap-4">
-            <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
+            <GALink href="/login" gaEventName="navbar_login_click" className="text-sm text-gray-400 hover:text-white transition-colors">
               Login
-            </Link>
-            <Link 
+            </GALink>
+            <GALink 
               href="/get-started" 
+              gaEventName="navbar_get_started_click"
               className="group relative inline-flex items-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 text-sm font-semibold rounded-xl overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-indigo-500" />
               <span className="relative text-white">Get Started</span>
               <ArrowRight className="relative w-3.5 h-3.5 text-white group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            </GALink>
           </div>
         </div>
       </nav>
@@ -266,8 +268,9 @@ export default function HomePage() {
 
               {/* CTA Button */}
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link
+                <GALink
                   href="/get-started"
+                  gaEventName="hero_build_website_click"
                   className="group relative inline-flex items-center justify-center gap-2 px-6 md:px-8 py-3.5 md:py-4 font-semibold rounded-xl overflow-hidden transition-all active:scale-[0.98] hover:scale-[1.02] shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30"
                 >
                   {/* Animated gradient background */}
@@ -280,14 +283,15 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <span className="relative text-white text-sm md:text-base">Build My Website</span>
                   <ArrowRight className="relative w-4 h-4 md:w-5 md:h-5 text-white group-hover:translate-x-1 transition-transform" />
-                </Link>
+                </GALink>
                 
-                <Link
+                <GALink
                   href="/login"
+                  gaEventName="hero_login_click"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-gray-400 hover:text-cyan-400 transition-colors font-medium text-sm md:text-base"
                 >
                   Login →
-                </Link>
+                </GALink>
               </div>
 
               {/* Trust Indicators */}
@@ -564,12 +568,13 @@ export default function HomePage() {
               </ul>
 
               <div className="mt-auto">
-                <Link
+                <GALink
                   href="/get-started"
+                  gaEventName="pricing_free_start_click"
                   className="block w-full py-3.5 px-4 rounded-xl border border-slate-600 text-gray-300 font-medium hover:bg-slate-700/50 transition-colors text-center"
                 >
                   Start Free
-                </Link>
+                </GALink>
               </div>
             </motion.div>
 
@@ -632,12 +637,13 @@ export default function HomePage() {
                 </ul>
 
                 <div className="mt-auto">
-                  <Link
+                  <GALink
                     href="/get-started"
+                    gaEventName="pricing_pro_click"
                     className="block w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold hover:from-blue-600 hover:to-cyan-600 transition-all text-center shadow-lg shadow-blue-500/25"
                   >
                     Go Pro
-                  </Link>
+                  </GALink>
                 </div>
               </div>
             </motion.div>
@@ -768,8 +774,9 @@ export default function HomePage() {
                 Get started today.
               </p>
 
-              <Link
+              <GALink
                 href="/get-started"
+                gaEventName="final_cta_start_building_click"
                 className="group relative inline-flex items-center gap-2 px-8 md:px-10 py-3.5 md:py-4 font-semibold text-base md:text-lg rounded-xl overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <motion.div
@@ -779,7 +786,7 @@ export default function HomePage() {
                 />
                 <span className="relative">Start Building Now</span>
                 <ArrowRight className="relative w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </GALink>
             </div>
           </motion.div>
         </div>
@@ -794,8 +801,8 @@ export default function HomePage() {
             </div>
             <div className="flex items-center gap-6 text-sm text-gray-500">
               <Link href="/" className="hover:text-cyan-400 transition">Home</Link>
-              <Link href="/get-started" className="hover:text-cyan-400 transition">Get Started</Link>
-              <Link href="/login" className="hover:text-cyan-400 transition">Login</Link>
+              <GALink href="/get-started" gaEventName="footer_get_started_click" className="hover:text-cyan-400 transition">Get Started</GALink>
+              <GALink href="/login" gaEventName="footer_login_click" className="hover:text-cyan-400 transition">Login</GALink>
             </div>
             <p className="text-xs md:text-sm text-gray-600">
               &copy; {new Date().getFullYear()} ByteSuite
