@@ -13,7 +13,6 @@ interface GAButtonProps {
   disabled?: boolean;
   variant?: 'primary' | 'secondary' | 'outline';
   type?: 'button' | 'submit' | 'reset';
-  [key: string]: unknown;
 }
 
 interface GALinkProps {
@@ -22,7 +21,6 @@ interface GALinkProps {
   gaEventName: string;
   gaEventData?: Record<string, unknown>;
   className?: string;
-  [key: string]: unknown;
 }
 
 /**
@@ -40,7 +38,6 @@ export const GAButton = React.forwardRef<HTMLButtonElement, GAButtonProps>(
       variant = 'primary',
       type = 'button',
       disabled = false,
-      ...props
     },
     ref
   ) => {
@@ -50,7 +47,7 @@ export const GAButton = React.forwardRef<HTMLButtonElement, GAButtonProps>(
       
       // Execute custom handler if provided
       if (onClick) {
-        onClick();
+        (onClick as () => void)();
       }
     };
 
@@ -68,7 +65,6 @@ export const GAButton = React.forwardRef<HTMLButtonElement, GAButtonProps>(
         onClick={handleClick}
         disabled={disabled}
         className={`${baseStyles} ${variantStyles[variant]} ${className}`}
-        {...props}
       >
         {children}
       </button>
@@ -84,11 +80,11 @@ GAButton.displayName = 'GAButton';
  */
 export const GALink = React.forwardRef<HTMLAnchorElement, GALinkProps>(
   (
-    { children, href, gaEventName, gaEventData, className = '', ...props },
+    { children, href, gaEventName, gaEventData, className = '' },
     ref
   ) => {
     const handleClick = () => {
-      trackButtonClick(gaEventName as string, gaEventData);
+      trackButtonClick(gaEventName as string, gaEventData as Record<string, unknown> | undefined);
     };
 
     return (
@@ -97,7 +93,6 @@ export const GALink = React.forwardRef<HTMLAnchorElement, GALinkProps>(
         href={href}
         onClick={handleClick}
         className={className}
-        {...props}
       >
         {children}
       </Link>
