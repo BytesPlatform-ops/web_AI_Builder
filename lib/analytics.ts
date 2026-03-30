@@ -1,6 +1,6 @@
 // Centralized Google Analytics utility
 
-const GA_MEASUREMENT_ID = "G-LVL6QPRVRK";
+const GA_MEASUREMENT_ID = "G-1BV98CWGWS";
 
 declare global {
   interface Window {
