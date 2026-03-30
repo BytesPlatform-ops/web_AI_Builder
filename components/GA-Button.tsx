@@ -46,7 +46,7 @@ export const GAButton = React.forwardRef<HTMLButtonElement, GAButtonProps>(
   ) => {
     const handleClick = () => {
       // Track to GA
-      trackButtonClick(gaEventName as string, gaEventData);
+      trackButtonClick(gaEventName as string, gaEventData as Record<string, unknown> | undefined);
       
       // Execute custom handler if provided
       if (onClick) {
