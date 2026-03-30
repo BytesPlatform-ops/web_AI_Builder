@@ -9,7 +9,7 @@ import LayoutClient from "./layout-client";
 const META_PIXEL_ID = "1864813177484696";
 
 // Google Analytics Measurement ID
-const GA_MEASUREMENT_ID = "G-LVL6QPRVRK";
+const GA_MEASUREMENT_ID = "G-1BV98CWGWS";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
